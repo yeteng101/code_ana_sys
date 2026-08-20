@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "demo-redis-client-command",
+  "status": "success",
+  "findings": [
+    {"kind": "direct_call", "source": "aeMain", "target": "aeProcessEvents", "condition": "linux-epoll", "confidence": 0.99, "evidence": [{"file": "src/ae.c", "line": 1}]},
+    {"kind": "callback_edge", "source": "aeApiPoll", "target": "readQueryFromClient", "event": "client_readable", "execution_context": "main_thread", "confidence": 0.92, "evidence": [{"file": "src/networking.c", "line": 1}]},
+    {"kind": "direct_call", "source": "processInputBuffer", "target": "processCommand", "condition": "linux-epoll", "confidence": 0.99, "evidence": [{"file": "src/networking.c", "line": 1}]}
+  ],
+  "artifacts": ["graph://demo/redis-client-command"],
+  "warnings": ["line=1 is a fixture placeholder; real adapter must emit exact source lines"]
+}

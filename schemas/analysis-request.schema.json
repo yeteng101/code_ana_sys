@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/analysis-request.schema.json",
+  "title": "AnalysisRequest",
+  "type": "object",
+  "required": ["schema_version", "task_id", "repository", "build_profiles", "query"],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "task_id": {"type": "string", "minLength": 1},
+    "repository": {
+      "type": "object",
+      "required": ["url", "commit", "language"],
+      "properties": {
+        "url": {"type": "string", "format": "uri"},
+        "commit": {"type": "string", "minLength": 7},
+        "language": {"type": "string", "enum": ["c", "cpp"]}
+      },
+      "additionalProperties": false
+    },
+    "build_profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "defines", "target"],
+        "properties": {
+          "name": {"type": "string"},
+          "defines": {"type": "array", "items": {"type": "string"}},
+          "target": {"type": "string"},
+          "compiler": {"type": "string"},
+          "flags": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "query": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {"type": "string", "enum": ["call_chain", "architecture", "natural_language"]},
+        "entry_symbols": {"type": "array", "items": {"type": "string"}},
+        "question": {"type": "string"},
+        "depth": {"type": "integer", "minimum": 1, "maximum": 100},
+        "include_async": {"type": "boolean"},
+        "include_function_pointers": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "max_nodes": {"type": "integer", "minimum": 1},
+        "timeout_seconds": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

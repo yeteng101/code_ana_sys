@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "demo-libuv-loop",
+  "status": "success",
+  "findings": [
+    {"kind": "direct_call", "source": "uv_run", "target": "uv__run_pending", "condition": "linux-debug", "confidence": 0.99, "evidence": [{"file": "src/unix/core.c", "line": 1}]},
+    {"kind": "direct_call", "source": "uv_run", "target": "uv__io_poll", "condition": "linux-debug", "confidence": 0.99, "evidence": [{"file": "src/unix/core.c", "line": 1}]},
+    {"kind": "callback_edge", "source": "uv__io_poll", "target": "watcher.callback", "event": "fd_ready", "execution_context": "event_loop_thread", "confidence": 0.90, "evidence": [{"file": "src/unix/core.c", "line": 1}]}
+  ],
+  "artifacts": ["graph://demo/libuv-loop"],
+  "warnings": ["line=1 is a fixture placeholder; real adapter must emit exact source lines"]
+}

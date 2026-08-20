@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "demo-libuv-loop",
+  "repository": {
+    "url": "https://github.com/libuv/libuv",
+    "commit": "PIN_REQUIRED",
+    "language": "c"
+  },
+  "build_profiles": [
+    {"name": "linux-debug", "defines": ["_GNU_SOURCE"], "target": "default"}
+  ],
+  "query": {
+    "type": "call_chain",
+    "entry_symbols": ["uv_run"],
+    "depth": 8,
+    "include_async": true,
+    "include_function_pointers": true
+  }
+}
