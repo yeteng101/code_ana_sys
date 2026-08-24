@@ -8,8 +8,9 @@
 - `docs/architecture.md`：Subagent 分工、执行协议、证据和验收规范。
 - `schemas/`：分析请求与 Agent 结果 JSON Schema。
 - `demo/`：libuv `uv_run`、Redis 客户端请求链的 Demo fixture 和 Mermaid 报告。
-- `Code-Reverse-Agent-汇报.pptx`：汇报用 PPT。
-- `scripts/build_ppt.js`：PPT 生成脚本。
+- `Code-Reverse-Agent-汇报.pptx`：面向初学者的汇报 PPT。
+- `scripts/build_ppt.js`：技术版 PPT 生成脚本。
+- `scripts/build_beginner_ppt.js`：初学者版 PPT 生成脚本。
 
 ## Demo
 

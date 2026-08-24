@@ -24,4 +24,4 @@ function bullets(s,arr,x,y,w,h,size=17){s.addText(arr.map(v=>({text:v,options:{b
 // 4. 分析方法
 {const s=base();title(s,'初学者的四步分析法','先把问题变小，再让每条结论可复核');const steps=[['1','选一个入口','uv_run、aeMain 或网络 API'],['2','追三件事','谁注册？谁触发？谁执行？'],['3','固定配置','commit、平台、编译宏、生成步骤'],['4','保留证据','文件、行号、边类型、置信度']];steps.forEach((v,i)=>{const y=1.35+i*0.98;box(s,0.95,y,0.62,0.58,v[0],{fill:C.teal,color:'FFFFFF',bold:true,size:18});box(s,1.85,y,2.15,0.58,v[1],{fill:C.panel,bold:true,size:14,align:'left'});box(s,4.3,y,7.65,0.58,v[2],{fill:C.panel,color:C.muted,size:14,align:'left'});});box(s,1.55,5.55,10.2,0.88,'不能唯一确定时：输出候选集合和置信度，不要把猜测写成事实。',{fill:C.soft,color:C.teal,bold:true,size:18});s.addText('一句话总结：函数调用看栈，异步回调看事件，复杂宏看预处理结果。',{x:1.0,y:6.65,w:11.3,h:0.3,fontSize:15,color:C.ink,align:'center',margin:0});}
 
-pptx.writeFile({fileName:'/Users/andye/Documents/ChatGPT/8.18huawei/reverse-analysis-beginner.pptx'});
+pptx.writeFile({fileName:'/Users/andye/Documents/ChatGPT/8.18huawei/Code-Reverse-Agent-汇报.pptx'});
