@@ -110,16 +110,180 @@
 
 ```json
 {
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "nodes": [
+    {
+      "id": "fn:uv_run",
+      "kind": "function",
+      "name": "uv_run",
+      "file": "third_party/libuv/src/unix/core.c",
+      "line": 427
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_874df4524df0",
+      "source": "fn:uv_run",
+      "target": "fn:uv__io_poll",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 460,
+        "snippet": "uv__io_poll(loop, timeout);"
+      },
+      "confidence": 1.0,
+      "evidence_ids": ["ev_a3dcf6ec0abb"]
+    }
+  ],
+  "evidence": []
+}
+```
 
-## Demo
+### 1.4 自然语言提问
 
-当前 Demo 用 Clang 真正解析 `demo/sample/` 里的 C++ 代码，跑完 7 个流水线阶段，产出模块架构、关键调用链、自然语言分析、带源码证据的调用图、函数指针候选、异步回调和验证报告。生成的产物在 `demo/run_clang_demo/`，报告与图同步发布到 `demo/`。
+请求 JSON：
+
+```json
+{
+  "question": "uv_async_send 之后回调在什么时候执行？",
+  "focus": ["uv_async_send"],
+  "max_paths": 5
+}
+```
+
+响应 JSON：
+
+```json
+{
+  "run_id": "run_libuv_1.50.0",
+  "question": "uv_async_send 之后回调在什么时候执行？",
+  "answer": "uv_async_send 会唤醒事件循环，事件循环线程在 poll 阶段处理后执行注册的回调。",
+  "confidence": 0.85,
+  "evidence_chain": [
+    {
+      "id": "ev_10",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 170,
+        "snippet": "uv__async_io(loop, w, events);"
+      }
+    }
+  ]
+}
+```
+
+## 2. 对内 JSON 接口
+
+对内接口不使用 HTTP，而是 JSON 文件管道：上一阶段把结果写成 JSON 文件，下一阶段读取。
 
 ```text
-app_main -> loop_run -> wait_for_events
-app_main -> loop_register  (callback registration)
-dispatch_once --CALL_WATCHER--> Watcher::callback -> on_readable / on_writable / on_once
+workspace/{run_id}/
+├── compile_commands.json
+├── 01-index/symbols.json
+├── 02-macro/macros.json
+├── 03-callgraph/callgraph.json
+├── 04-fptr/fptr-candidates.json
+├── 05-async/async-chains.json
+├── 06-verify/verification.json
+└── 07-report/
+    ├── report.md
+    ├── graph.json
+    ├── graph.mmd
+    ├── architecture.json
+    ├── key-chains.json
+    └── analysis.md
 ```
+
+| 阶段 | 输入 | 输出 | 内容 |
+|---|---|---|---|
+| 01-index | compile_commands.json | symbols.json | 函数、字段、类型索引 |
+| 02-macro | compile_commands.json | macros.json | 宏定义、展开、条件编译 |
+| 03-callgraph | symbols + macros | callgraph.json | 调用图节点和边 |
+| 04-fptr | callgraph | fptr-candidates.json | 函数指针候选 |
+| 05-async | callgraph + fptr | async-chains.json | 注册、触发、回调链 |
+| 06-verify | 以上全部 | verification.json | 证据核查、覆盖率 |
+| 07-report | verification | report/graph/analysis | 对外交付物 |
+
+阶段执行顺序由 `pipeline.json` 定义：
+
+```json
+{
+  "pipeline_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "stages": [
+    {
+      "name": "01-index",
+      "order": 1,
+      "command": ["python3", "-m", "clang_pipeline.stage_runner", "01-index", "--workspace", "{workspace}"],
+      "inputs": ["compile_commands.json"],
+      "outputs": ["01-index/symbols.json"]
+    }
+  ]
+}
+```
+
+每个阶段只读自己的输入，只写自己的输出，不修改其他阶段的文件。
+
+## 3. JSON 规范
+
+所有阶段产物都带统一信封：
+
+```json
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "stage": "03-callgraph",
+  "status": "succeeded",
+  "generated_at": "2026-08-27T08:00:00Z",
+  "inputs": [],
+  "findings": [],
+  "evidence": [],
+  "warnings": []
+}
+```
+
+证据必须能回到源码：
+
+```json
+{
+  "id": "ev_a3dcf6ec0abb",
+  "kind": "call_site",
+  "location": {
+    "file": "third_party/libuv/src/unix/core.c",
+    "line": 460,
+    "snippet": "uv__io_poll(loop, timeout);"
+  },
+  "role": "supports",
+  "build_profile": "macos-clang"
+}
+```
+
+置信度语义：
+
+- `1.0`：源码直接调用，目标唯一。
+- `0.8 - 0.99`：类型、赋值流和控制流共同确认。
+- `0.5 - 0.79`：存在多个候选，但上下文有较强约束。
+- `<0.5`：启发式推断，只能作为待验证线索。
+
+Schema 统一放在 `schemas/` 目录：
+
+```text
+common.schema.json          共享定义
+analysis-request.schema.json 分析请求
+run-result.schema.json       任务结果
+graph.schema.json            调用关系图
+symbols.schema.json          01-index
+macros.schema.json           02-macro
+fptr-candidates.schema.json  04-fptr
+async-chains.schema.json     05-async
+verification.schema.json     06-verify
+pipeline.schema.json         pipeline 配置
+```
+
+总结：对外是 JSON 消息，对内是 JSON 文件接力，所有结论都必须带源码证据。
+
 
 运行：
 
