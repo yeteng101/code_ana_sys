@@ -1,0 +1,147 @@
+{
+  "pipeline_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "workspace_root": "demo/run_libuv_v1.50.0",
+  "stages": [
+    {
+      "name": "01-index",
+      "order": 1,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "01-index",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "compile_commands.json"
+      ],
+      "outputs": [
+        "01-index/symbols.json",
+        "01-index/ast/*.ast.json"
+      ]
+    },
+    {
+      "name": "02-macro",
+      "order": 2,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "02-macro",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "compile_commands.json",
+        "01-index/symbols.json"
+      ],
+      "outputs": [
+        "02-macro/macros.json"
+      ]
+    },
+    {
+      "name": "03-callgraph",
+      "order": 3,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "03-callgraph",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "01-index/symbols.json",
+        "02-macro/macros.json"
+      ],
+      "outputs": [
+        "03-callgraph/callgraph.json"
+      ]
+    },
+    {
+      "name": "04-fptr",
+      "order": 4,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "04-fptr",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "03-callgraph/callgraph.json"
+      ],
+      "outputs": [
+        "04-fptr/fptr-candidates.json"
+      ]
+    },
+    {
+      "name": "05-async",
+      "order": 5,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "05-async",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "03-callgraph/callgraph.json",
+        "04-fptr/fptr-candidates.json"
+      ],
+      "outputs": [
+        "05-async/async-chains.json"
+      ]
+    },
+    {
+      "name": "06-verify",
+      "order": 6,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "06-verify",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "01-index/symbols.json",
+        "02-macro/macros.json",
+        "03-callgraph/callgraph.json",
+        "04-fptr/fptr-candidates.json",
+        "05-async/async-chains.json"
+      ],
+      "outputs": [
+        "06-verify/verification.json"
+      ]
+    },
+    {
+      "name": "07-report",
+      "order": 7,
+      "command": [
+        "python3",
+        "-m",
+        "clang_pipeline.stage_runner",
+        "07-report",
+        "--workspace",
+        "{workspace}"
+      ],
+      "inputs": [
+        "06-verify/verification.json"
+      ],
+      "outputs": [
+        "07-report/report.md",
+        "07-report/graph.json",
+        "07-report/graph.mmd",
+        "07-report/run-result.json",
+        "07-report/architecture.json",
+        "07-report/key-chains.json",
+        "07-report/analysis.md"
+      ]
+    }
+  ]
+}

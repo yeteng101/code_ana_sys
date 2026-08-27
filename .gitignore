@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 demo/run_clang_demo/
+demo/run_*/
+third_party/

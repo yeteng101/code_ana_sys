@@ -10,7 +10,9 @@
 - `schemas/`：接口与流水线的完整 JSON Schema（分析请求、任务结果、证据图、问答、各阶段产物、pipeline 配置）。
 - `demo/`：libuv `uv_run`、Redis 客户端请求链的 Demo fixture、调用图 / 问答 / pipeline 示例。
 - `demo/sample/`：自包含的 C++ 事件循环样例，Clang 流水线直接分析这个仓库。
+- `demo/libuv/`：libuv v1.50.0 真实分析产物（调用图、模块架构、关键链、自然语言分析）。
 - `clang_pipeline/`：7 阶段 Clang 流水线（index → macro → callgraph → fptr → async → verify → report）。
+- `scripts/run_libuv.sh`：一键 clone libuv v1.50.0、生成 compile_commands 并运行流水线。
 - `Code-Reverse-Agent-汇报.pptx`：面向初学者的汇报 PPT。
 - `scripts/build_ppt.js`：技术版 PPT 生成脚本。
 - `scripts/build_beginner_ppt.js`：初学者版 PPT 生成脚本。
@@ -45,6 +47,14 @@ python3 -m clang_pipeline.pipeline \
 bash /Users/andye/Documents/ChatGPT/8.18huawei/run_demo.sh
 ```
 
+跑 libuv：
+
+```bash
+bash scripts/run_libuv.sh
+```
+
+libuv 产物发布到 `demo/libuv/`：`graph.json`、`report.md`、`architecture.json`、`key-chains.json`、`analysis.md`。
+
 验证：
 
 ```bash
@@ -73,7 +83,7 @@ bash run_demo.sh
 
 ## 下一步
 
-1. 把 `compile_commands.json` 从 demo 样例换成固定 commit 的 libuv / Redis 编译数据库。
+1. libuv v1.50.0 已用 CMake 生成真实 compile_commands 并跑通流水线；下一步固定 Redis 编译数据库。
 2. 用 `clang_pipeline/stage_runner.py` 的同一契约替换各阶段实现，加入 GitHub Actions 回归验证。
 3. `demo/graph.json` 已接入 `call_chain_demo`（`repository.name=clang-pipeline-demo`）；下一步把 libuv / Redis fixture 也替换为真实 compile_commands 产物。
 

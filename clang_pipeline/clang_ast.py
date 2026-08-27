@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shlex
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -109,16 +110,10 @@ def node_location(
     node: dict[str, Any],
     default_file: str | None = None,
 ) -> dict[str, Any] | None:
-    kind = node.get("kind")
-    if kind in {"CallExpr", "MemberExpr", "BinaryOperator", "UnaryOperator"}:
-        loc = range_begin(node)
-        loc = _loc_with_file(root, loc, default_file)
-        if loc.get("file"):
-            return make_source_location(root, loc)
     loc = node.get("loc")
     if not loc or not loc.get("file"):
         loc = range_begin(node)
-        loc = _loc_with_file(root, loc, default_file)
+    loc = _loc_with_file(root, loc, default_file)
     if not loc or not loc.get("file"):
         return None
     return make_source_location(root, loc)
@@ -169,7 +164,7 @@ def is_fptr_qual_type(type_info: Any) -> bool:
 
 
 def run_clang_ast(unit: dict[str, Any], root: Path) -> dict[str, Any]:
-    command = list(unit.get("arguments", []))
+    command = _syntax_only_arguments(unit)
     command += ["-fsyntax-only", "-Xclang", "-ast-dump=json"]
     completed = subprocess.run(
         command,
@@ -190,7 +185,7 @@ def run_clang_ast(unit: dict[str, Any], root: Path) -> dict[str, Any]:
 
 
 def run_preprocessor_macros(unit: dict[str, Any], root: Path) -> list[str]:
-    command = list(unit.get("arguments", []))
+    command = _syntax_only_arguments(unit)
     command += ["-E", "-dM"]
     completed = subprocess.run(
         command,
@@ -205,3 +200,25 @@ def run_preprocessor_macros(unit: dict[str, Any], root: Path) -> list[str]:
             f"Clang 预处理失败: {unit.get('file')}\n{completed.stderr.strip()}"
         )
     return completed.stdout.splitlines()
+
+
+def _syntax_only_arguments(unit: dict[str, Any]) -> list[str]:
+    arguments = unit.get("arguments")
+    if not arguments:
+        arguments = shlex.split(unit.get("command", ""))
+    result: list[str] = []
+    index = 0
+    while index < len(arguments):
+        value = str(arguments[index])
+        if value in {"-c", "-MD", "-MMD", "-MQ"}:
+            index += 1
+            continue
+        if value in {"-o", "-MF", "-MT"}:
+            index += 2
+            continue
+        if value.startswith("-o") and len(value) > 2:
+            index += 1
+            continue
+        result.append(value)
+        index += 1
+    return result

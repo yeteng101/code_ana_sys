@@ -57,6 +57,20 @@ bash /Users/andye/Documents/ChatGPT/8.18huawei/run_demo.sh
 
 HTTP 联调也可以直接命中真实图：`call_chain_demo/examples/clang-request.json` 会以 `repository.name=clang-pipeline-demo` 请求 `POST /api/v1/call-chains`，服务端读取 `demo/graph.json` 返回带证据的调用链。
 
+## libuv 真实仓库
+
+```bash
+bash scripts/run_libuv.sh
+```
+
+脚本会固定 `libuv v1.50.0`，用 CMake 生成真实 `compile_commands.json`，再跑完整 7 阶段流水线。产物发布到 `demo/libuv/`：
+
+- `graph.json`：真实调用关系图
+- `architecture.json`：模块架构
+- `key-chains.json`：从 `uv_run` 出发的关键调用链
+- `analysis.md`：自然语言分析
+- `report.md`：完整报告
+
 ## 验证
 
 ```bash

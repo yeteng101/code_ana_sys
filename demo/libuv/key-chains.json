@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "entry": "uv_run",
+  "paths": [
+    {
+      "id": "key_f23284a8cb73",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv__queue_remove"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_11c97d8ecf69"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv__queue_remove",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_7ce651976695",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv__queue_init"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_133526609dd3"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv__queue_init",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_7ce651976695",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv__queue_init"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_29fe8422d4f8"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv__queue_init",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_37ca79f49e40",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:heap_min"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_57e36ff3483b"
+      ],
+      "summary": "uv_run -> uv__run_timers -> heap_min",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_d9c6855dc595",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:timer_heap"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_59c73f6c9716"
+      ],
+      "summary": "uv_run -> uv__run_timers -> timer_heap",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_72870ab372ae",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv_timer_again",
+        "fn:uv_timer_stop",
+        "fn:timer_heap"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_5e876449a198",
+        "e_6c6f7baa631f",
+        "e_1f260509d928"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv_timer_again -> uv_timer_stop -> timer_heap",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_3ffd953134cf",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv_timer_again",
+        "fn:uv_timer_stop",
+        "fn:heap_remove",
+        "fn:heap_node_swap"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_5e876449a198",
+        "e_6c6f7baa631f",
+        "e_dc360e0ca962",
+        "e_1a74789c4dfc"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv_timer_again -> uv_timer_stop -> heap_remove -> heap_node_swap",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_103dcf2c61c6",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv_timer_again",
+        "fn:uv_timer_stop",
+        "fn:heap_remove",
+        "cb:less_than"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_5e876449a198",
+        "e_6c6f7baa631f",
+        "e_dc360e0ca962",
+        "e_2982dab68d2e"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv_timer_again -> uv_timer_stop -> heap_remove -> less_than",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_103dcf2c61c6",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv_timer_again",
+        "fn:uv_timer_stop",
+        "fn:heap_remove",
+        "cb:less_than"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_5e876449a198",
+        "e_6c6f7baa631f",
+        "e_dc360e0ca962",
+        "e_6b06b2f039bc"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv_timer_again -> uv_timer_stop -> heap_remove -> less_than",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_3ffd953134cf",
+      "nodes": [
+        "fn:uv_run",
+        "fn:uv__run_timers",
+        "fn:uv_timer_again",
+        "fn:uv_timer_stop",
+        "fn:heap_remove",
+        "fn:heap_node_swap"
+      ],
+      "edges": [
+        "e_121e0a3a1786",
+        "e_5e876449a198",
+        "e_6c6f7baa631f",
+        "e_dc360e0ca962",
+        "e_ce738ddf91ad"
+      ],
+      "summary": "uv_run -> uv__run_timers -> uv_timer_again -> uv_timer_stop -> heap_remove -> heap_node_swap",
+      "termination_reason": "leaf"
+    }
+  ]
+}

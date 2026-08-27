@@ -18,18 +18,24 @@ def build_request(
     run_id: str,
     source_root: Path,
     build_profile: str,
+    repository: str = "local-cpp-demo",
+    commit: str = "local",
+    entry_symbols: list[str] | None = None,
 ) -> dict[str, Any]:
-    return {
+    request = {
         "schema_version": "1.0",
         "run_id": run_id,
         "task_id": "clang-pipeline-demo",
         "repo_root": str(Path.cwd().resolve()),
         "source_root": str(source_root.resolve()),
-        "repository": "local-cpp-demo",
-        "commit": "local",
+        "repository": repository,
+        "commit": commit,
         "build_profile": build_profile,
         "started_at": utc_now(),
     }
+    if entry_symbols:
+        request["entry_symbols"] = entry_symbols
+    return request
 
 
 def build_compile_commands(
@@ -149,13 +155,25 @@ def run_pipeline(
     build_profile: str = "demo-poll",
     defines: list[str] | None = None,
     publish_dir: Path | None = None,
+    compile_commands: list[dict[str, Any]] | None = None,
+    repository: str = "local-cpp-demo",
+    commit: str = "local",
+    entry_symbols: list[str] | None = None,
 ) -> dict[str, Any]:
     workspace.mkdir(parents=True, exist_ok=True)
-    request = build_request(run_id, source_root, build_profile)
+    request = build_request(
+        run_id,
+        source_root,
+        build_profile,
+        repository=repository,
+        commit=commit,
+        entry_symbols=entry_symbols,
+    )
     write_json(workspace / "request.json", request)
     write_json(
         workspace / "compile_commands.json",
-        build_compile_commands(source_root, build_profile, defines or []),
+        compile_commands
+        or build_compile_commands(source_root, build_profile, defines or []),
     )
     try:
         workspace_label = workspace.relative_to(Path.cwd()).as_posix()
@@ -172,7 +190,7 @@ def run_pipeline(
             cwd=Path.cwd(),
             capture_output=True,
             text=True,
-            timeout=180,
+            timeout=1200,
             check=False,
         )
         if completed.returncode != 0:
@@ -220,9 +238,16 @@ def main() -> None:
     parser.add_argument("--profile", default="demo-poll")
     parser.add_argument("--define", action="append", default=[])
     parser.add_argument("--publish", default="demo")
+    parser.add_argument("--compile-commands", default="")
+    parser.add_argument("--repository", default="local-cpp-demo")
+    parser.add_argument("--commit", default="local")
+    parser.add_argument("--entry", action="append", default=[])
     args = parser.parse_args()
 
     run_id = args.run_id or f"run_{__import__('datetime').datetime.now().strftime('%Y%m%d')}_clang_demo"
+    compile_commands = None
+    if args.compile_commands:
+        compile_commands = list(read_json(Path(args.compile_commands).resolve()))
     outcome = run_pipeline(
         source_root=Path(args.source).resolve(),
         workspace=Path(args.workspace).resolve(),
@@ -230,6 +255,10 @@ def main() -> None:
         build_profile=args.profile,
         defines=args.define,
         publish_dir=Path(args.publish) if args.publish else None,
+        compile_commands=compile_commands,
+        repository=args.repository,
+        commit=args.commit,
+        entry_symbols=args.entry or None,
     )
     print(json.dumps(outcome, ensure_ascii=False, indent=2))
 

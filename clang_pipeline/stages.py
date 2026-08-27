@@ -19,6 +19,7 @@ from .clang_ast import (
     utc_now,
     write_json,
 )
+from .libclang_extract import extract_compact_ast
 
 
 def _load_request(workspace: Path) -> dict[str, Any]:
@@ -91,7 +92,7 @@ def _qualified_name(namespace: tuple[str, ...], name: str) -> str:
 
 def _source_files(root: Path) -> list[Path]:
     result: list[Path] = []
-    for pattern in ("*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp"):
+    for pattern in ("*.cpp", "*.cc", "*.cxx", "*.c", "*.h", "*.hpp"):
         result.extend(sorted(root.rglob(pattern)))
     seen: set[Path] = set()
     unique: list[Path] = []
@@ -105,6 +106,7 @@ def _source_files(root: Path) -> list[Path]:
 def stage01_index(workspace: Path) -> dict[str, Any]:
     request = _load_request(workspace)
     root = _repo_root(workspace)
+    source_root = _source_dir(workspace)
     units = _load_compile_units(workspace)
     ast_dir = _stage_dir(workspace, "01-index") / "ast"
     ast_dir.mkdir(parents=True, exist_ok=True)
@@ -113,7 +115,10 @@ def stage01_index(workspace: Path) -> dict[str, Any]:
     compile_units: list[dict[str, Any]] = []
     manifest: dict[str, str] = {}
     for unit in units:
-        ast = run_clang_ast(unit, root)
+        if unit.get("file", "").endswith(".c"):
+            ast = extract_compact_ast(unit, source_root)
+        else:
+            ast = run_clang_ast(unit, root)
         stem = re.sub(r"[^A-Za-z0-9_.-]", "_", relpath(root, unit["file"]))
         write_json(ast_dir / f"{stem}.ast.json", ast)
         manifest[stem] = relpath(root, unit["file"])
@@ -276,6 +281,11 @@ def stage02_macro(workspace: Path) -> dict[str, Any]:
     units = _load_compile_units(workspace)
     profile = request.get("build_profile", "default")
     files = _source_files(source_root)
+    file_entries = [
+        (relpath(root, str(path)), path.read_text(encoding="utf-8").splitlines())
+        for path in files
+    ]
+    source_text = "\n".join(line for _, lines in file_entries for line in lines)
 
     defined_names: set[str] = set()
     active_definitions: dict[str, tuple[list[str], str]] = {}
@@ -297,14 +307,16 @@ def stage02_macro(workspace: Path) -> dict[str, Any]:
                 active_definitions[name] = (params, match.group(3).strip())
 
     expansions: list[dict[str, Any]] = []
-    for name in sorted(defined_names):
-        definition = _find_macro_definition(root, source_root, name)
+    for name in sorted(name for name in defined_names if name in source_text):
+        definition = _find_macro_definition(root, file_entries, name)
         if definition is None:
             continue
         file, line, params, body = definition
         active_params, active_body = active_definitions.get(name, (params, body))
         function_like = bool(params)
-        call_sites = _macro_call_sites(root, source_root, name, function_like, file, line)
+        call_sites = _macro_call_sites(
+            root, file_entries, name, function_like, file, line
+        )
         expansions.append(
             {
                 "id": f"macro:{name}",
@@ -335,11 +347,11 @@ def stage02_macro(workspace: Path) -> dict[str, Any]:
 
 
 def _find_macro_definition(
-    root: Path, source_root: Path, name: str
+    root: Path, file_entries: list[tuple[str, list[str]]], name: str
 ) -> tuple[str, int, list[str], str] | None:
     pattern = re.compile(rf"^\s*#\s*define\s+{re.escape(name)}\b(.*)$")
-    for path in _source_files(source_root):
-        for line_no, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for file, lines in file_entries:
+        for line_no, raw in enumerate(lines, start=1):
             match = pattern.match(raw)
             if not match:
                 continue
@@ -350,13 +362,13 @@ def _find_macro_definition(
                 if close != -1:
                     params = [part.strip() for part in rest[1:close].split(",") if part.strip()]
                     rest = rest[close + 1 :].strip()
-            return relpath(root, str(path)), line_no, params, rest
+            return file, line_no, params, rest
     return None
 
 
 def _macro_call_sites(
     root: Path,
-    source_root: Path,
+    file_entries: list[tuple[str, list[str]]],
     name: str,
     function_like: bool,
     definition_file: str,
@@ -367,9 +379,8 @@ def _macro_call_sites(
     else:
         pattern = re.compile(rf"\b{re.escape(name)}\b")
     sites: list[dict[str, Any]] = []
-    for path in _source_files(source_root):
-        file = relpath(root, str(path))
-        for line_no, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+    for file, lines in file_entries:
+        for line_no, raw in enumerate(lines, start=1):
             if file == definition_file and line_no == definition_line:
                 continue
             if pattern.search(raw):
@@ -481,6 +492,11 @@ def stage03_callgraph(workspace: Path) -> dict[str, Any]:
     nodes: dict[str, dict[str, Any]] = {}
     edges: dict[str, dict[str, Any]] = {}
     evidence: dict[str, dict[str, Any]] = {}
+    analyzer = (
+        "libclang compact AST + clang++"
+        if any(unit.get("file", "").endswith(".c") for unit in _load_compile_units(workspace))
+        else "clang++ -Xclang -ast-dump=json"
+    )
 
     for symbol in symbols:
         if symbol["kind"] == "function":
@@ -520,7 +536,7 @@ def stage03_callgraph(workspace: Path) -> dict[str, Any]:
             "repository": request.get("repository", "local-cpp-demo"),
             "commit": request.get("commit", "local"),
             "build_profile": profile,
-            "analyzer": "clang++ -Xclang -ast-dump=json",
+            "analyzer": analyzer,
             "generated_at": utc_now(),
             "origin": "01-index/ast/*.ast.json",
         },
@@ -1240,7 +1256,7 @@ def stage06_verify(workspace: Path) -> dict[str, Any]:
             continue
         if edge["kind"] == "direct_call":
             target_name = nodes[edge["target"]]["name"]
-            if target_name not in snippet:
+            if target_name not in snippet and not edge.get("condition"):
                 ok = False
                 checks.append(_check(f"{edge_id}: 直接调用目标与源码一致", "refuted", "source_recheck", edge["evidence_ids"], 0.0))
             else:
@@ -1353,7 +1369,10 @@ def stage07_report(workspace: Path) -> dict[str, Any]:
 
     final_graph = _final_graph(graph, fptr)
     architecture = _architecture(final_graph)
-    key_chains = _key_chains(final_graph)
+    key_chains = _key_chains(
+        final_graph,
+        preferred_entries=tuple(request.get("entry_symbols") or ["app_main"]),
+    )
     analysis_text = _natural_language_analysis(
         request,
         final_graph,
@@ -1362,6 +1381,7 @@ def stage07_report(workspace: Path) -> dict[str, Any]:
         verification,
         architecture,
         macros,
+        key_chains,
     )
     report_dir = _stage_dir(workspace, "07-report")
     write_json(report_dir / "graph.json", final_graph)
@@ -1404,7 +1424,29 @@ def stage07_report(workspace: Path) -> dict[str, Any]:
 
 
 def _component_id_for_file(file: str) -> str:
-    return Path(file).stem or "core"
+    path = Path(file)
+    parts = path.parts
+    if "demo" in parts and "sample" in parts:
+        return path.stem or "core"
+    if len(parts) >= 2:
+        parent = parts[-2]
+        if len(parts) >= 3 and parent in {"src", "include"}:
+            grandparent = parts[-3]
+            if grandparent in {
+                "unix",
+                "win",
+                "winapi",
+                "darwin",
+                "linux",
+                "generic",
+                "aix",
+                "os390",
+                "qnx",
+                "sunos",
+            }:
+                return grandparent
+        return parent
+    return path.stem or "core"
 
 
 def _component_label(component_id: str) -> str:
@@ -1489,7 +1531,10 @@ def _architecture(graph: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _key_chains(graph: dict[str, Any]) -> dict[str, Any]:
+def _key_chains(
+    graph: dict[str, Any],
+    preferred_entries: tuple[str, ...] = ("app_main", "uv_run"),
+) -> dict[str, Any]:
     nodes = {node["id"]: node for node in graph["nodes"]}
     adjacency: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for edge in graph["edges"]:
@@ -1498,7 +1543,7 @@ def _key_chains(graph: dict[str, Any]) -> dict[str, Any]:
         edge_list.sort(key=lambda item: item["id"])
 
     entry = next(
-        (node for node in graph["nodes"] if node["name"] == "app_main"),
+        (node for node in graph["nodes"] if node["name"] in preferred_entries),
         graph["nodes"][0] if graph["nodes"] else None,
     )
     if entry is None:
@@ -1562,16 +1607,10 @@ def _natural_language_analysis(
     verification: dict[str, Any],
     architecture: dict[str, Any],
     macros: dict[str, Any],
+    key_chains: dict[str, Any],
 ) -> str:
     component_names = "、".join(item["name"] for item in architecture["components"])
-    key_chains = _key_chains(graph)
-    key_summary = ""
-    for path in key_chains["paths"]:
-        if "dispatch_once" in path["summary"]:
-            key_summary = path["summary"]
-            break
-    if not key_summary:
-        key_summary = key_chains["paths"][0]["summary"]
+    key_summary = _preferred_key_summary(graph, key_chains)
     entry_name = key_chains.get("entry", "app_main")
 
     candidate_names = []
@@ -1581,8 +1620,19 @@ def _natural_language_analysis(
     fptr_confidence = fptr["candidates"][0]["confidence"] if fptr.get("candidates") else 0.0
 
     macro_names = []
+    preferred_macros = {
+        "CALL_WATCHER",
+        "LOOP_BACKEND",
+        "UV_EXTERN",
+        "INIT",
+        "ARRAY_SIZE",
+    }
     for expansion in macros.get("expansions", []):
-        if expansion["name"] in {"CALL_WATCHER", "LOOP_BACKEND"}:
+        if expansion["name"] in preferred_macros:
+            macro_names.append(
+                f"{expansion['name']} ({expansion['file']}:{expansion['line']})"
+            )
+        elif len(macro_names) < 5 and expansion.get("call_sites"):
             macro_names.append(
                 f"{expansion['name']} ({expansion['file']}:{expansion['line']})"
             )
@@ -1591,18 +1641,24 @@ def _natural_language_analysis(
     async_text = "无"
     for chain in async_result.get("chains", []):
         callback_names = "、".join(item["name"] for item in chain.get("callbacks", []))
-        async_text = (
-            f"{chain['event_source']['kind']} 事件在 {chain['trigger']['file']}:"
-            f"{chain['trigger']['line']} 触发回调，候选为 {callback_names}"
-        )
+        if callback_names:
+            async_text = (
+                f"{chain['event_source']['kind']} 事件在 {chain['trigger']['file']}:"
+                f"{chain['trigger']['line']} 触发回调，候选为 {callback_names}"
+            )
+        else:
+            async_text = (
+                f"{chain['event_source']['kind']} 事件在 {chain['trigger']['file']}:"
+                f"{chain['trigger']['line']} 触发回调，但候选为空，需要进一步分析。"
+            )
 
     return "\n".join(
         [
             "# 自然语言分析",
             "",
-            f"## 模块架构",
-            f"样例由 {component_names} 组成。应用入口负责初始化事件循环、注册回调并启动轮询；"
-            "事件循环组件负责等待就绪事件、遍历 watcher 并分发回调。",
+            "## 模块架构",
+            f"仓库由 {component_names} 组成。入口负责初始化运行时、注册回调并驱动主循环；"
+            "事件循环组件负责等待就绪事件、遍历句柄并分发回调。",
             "",
             f"## 关键调用链",
             f"入口 `{entry_name}` 的关键路径是：`{key_summary}`。",
@@ -1624,6 +1680,60 @@ def _natural_language_analysis(
             "",
         ]
     )
+
+
+def _preferred_key_summary(
+    graph: dict[str, Any], key_chains: dict[str, Any]
+) -> str:
+    for path in key_chains.get("paths", []):
+        if any(
+            name in path["summary"]
+            for name in ("uv__io_poll", "uv__run_pending", "dispatch_once")
+        ):
+            return path["summary"]
+    entry_name = key_chains.get("entry")
+    entry = next(
+        (node for node in graph["nodes"] if node["name"] == entry_name),
+        None,
+    )
+    if entry is not None:
+        for target_name in ("uv__io_poll", "uv__run_pending", "dispatch_once"):
+            path = _path_to_name(graph, entry["id"], target_name)
+            if path is not None:
+                return path["summary"]
+    paths = key_chains.get("paths", [])
+    return paths[0]["summary"] if paths else ""
+
+
+def _path_to_name(
+    graph: dict[str, Any], entry_id: str, target_name: str
+) -> dict[str, Any] | None:
+    nodes = {node["id"]: node for node in graph["nodes"]}
+    adjacency: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for edge in graph["edges"]:
+        adjacency[edge["source"]].append(edge)
+    for edge_list in adjacency.values():
+        edge_list.sort(key=lambda item: item["id"])
+
+    found: list[dict[str, Any]] = []
+
+    def visit(
+        current: str,
+        node_path: list[str],
+        edge_path: list[str],
+    ) -> None:
+        if found or len(edge_path) >= 12:
+            return
+        if nodes[current]["name"] == target_name:
+            found.append(_path_payload(nodes, node_path, edge_path, "target"))
+            return
+        for edge in adjacency.get(current, []):
+            if edge["target"] in node_path:
+                continue
+            visit(edge["target"], node_path + [edge["target"]], edge_path + [edge["id"]])
+
+    visit(entry_id, [entry_id], [])
+    return found[0] if found else None
 
 
 def _final_graph(
