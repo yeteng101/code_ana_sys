@@ -6,7 +6,7 @@
     "commit": "local",
     "build_profile": "demo-poll",
     "analyzer": "clang++ -Xclang -ast-dump=json",
-    "generated_at": "2026-08-27T07:48:56Z",
+    "generated_at": "2026-08-27T07:58:20Z",
     "origin": "01-index/ast/*.ast.json"
   },
   "nodes": [

@@ -53,6 +53,22 @@ python3 -m unittest discover -s clang_pipeline/tests -v
 
 交付物：`demo/graph.json`（调用关系图）、`demo/architecture.json`（模块架构）、`demo/key-chains.json`（关键调用链）、`demo/analysis.md`（自然语言分析）、`demo/report.md`（完整报告）。
 
+## 其他电脑直接运行
+
+仓库只依赖 Python 标准库，不需要 `pip install`。换一台电脑运行时，只需要：
+
+1. Python 3.9+：macOS 自带 `/usr/bin/python3`；Linux 可用 `apt install python3`。
+2. Clang：macOS 执行 `xcode-select --install`；Ubuntu/Debian 执行 `sudo apt install clang`；Fedora 执行 `sudo dnf install clang`。
+3. 克隆并运行：
+
+```bash
+git clone https://github.com/yeteng101/code_ana_sys.git
+cd code_ana_sys
+bash run_demo.sh
+```
+
+`run_demo.sh` 会自动检查 `python3` 和 `clang++`，缺少时给出安装提示。Windows 建议使用 WSL 2 或安装 LLVM 后从命令行运行。
+
 接口约定：分析请求见 `schemas/analysis-request.schema.json`，任务状态见 `run-result.schema.json`，调用关系图见 `graph.schema.json`，内部流水线见 `pipeline.schema.json`。
 
 ## 下一步
