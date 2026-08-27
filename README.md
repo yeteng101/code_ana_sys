@@ -14,6 +14,102 @@
 - `clang_pipeline/`：7 阶段 Clang 流水线（index → macro → callgraph → fptr → async → verify → report）。
 - `scripts/run_libuv.sh`：一键 clone libuv v1.50.0、生成 compile_commands 并运行流水线。
 
+# 代码逆向分析 Agent 接口与 JSON 规范
+
+## 1. 对外 JSON 接口
+
+对外接口只定义 JSON 消息，不绑定具体传输方式。调用方提交一个分析任务，服务端返回任务编号；之后可以查询任务状态、调用关系图、中间产物，并对分析结果进行自然语言提问。
+
+### 1.1 提交分析请求
+
+请求 JSON：
+
+```json
+{
+  "schema_version": "1.0",
+  "task_id": "demo-libuv-loop",
+  "repository": {
+    "url": "https://github.com/libuv/libuv",
+    "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+    "language": "c"
+  },
+  "build_profiles": [
+    {
+      "name": "macos-clang",
+      "defines": ["_GNU_SOURCE"],
+      "target": "default"
+    }
+  ],
+  "query": {
+    "type": "call_chain",
+    "entry_symbols": ["uv_run"],
+    "depth": 8,
+    "include_async": true,
+    "include_function_pointers": true
+  }
+}
+```
+
+响应 JSON：
+
+```json
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "task_id": "demo-libuv-loop",
+  "status": "queued"
+}
+```
+
+### 1.2 查询分析结果
+
+请求只需要任务编号：
+
+```json
+{
+  "run_id": "run_libuv_1.50.0"
+}
+```
+
+响应 JSON：
+
+```json
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "task_id": "demo-libuv-loop",
+  "status": "partial",
+  "summary": "uv_run 驱动事件循环，等待就绪事件并分发回调。",
+  "findings": [
+    {
+      "kind": "direct_call",
+      "source": "fn:uv_run",
+      "target": "fn:uv__io_poll",
+      "confidence": 1.0,
+      "evidence_ids": ["ev_a3dcf6ec0abb"]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_a3dcf6ec0abb",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 460,
+        "snippet": "uv__io_poll(loop, timeout);"
+      }
+    }
+  ],
+  "warnings": []
+}
+```
+
+### 1.3 获取调用关系图
+
+调用图是完整 JSON 图：
+
+```json
+{
 
 ## Demo
 
