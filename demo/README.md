@@ -1,35 +1,67 @@
-# Demo 验证
+# Clang 7 阶段流水线 Demo
 
-本 Demo 先用固定的、人工复核过的期望结果验证接口和报告格式；接入真实 AST/编译数据库后，将这些 fixture 替换为分析器 artifact。
+本目录的 Clang 7 阶段 Demo 不再使用占位 fixture。`demo/sample/` 是一个自包含的 C++ 事件循环样例，`clang_pipeline/` 调用 Clang 的 `-ast-dump=json` 和 `-E -dM` 真正解析源码，按 7 个阶段接力产出 JSON。`libuv-result.json` / `redis-result.json` 仍是旧 HTTP 契约样例，不作为真实分析结论。
 
-## 用例 1：libuv 事件循环
-
-问题：`uv_run` 如何驱动一次 Unix I/O 事件循环？
-
-期望链：
+## 样例
 
 ```text
-uv_run -> uv__run_pending -> uv__run_prepare -> uv__io_poll
-       -> watcher callback -> uv__run_check -> uv__run_closing_handles
+app_main
+  -> loop_init
+  -> loop_register(&loop, 0, on_readable)
+  -> loop_register(&loop, 1, on_writable)
+  -> loop_register(&loop, 2, on_once)
+  -> loop_run
+       -> wait_for_events
+       -> run_ready_watchers
+            -> dispatch_once
+                 -> Watcher::callback (CALL_WATCHER)
+                      -> on_readable / on_writable / on_once
 ```
 
-## 用例 2：Redis 客户端请求
+`CALL_WATCHER` 是函数式宏；Clang 的 AST 展开记录让调用边挂上 `macro_stack: ["CALL_WATCHER"]`。
 
-问题：Redis 如何从 socket 事件进入命令执行？
+## 运行
 
-期望链：
-
-```text
-aeMain -> aeProcessEvents -> aeApiPoll -> readQueryFromClient
-       -> processInputBuffer -> processCommand -> command implementation
+```bash
+cd /Users/andye/Documents/ChatGPT/8.18huawei
+python3 -m clang_pipeline.pipeline \
+  --source demo/sample \
+  --workspace demo/run_clang_demo \
+  --run-id run_20260827_clang_demo \
+  --publish demo
 ```
 
-## 验证规则
+从任何目录运行一键脚本：
 
-1. 每条边必须有源码文件和行号证据。
-2. `watcher callback` 和 `readQueryFromClient` 使用 `callback_edge`，不能标为普通直接调用。
-3. epoll/kqueue/select 的实现边必须带 build profile 条件。
-4. 函数指针无法唯一解析时输出候选集合和低置信度，而不是猜测唯一目标。
-5. 同一输入重复运行时，结果中的节点和边排序稳定。
+```bash
+bash /Users/andye/Documents/ChatGPT/8.18huawei/run_demo.sh
+```
 
-样例请求见 `libuv-request.json`，样例结果见 `libuv-result.json` 与 `redis-result.json`。
+运行后：
+
+- `demo/run_clang_demo/01-index/symbols.json`：Clang AST 索引
+- `demo/run_clang_demo/02-macro/macros.json`：宏定义、展开和条件编译
+- `demo/run_clang_demo/03-callgraph/callgraph.json`：带证据的调用图
+- `demo/run_clang_demo/04-fptr/fptr-candidates.json`：函数指针候选
+- `demo/run_clang_demo/05-async/async-chains.json`：异步回调链
+- `demo/run_clang_demo/06-verify/verification.json`：交叉验证
+- `demo/run_clang_demo/07-report/`：报告、图、模块架构、关键链、自然语言分析
+- `demo/report.md`、`demo/graph.json`、`demo/graph.mmd`、`demo/run-result.json`、`demo/architecture.json`、`demo/key-chains.json`、`demo/analysis.md`：发布的交付物
+
+07-report 现在包含四类逆向分析结论：
+
+- 模块架构：按文件把函数归入 `event_loop` / `app` 组件，并输出组件依赖。
+- 关键调用链：从 `app_main` 出发提取到事件循环和回调候选的完整路径。
+- 自然语言分析：用证据图生成专家式解释，覆盖架构、关键路径、异步回调、函数指针和宏。
+- 调用关系图：Mermaid 按模块分组，直接调用用实线，宏/回调触发用虚线。
+
+HTTP 联调也可以直接命中真实图：`call_chain_demo/examples/clang-request.json` 会以 `repository.name=clang-pipeline-demo` 请求 `POST /api/v1/call-chains`，服务端读取 `demo/graph.json` 返回带证据的调用链。
+
+## 验证
+
+```bash
+python3 -m unittest discover -s clang_pipeline/tests -v
+python3 -m unittest discover -s call_chain_demo/tests -v
+```
+
+每条调用边都带 `evidence`：文件、行号、原始代码片段。函数指针无法唯一解析时输出候选集合和 `0.6` 置信度，不猜测唯一目标。

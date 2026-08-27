@@ -1,0 +1,325 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_20260827_clang_demo",
+  "task_id": "clang-pipeline-demo",
+  "status": "succeeded",
+  "summary": "Clang 从 AST 中提取 C++ 函数调用关系，并通过函数指针赋值流还原事件循环回调链。",
+  "findings": [
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::run_ready_watchers",
+      "target": "fn:demo::dispatch_once",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_81efb252595d"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_stop",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_d61a532389ff"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_da74b82fb9e8"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_b8b0d8d19f85"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::loop_run",
+      "target": "fn:demo::wait_for_events",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_e3eef1e5713e"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_a2169417fd49"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_run",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_82211e5f28dc"
+      ]
+    },
+    {
+      "kind": "callback_edge",
+      "source": "fn:demo::dispatch_once",
+      "target": "cb:Watcher::callback",
+      "condition": "CALL_WATCHER",
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_0027cd5acd0f",
+        "ev_2907f5c10837",
+        "ev_2bc375cf27d5",
+        "ev_da515d150c0c"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_init",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_79a6829a0ac1"
+      ]
+    },
+    {
+      "kind": "direct_call",
+      "source": "fn:demo::loop_run",
+      "target": "fn:demo::run_ready_watchers",
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_c7caa85aaeb5"
+      ]
+    },
+    {
+      "kind": "callback_edge",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_once",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_da515d150c0c"
+      ]
+    },
+    {
+      "kind": "callback_edge",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_readable",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_2907f5c10837"
+      ]
+    },
+    {
+      "kind": "callback_edge",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_writable",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_0027cd5acd0f"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_0027cd5acd0f",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_2907f5c10837",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_2bc375cf27d5",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 19,
+        "column": 5,
+        "snippet": "CALL_WATCHER(watcher, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll",
+      "macro_stack": [
+        "CALL_WATCHER"
+      ]
+    },
+    {
+      "id": "ev_79a6829a0ac1",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 25,
+        "column": 5,
+        "snippet": "loop_init(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_81efb252595d",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 26,
+        "column": 13,
+        "snippet": "dispatch_once(loop, watcher, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_82211e5f28dc",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 29,
+        "column": 5,
+        "snippet": "loop_run(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_a2169417fd49",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_b8b0d8d19f85",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_c7caa85aaeb5",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 48,
+        "column": 9,
+        "snippet": "run_ready_watchers(loop, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_d61a532389ff",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 30,
+        "column": 5,
+        "snippet": "loop_stop(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_da515d150c0c",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_da74b82fb9e8",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_e3eef1e5713e",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 47,
+        "column": 22,
+        "snippet": "int events = wait_for_events(loop, 100);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    }
+  ],
+  "stats": {
+    "started_at": "2026-08-27T07:48:55Z",
+    "finished_at": "2026-08-27T07:48:56Z",
+    "duration_ms": 0,
+    "symbols": 24,
+    "nodes": 12,
+    "edges": 13
+  },
+  "warnings": []
+}

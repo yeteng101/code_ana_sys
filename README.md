@@ -6,26 +6,60 @@
 
 - `docs/source-analysis.md`：libuv / Redis 源码结构和关键调用链基线。
 - `docs/architecture.md`：Subagent 分工、执行协议、证据和验收规范。
-- `schemas/`：分析请求与 Agent 结果 JSON Schema。
-- `demo/`：libuv `uv_run`、Redis 客户端请求链的 Demo fixture 和 Mermaid 报告。
+- `docs/interfaces.md`：对外 / 对内接口与 JSON 规范总文档（对接其他组先看这里）。
+- `schemas/`：接口与流水线的完整 JSON Schema（分析请求、任务结果、证据图、问答、各阶段产物、pipeline 配置）。
+- `demo/`：libuv `uv_run`、Redis 客户端请求链的 Demo fixture、调用图 / 问答 / pipeline 示例。
+- `demo/sample/`：自包含的 C++ 事件循环样例，Clang 流水线直接分析这个仓库。
+- `clang_pipeline/`：7 阶段 Clang 流水线（index → macro → callgraph → fptr → async → verify → report）。
 - `Code-Reverse-Agent-汇报.pptx`：面向初学者的汇报 PPT。
 - `scripts/build_ppt.js`：技术版 PPT 生成脚本。
 - `scripts/build_beginner_ppt.js`：初学者版 PPT 生成脚本。
 
 ## Demo
 
-当前 Demo 用人工复核的 fixture 验证接口和报告格式。`demo/*.json` 中的证据行号是占位值，接入固定 commit 的源码索引器后必须替换为精确行号。
+当前 Demo 用 Clang 真正解析 `demo/sample/` 里的 C++ 代码，跑完 7 个流水线阶段，产出模块架构、关键调用链、自然语言分析、带源码证据的调用图、函数指针候选、异步回调和验证报告。生成的产物在 `demo/run_clang_demo/`，报告与图同步发布到 `demo/`。
 
 ```text
-libuv: uv_run -> uv__io_poll -> watcher.callback
-Redis: aeMain -> aeApiPoll -> readQueryFromClient -> processCommand
+app_main -> loop_run -> wait_for_events
+app_main -> loop_register  (callback registration)
+dispatch_once --CALL_WATCHER--> Watcher::callback -> on_readable / on_writable / on_once
 ```
+
+运行：
+
+```bash
+cd /Users/andye/Documents/ChatGPT/8.18huawei
+```
+
+```bash
+python3 -m clang_pipeline.pipeline \
+  --source demo/sample \
+  --workspace demo/run_clang_demo \
+  --run-id run_20260827_clang_demo \
+  --publish demo
+```
+
+也可以从任何目录直接跑一键脚本（脚本会自动进入仓库根目录）：
+
+```bash
+bash /Users/andye/Documents/ChatGPT/8.18huawei/run_demo.sh
+```
+
+验证：
+
+```bash
+python3 -m unittest discover -s clang_pipeline/tests -v
+```
+
+交付物：`demo/graph.json`（调用关系图）、`demo/architecture.json`（模块架构）、`demo/key-chains.json`（关键调用链）、`demo/analysis.md`（自然语言分析）、`demo/report.md`（完整报告）。
+
+接口约定：分析请求见 `schemas/analysis-request.schema.json`，任务状态见 `run-result.schema.json`，调用关系图见 `graph.schema.json`，内部流水线见 `pipeline.schema.json`。
 
 ## 下一步
 
-1. 固定 libuv / Redis commit 和编译配置。
-2. 接入 AST/IR、compile database 和宏配置分析。
-3. 用真实源码证据替换 fixture，并加入 GitHub Actions 回归验证。
+1. 把 `compile_commands.json` 从 demo 样例换成固定 commit 的 libuv / Redis 编译数据库。
+2. 用 `clang_pipeline/stage_runner.py` 的同一契约替换各阶段实现，加入 GitHub Actions 回归验证。
+3. `demo/graph.json` 已接入 `call_chain_demo`（`repository.name=clang-pipeline-demo`）；下一步把 libuv / Redis fixture 也替换为真实 compile_commands 产物。
 
 ## 许可证
 

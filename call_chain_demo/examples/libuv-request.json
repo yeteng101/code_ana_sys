@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "task_libuv_chain_001",
+  "action": "get_call_chains",
+  "repository": {
+    "provider": "github",
+    "name": "libuv/libuv",
+    "commit_sha": "demo-libuv-1x",
+    "graph_snapshot_id": "libuv_fixture_crg_v1"
+  },
+  "targets": [
+    {
+      "target_id": "target_uv_poll",
+      "node_id": "fn_uv_io_poll",
+      "type": "function",
+      "name": "uv__io_poll",
+      "qualified_name": "libuv.uv__io_poll",
+      "signature": "void uv__io_poll(uv_loop_t *loop, int timeout)",
+      "location": {"file": "src/unix/linux.c", "start_line": 1400, "end_line": 1700},
+      "role": "changed_function"
+    }
+  ],
+  "analysis": {
+    "direction": "both",
+    "max_depth": 6,
+    "max_paths_per_target": 10,
+    "include_callbacks": true,
+    "include_indirect_calls": true,
+    "include_external_calls": false,
+    "build_profile": "linux-clang-debug"
+  }
+}

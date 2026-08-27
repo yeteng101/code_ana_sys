@@ -1,0 +1,14 @@
+{
+  "run_id": "run_20260826_demo_libuv",
+  "question": "uv_async_send 之后回调在哪个线程、什么时机被调用？",
+  "answer": "uv_async_send 会向事件循环的唤醒管道写入一个字节；事件循环线程在 poll 阶段收到该事件后执行 uv__async_io，并从 async 队列取出注册的回调逐一调用。",
+  "confidence": 0.85,
+  "evidence_chain": [
+    {"id": "ev_10", "kind": "call_site", "location": {"file": "src/unix/async.c", "line": 1, "snippet": "uv__async_io(loop, w, events);"}, "role": "supports", "build_profile": "linux-debug"},
+    {"id": "ev_11", "kind": "call_site", "location": {"file": "src/unix/async.c", "line": 1, "snippet": "async_cb(loop, w, events);"}, "role": "supports", "build_profile": "linux-debug"}
+  ],
+  "paths": [
+    {"source": "uv_async_send", "target": "async_cb", "edge_ids": ["e10", "e11"]}
+  ],
+  "disclaimer": "fixture：行号为占位值；回调触发时机为推断，需源码验证。"
+}

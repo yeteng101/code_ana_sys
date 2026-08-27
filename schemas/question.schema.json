@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/question.schema.json",
+  "title": "Question Request and Response",
+  "description": "POST /api/v1/runs/{run_id}/questions 的请求与响应。",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "required": ["question"],
+      "properties": {
+        "question": {"type": "string", "minLength": 1},
+        "focus": {"type": "array", "items": {"type": "string"}, "description": "限定关注的符号，如 [\"uv_async_send\"]"},
+        "max_paths": {"type": "integer", "minimum": 1, "maximum": 50, "default": 5}
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["run_id", "question", "answer", "confidence", "evidence_chain"],
+      "properties": {
+        "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+        "question": {"type": "string"},
+        "answer": {"type": "string", "description": "自然语言答案"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_chain": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/evidence"},
+          "description": "按推理顺序排列的证据链"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "target"],
+            "properties": {
+              "source": {"type": "string"},
+              "target": {"type": "string"},
+              "edge_ids": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": false
+          }
+        },
+        "disclaimer": {"type": "string", "description": "标注哪些部分是推断而非源码事实"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

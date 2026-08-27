@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/fptr-candidates.schema.json",
+  "title": "FunctionPointerCandidates（函数指针分析产物）",
+  "description": "04-fptr 阶段产物：函数指针调用点、赋值点与候选目标。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "stage", "status", "generated_at", "candidates"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "stage": {"const": "04-fptr"},
+    "status": {"$ref": "common.schema.json#/$defs/status"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/evidence"}
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "call_site",
+          "field",
+          "assignment_sites",
+          "candidate_targets",
+          "resolved",
+          "confidence"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "call_site": {"$ref": "common.schema.json#/$defs/source_location"},
+          "field": {"type": "string", "description": "例如 watcher.callback"},
+          "assignment_sites": {
+            "type": "array",
+            "items": {"$ref": "common.schema.json#/$defs/source_location"}
+          },
+          "candidate_targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "file", "line", "confidence"],
+              "properties": {
+                "name": {"type": "string"},
+                "file": {"type": "string"},
+                "line": {"type": "integer", "minimum": 1},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "evidence_ids": {"type": "array", "items": {"type": "string"}}
+              },
+              "additionalProperties": false
+            }
+          },
+          "resolved": {"type": "boolean"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

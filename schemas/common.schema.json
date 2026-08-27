@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/common.schema.json",
+  "title": "CodeReverseAgent Common Definitions",
+  "description": "对外接口与对内流水线共享的 JSON 定义：版本、任务标识、源码位置、证据、结论、错误与产物。",
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "examples": ["1.0"]
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^run_[0-9]{8}_[A-Za-z0-9_-]{1,64}$",
+      "description": "服务端生成的分析任务 ID，例如 run_20260826_uv_run"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "调用方自定义的任务标识，用于幂等去重"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "running", "succeeded", "partial", "failed"]
+    },
+    "source_location": {
+      "type": "object",
+      "description": "源码中的一处精确位置，是证据的锚点",
+      "required": ["file"],
+      "properties": {
+        "file": {"type": "string", "description": "相对仓库根目录的路径"},
+        "line": {"type": "integer", "minimum": 1},
+        "column": {"type": "integer", "minimum": 1},
+        "start_line": {"type": "integer", "minimum": 1},
+        "end_line": {"type": "integer", "minimum": 1},
+        "start_column": {"type": "integer", "minimum": 1},
+        "end_column": {"type": "integer", "minimum": 1},
+        "snippet": {"type": "string", "description": "该处的原始代码片段"},
+        "ast_id": {"type": "string", "description": "Clang AST 节点 ID（如可用）"},
+        "snippet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "anyOf": [
+        {"required": ["line"]},
+        {"required": ["start_line"]}
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "description": "一条可复核的证据：结论必须有源码出处",
+      "required": ["id", "kind", "location"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {
+          "type": "string",
+          "enum": [
+            "declaration",
+            "call_site",
+            "assignment",
+            "registration",
+            "trigger",
+            "macro_expansion",
+            "conditional_compilation",
+            "type_constraint",
+            "control_flow",
+            "build_flag"
+          ]
+        },
+        "location": {"$ref": "#/$defs/source_location"},
+        "role": {"type": "string", "enum": ["supports", "refutes", "context"], "default": "supports"},
+        "build_profile": {"type": "string", "description": "该证据生效的构建配置"},
+        "macro_stack": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "展开该处代码时处于激活态的宏栈"
+        },
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "description": "一条分析结论：一条调用边、一条回调链或一个候选目标",
+      "required": ["kind", "confidence", "evidence_ids"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "direct_call",
+            "callback_edge",
+            "registers",
+            "completes",
+            "implementation_of",
+            "data_flow",
+            "macro_expansion",
+            "external"
+          ]
+        },
+        "source": {"type": "string"},
+        "target": {"type": "string"},
+        "event": {"type": "string"},
+        "condition": {"type": "string"},
+        "execution_context": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "bad_request",
+            "validation_error",
+            "unauthorized",
+            "not_found",
+            "conflict",
+            "rate_limited",
+            "run_failed",
+            "timeout",
+            "internal_error"
+          ]
+        },
+        "message": {"type": "string"},
+        "details": {"type": "object"},
+        "run_id": {"$ref": "#/$defs/run_id"}
+      },
+      "additionalProperties": false
+    },
+    "artifact_ref": {
+      "type": "object",
+      "description": "对一份 JSON 产物的引用（含校验与下载信息）",
+      "required": ["name", "schema", "sha256"],
+      "properties": {
+        "name": {"type": "string"},
+        "schema": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "url": {"type": "string", "format": "uri"},
+        "size_bytes": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}

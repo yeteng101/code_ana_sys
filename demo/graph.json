@@ -1,0 +1,525 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_20260827_clang_demo",
+  "meta": {
+    "repository": "local-cpp-demo",
+    "commit": "local",
+    "build_profile": "demo-poll",
+    "analyzer": "clang++ -Xclang -ast-dump=json",
+    "generated_at": "2026-08-27T07:48:56Z",
+    "origin": "01-index/ast/*.ast.json"
+  },
+  "nodes": [
+    {
+      "id": "cb:Watcher::callback",
+      "kind": "callback",
+      "name": "Watcher::callback",
+      "file": "demo/sample/event_loop.h",
+      "line": 19,
+      "signature": "EventHandler"
+    },
+    {
+      "id": "fn:demo::app_main",
+      "kind": "function",
+      "name": "app_main",
+      "file": "demo/sample/app.cpp",
+      "line": 23,
+      "signature": "void ()",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::dispatch_once",
+      "kind": "function",
+      "name": "dispatch_once",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 17,
+      "signature": "void (EventLoop *, Watcher *, int)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::loop_init",
+      "kind": "function",
+      "name": "loop_init",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 31,
+      "signature": "void (EventLoop *)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::loop_register",
+      "kind": "function",
+      "name": "loop_register",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 36,
+      "signature": "void (EventLoop *, int, EventHandler)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::loop_run",
+      "kind": "function",
+      "name": "loop_run",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 44,
+      "signature": "void (EventLoop *)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::loop_stop",
+      "kind": "function",
+      "name": "loop_stop",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 52,
+      "signature": "void (EventLoop *)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::on_once",
+      "kind": "function",
+      "name": "on_once",
+      "file": "demo/sample/app.cpp",
+      "line": 17,
+      "signature": "void (int)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::on_readable",
+      "kind": "function",
+      "name": "on_readable",
+      "file": "demo/sample/app.cpp",
+      "line": 5,
+      "signature": "void (int)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::on_writable",
+      "kind": "function",
+      "name": "on_writable",
+      "file": "demo/sample/app.cpp",
+      "line": 11,
+      "signature": "void (int)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::run_ready_watchers",
+      "kind": "function",
+      "name": "run_ready_watchers",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 22,
+      "signature": "void (EventLoop *, int)",
+      "module": "demo"
+    },
+    {
+      "id": "fn:demo::wait_for_events",
+      "kind": "function",
+      "name": "wait_for_events",
+      "file": "demo/sample/event_loop.cpp",
+      "line": 7,
+      "signature": "int (EventLoop *, int)",
+      "module": "demo"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_0187c0802f02",
+      "source": "fn:demo::run_ready_watchers",
+      "target": "fn:demo::dispatch_once",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 26,
+        "column": 13,
+        "snippet": "dispatch_once(loop, watcher, events);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_81efb252595d"
+      ]
+    },
+    {
+      "id": "e_04cc5f4fbfe8",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_stop",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 30,
+        "column": 5,
+        "snippet": "loop_stop(&loop);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_d61a532389ff"
+      ]
+    },
+    {
+      "id": "e_30aa428c0aae",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_da74b82fb9e8"
+      ]
+    },
+    {
+      "id": "e_83b9d14a7fe0",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_b8b0d8d19f85"
+      ]
+    },
+    {
+      "id": "e_8afe78101a36",
+      "source": "fn:demo::loop_run",
+      "target": "fn:demo::wait_for_events",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 47,
+        "column": 22,
+        "snippet": "int events = wait_for_events(loop, 100);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_e3eef1e5713e"
+      ]
+    },
+    {
+      "id": "e_8d30c11e34fd",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_register",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_a2169417fd49"
+      ]
+    },
+    {
+      "id": "e_97e35172986e",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_run",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 29,
+        "column": 5,
+        "snippet": "loop_run(&loop);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_82211e5f28dc"
+      ]
+    },
+    {
+      "id": "e_b27f0235676b",
+      "source": "fn:demo::dispatch_once",
+      "target": "cb:Watcher::callback",
+      "kind": "callback_edge",
+      "call_site": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 19,
+        "column": 5,
+        "snippet": "CALL_WATCHER(watcher, events);"
+      },
+      "condition": "CALL_WATCHER",
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_0027cd5acd0f",
+        "ev_2907f5c10837",
+        "ev_2bc375cf27d5",
+        "ev_da515d150c0c"
+      ],
+      "event": "fd_ready"
+    },
+    {
+      "id": "e_b61e1436c380",
+      "source": "fn:demo::app_main",
+      "target": "fn:demo::loop_init",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 25,
+        "column": 5,
+        "snippet": "loop_init(&loop);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_79a6829a0ac1"
+      ]
+    },
+    {
+      "id": "e_dce19199a6c8",
+      "source": "fn:demo::loop_run",
+      "target": "fn:demo::run_ready_watchers",
+      "kind": "direct_call",
+      "call_site": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 48,
+        "column": 9,
+        "snippet": "run_ready_watchers(loop, events);"
+      },
+      "condition": null,
+      "execution_context": null,
+      "confidence": 1.0,
+      "evidence_ids": [
+        "ev_c7caa85aaeb5"
+      ]
+    },
+    {
+      "id": "e_29f9ea6da8c9",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_once",
+      "kind": "callback_edge",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "event": "fd_ready",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_da515d150c0c"
+      ]
+    },
+    {
+      "id": "e_27cedd2c83e7",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_readable",
+      "kind": "callback_edge",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "event": "fd_ready",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_2907f5c10837"
+      ]
+    },
+    {
+      "id": "e_c3b9126e9c2d",
+      "source": "cb:Watcher::callback",
+      "target": "fn:demo::on_writable",
+      "kind": "callback_edge",
+      "call_site": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "event": "fd_ready",
+      "condition": null,
+      "execution_context": "event_loop",
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_0027cd5acd0f"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_0027cd5acd0f",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_2907f5c10837",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_2bc375cf27d5",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 19,
+        "column": 5,
+        "snippet": "CALL_WATCHER(watcher, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll",
+      "macro_stack": [
+        "CALL_WATCHER"
+      ]
+    },
+    {
+      "id": "ev_79a6829a0ac1",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 25,
+        "column": 5,
+        "snippet": "loop_init(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_81efb252595d",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 26,
+        "column": 13,
+        "snippet": "dispatch_once(loop, watcher, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_82211e5f28dc",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 29,
+        "column": 5,
+        "snippet": "loop_run(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_a2169417fd49",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 27,
+        "column": 5,
+        "snippet": "loop_register(&loop, 1, on_writable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_b8b0d8d19f85",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 26,
+        "column": 5,
+        "snippet": "loop_register(&loop, 0, on_readable);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_c7caa85aaeb5",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 48,
+        "column": 9,
+        "snippet": "run_ready_watchers(loop, events);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_d61a532389ff",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 30,
+        "column": 5,
+        "snippet": "loop_stop(&loop);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_da515d150c0c",
+      "kind": "assignment",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_da74b82fb9e8",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/app.cpp",
+        "line": 28,
+        "column": 5,
+        "snippet": "loop_register(&loop, 2, on_once);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    },
+    {
+      "id": "ev_e3eef1e5713e",
+      "kind": "call_site",
+      "location": {
+        "file": "demo/sample/event_loop.cpp",
+        "line": 47,
+        "column": 22,
+        "snippet": "int events = wait_for_events(loop, 100);"
+      },
+      "role": "supports",
+      "build_profile": "demo-poll"
+    }
+  ]
+}

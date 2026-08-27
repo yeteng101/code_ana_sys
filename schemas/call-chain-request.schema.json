@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/call-chain-request.schema.json",
+  "title": "CallChainRequest",
+  "description": "第三组向第一组提交的函数调用链查询请求。第三组必须已完成 PR diff 与目标函数定位。",
+  "type": "object",
+  "required": ["schema_version", "task_id", "action", "repository", "targets", "analysis"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "task_id": {"$ref": "common.schema.json#/$defs/task_id"},
+    "action": {"const": "get_call_chains"},
+    "repository": {
+      "type": "object",
+      "required": ["provider", "name", "commit_sha"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "commit_sha": {"type": "string", "minLength": 7},
+        "graph_snapshot_id": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/target"}
+    },
+    "analysis": {"$ref": "#/$defs/analysis"}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "target": {
+      "type": "object",
+      "required": ["target_id", "type", "name", "location", "role"],
+      "properties": {
+        "target_id": {"type": "string", "minLength": 1},
+        "node_id": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": ["function", "callback", "event_source", "build_configuration", "module", "external"]
+        },
+        "name": {"type": "string", "minLength": 1},
+        "qualified_name": {"type": "string"},
+        "signature": {"type": ["string", "null"]},
+        "location": {"$ref": "common.schema.json#/$defs/source_location"},
+        "role": {"type": "string", "enum": ["changed_function", "changed_callback", "changed_symbol"]}
+      },
+      "additionalProperties": true
+    },
+    "analysis": {
+      "type": "object",
+      "required": ["direction"],
+      "properties": {
+        "direction": {"type": "string", "enum": ["forward", "backward", "both"]},
+        "max_depth": {"type": "integer", "minimum": 1, "maximum": 20, "default": 8},
+        "max_paths_per_target": {"type": "integer", "minimum": 1, "maximum": 100, "default": 20},
+        "include_callbacks": {"type": "boolean", "default": true},
+        "include_indirect_calls": {"type": "boolean", "default": true},
+        "include_external_calls": {"type": "boolean", "default": false},
+        "build_profile": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

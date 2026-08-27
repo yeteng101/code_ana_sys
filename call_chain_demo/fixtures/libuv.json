@@ -1,0 +1,114 @@
+{
+  "repository": "libuv/libuv",
+  "graph_snapshot_id": "libuv_fixture_crg_v1",
+  "nodes": [
+    {
+      "node_id": "fn_uv_run",
+      "type": "function",
+      "name": "uv_run",
+      "qualified_name": "libuv.uv_run",
+      "signature": "int uv_run(uv_loop_t *loop, uv_run_mode mode)",
+      "location": {"file": "src/unix/core.c", "start_line": 427, "end_line": 487},
+      "evidence_ids": ["ev_uv_run_decl"]
+    },
+    {
+      "node_id": "fn_uv_run_pending",
+      "type": "function",
+      "name": "uv__run_pending",
+      "qualified_name": "libuv.uv__run_pending",
+      "signature": "static int uv__run_pending(uv_loop_t *loop)",
+      "location": {"file": "src/unix/core.c", "start_line": 842, "end_line": 860},
+      "evidence_ids": ["ev_uv_pending_decl"]
+    },
+    {
+      "node_id": "fn_uv_io_poll",
+      "type": "function",
+      "name": "uv__io_poll",
+      "qualified_name": "libuv.uv__io_poll",
+      "signature": "void uv__io_poll(uv_loop_t *loop, int timeout)",
+      "location": {"file": "src/unix/linux.c", "start_line": 1400, "end_line": 1700},
+      "evidence_ids": ["ev_uv_poll_decl"]
+    },
+    {
+      "node_id": "cb_uv_async_io",
+      "type": "callback",
+      "name": "uv__async_io",
+      "qualified_name": "libuv.uv__async_io",
+      "signature": "static void uv__async_io(uv_loop_t *loop, uv__io_t *w, unsigned int events)",
+      "location": {"file": "src/unix/async.c", "start_line": 136, "end_line": 170},
+      "evidence_ids": ["ev_uv_async_decl"]
+    },
+    {
+      "node_id": "cb_uv_stream_io",
+      "type": "callback",
+      "name": "uv__stream_io",
+      "qualified_name": "libuv.uv__stream_io",
+      "signature": "void uv__stream_io(uv_loop_t *loop, uv__io_t *w, unsigned int events)",
+      "location": {"file": "src/unix/stream.c", "start_line": 1150, "end_line": 1230},
+      "evidence_ids": ["ev_uv_stream_decl"]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "edge_uv_001",
+      "source_node_id": "fn_uv_run",
+      "target_node_id": "fn_uv_run_pending",
+      "type": "direct_call",
+      "call_site": {"file": "src/unix/core.c", "start_line": 447, "end_line": 447, "snippet": "ran_pending = uv__run_pending(loop);"},
+      "condition": "defined(__unix__) || defined(__APPLE__)",
+      "execution_context": {"process": null, "thread": "event_loop_thread", "event_loop": "uv_run", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_uv_001"]
+    },
+    {
+      "edge_id": "edge_uv_002",
+      "source_node_id": "fn_uv_run",
+      "target_node_id": "fn_uv_io_poll",
+      "type": "direct_call",
+      "call_site": {"file": "src/unix/core.c", "start_line": 459, "end_line": 459, "snippet": "uv__io_poll(loop, timeout);"},
+      "condition": "defined(__unix__) || defined(__APPLE__)",
+      "execution_context": {"process": null, "thread": "event_loop_thread", "event_loop": "uv_run", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_uv_002"]
+    },
+    {
+      "edge_id": "edge_uv_003",
+      "source_node_id": "fn_uv_io_poll",
+      "target_node_id": "cb_uv_async_io",
+      "type": "callback_edge",
+      "call_site": {"file": "src/unix/linux.c", "start_line": 1580, "end_line": 1580, "snippet": "w->cb(loop, w, pe->events);"},
+      "registration_site": {"file": "src/unix/async.c", "start_line": 260, "end_line": 260, "snippet": "uv__io_init(&loop->async_io_watcher, uv__async_io, pipefd[0]);"},
+      "condition": "UV_USE_EPOLL",
+      "execution_context": {"process": null, "thread": "event_loop_thread", "event_loop": "uv_run", "async_boundary": true},
+      "confidence": 0.78,
+      "candidate_node_ids": ["cb_uv_async_io", "cb_uv_stream_io"],
+      "evidence_ids": ["ev_uv_003", "ev_uv_003_registration", "ev_uv_003_type"]
+    },
+    {
+      "edge_id": "edge_uv_004",
+      "source_node_id": "fn_uv_io_poll",
+      "target_node_id": "cb_uv_stream_io",
+      "type": "callback_edge",
+      "call_site": {"file": "src/unix/linux.c", "start_line": 1580, "end_line": 1580, "snippet": "w->cb(loop, w, pe->events);"},
+      "registration_site": {"file": "src/unix/stream.c", "start_line": 520, "end_line": 520, "snippet": "uv__io_init(&stream->io_watcher, uv__stream_io, fd);"},
+      "condition": "UV_USE_EPOLL",
+      "execution_context": {"process": null, "thread": "event_loop_thread", "event_loop": "uv_run", "async_boundary": true},
+      "confidence": 0.78,
+      "candidate_node_ids": ["cb_uv_async_io", "cb_uv_stream_io"],
+      "evidence_ids": ["ev_uv_003", "ev_uv_004_registration", "ev_uv_003_type"]
+    }
+  ],
+  "evidence": [
+    {"id": "ev_uv_run_decl", "kind": "declaration", "location": {"file": "src/unix/core.c", "start_line": 427, "end_line": 487}, "role": "supports", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_pending_decl", "kind": "declaration", "location": {"file": "src/unix/core.c", "start_line": 842, "end_line": 860}, "role": "context", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_poll_decl", "kind": "declaration", "location": {"file": "src/unix/linux.c", "start_line": 1400, "end_line": 1700}, "role": "context", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_async_decl", "kind": "declaration", "location": {"file": "src/unix/async.c", "start_line": 136, "end_line": 170}, "role": "context", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_stream_decl", "kind": "declaration", "location": {"file": "src/unix/stream.c", "start_line": 1150, "end_line": 1230}, "role": "context", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_001", "kind": "call_site", "location": {"file": "src/unix/core.c", "start_line": 447, "end_line": 447, "snippet": "ran_pending = uv__run_pending(loop);"}, "role": "supports", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_002", "kind": "call_site", "location": {"file": "src/unix/core.c", "start_line": 459, "end_line": 459, "snippet": "uv__io_poll(loop, timeout);"}, "role": "supports", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_003", "kind": "call_site", "location": {"file": "src/unix/linux.c", "start_line": 1580, "end_line": 1580, "snippet": "w->cb(loop, w, pe->events);"}, "role": "supports", "build_profile": "linux-clang-debug", "macro_stack": ["UV_USE_EPOLL"]},
+    {"id": "ev_uv_003_registration", "kind": "registration", "location": {"file": "src/unix/async.c", "start_line": 260, "end_line": 260, "snippet": "uv__io_init(&loop->async_io_watcher, uv__async_io, pipefd[0]);"}, "role": "supports", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_004_registration", "kind": "registration", "location": {"file": "src/unix/stream.c", "start_line": 520, "end_line": 520, "snippet": "uv__io_init(&stream->io_watcher, uv__stream_io, fd);"}, "role": "supports", "build_profile": "linux-clang-debug"},
+    {"id": "ev_uv_003_type", "kind": "type_constraint", "location": {"file": "src/uv-common.h", "start_line": 1, "end_line": 1, "snippet": "void (*cb)(uv_loop_t*, uv__io_t*, unsigned int);"}, "role": "supports", "build_profile": "linux-clang-debug"}
+  ]
+}

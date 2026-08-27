@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "task_clang_demo_001",
+  "action": "get_call_chains",
+  "repository": {
+    "provider": "local",
+    "name": "clang-pipeline-demo",
+    "commit_sha": "local-demo",
+    "graph_snapshot_id": "clang-pipeline-demo-v1"
+  },
+  "targets": [
+    {
+      "target_id": "target_app_main",
+      "node_id": "fn:demo::app_main",
+      "type": "function",
+      "name": "app_main",
+      "qualified_name": "demo::app_main",
+      "signature": "void ()",
+      "location": {"file": "demo/sample/app.cpp", "start_line": 23, "end_line": 31},
+      "role": "changed_function"
+    }
+  ],
+  "analysis": {
+    "direction": "forward",
+    "max_depth": 6,
+    "max_paths_per_target": 10,
+    "include_callbacks": true,
+    "include_indirect_calls": true,
+    "include_external_calls": false,
+    "build_profile": "demo-poll"
+  }
+}

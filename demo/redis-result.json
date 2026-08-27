@@ -1,12 +1,36 @@
 {
   "schema_version": "1.0",
+  "run_id": "run_20260826_demo_redis",
   "task_id": "demo-redis-client-command",
-  "status": "success",
+  "status": "succeeded",
+  "query": {
+    "type": "call_chain",
+    "entry_symbols": ["aeMain"],
+    "depth": 8,
+    "include_async": true,
+    "include_function_pointers": true
+  },
+  "summary": "Redis 客户端请求从 epoll 事件进入 readQueryFromClient，经协议解析后由 processCommand 派发到具体命令实现。",
   "findings": [
-    {"kind": "direct_call", "source": "aeMain", "target": "aeProcessEvents", "condition": "linux-epoll", "confidence": 0.99, "evidence": [{"file": "src/ae.c", "line": 1}]},
-    {"kind": "callback_edge", "source": "aeApiPoll", "target": "readQueryFromClient", "event": "client_readable", "execution_context": "main_thread", "confidence": 0.92, "evidence": [{"file": "src/networking.c", "line": 1}]},
-    {"kind": "direct_call", "source": "processInputBuffer", "target": "processCommand", "condition": "linux-epoll", "confidence": 0.99, "evidence": [{"file": "src/networking.c", "line": 1}]}
+    {"kind": "direct_call", "source": "aeMain", "target": "aeProcessEvents", "condition": "linux-epoll", "confidence": 0.99, "evidence_ids": ["ev_1"]},
+    {"kind": "callback_edge", "source": "aeApiPoll", "target": "readQueryFromClient", "event": "client_readable", "execution_context": "main_thread", "confidence": 0.92, "evidence_ids": ["ev_2"]},
+    {"kind": "direct_call", "source": "processInputBuffer", "target": "processCommand", "condition": "linux-epoll", "confidence": 0.99, "evidence_ids": ["ev_3"]}
   ],
-  "artifacts": ["graph://demo/redis-client-command"],
+  "evidence": [
+    {"id": "ev_1", "kind": "call_site", "location": {"file": "src/ae.c", "line": 1, "snippet": "aeProcessEvents(eventLoop, flags);"}, "role": "supports", "build_profile": "linux-epoll"},
+    {"id": "ev_2", "kind": "call_site", "location": {"file": "src/networking.c", "line": 1, "snippet": "fe->rfileProc(eventLoop, fd, clientData, mask);"}, "role": "supports", "build_profile": "linux-epoll"},
+    {"id": "ev_3", "kind": "call_site", "location": {"file": "src/networking.c", "line": 1, "snippet": "processCommand(c);"}, "role": "supports", "build_profile": "linux-epoll"}
+  ],
+  "stats": {
+    "started_at": "2026-08-26T08:00:00Z",
+    "finished_at": "2026-08-26T08:00:45Z",
+    "duration_ms": 45000,
+    "symbols": 0,
+    "nodes": 4,
+    "edges": 3
+  },
+  "artifacts": [
+    {"name": "callgraph", "schema": "graph.schema.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"}
+  ],
   "warnings": ["line=1 is a fixture placeholder; real adapter must emit exact source lines"]
 }

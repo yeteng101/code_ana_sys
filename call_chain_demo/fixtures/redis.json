@@ -1,0 +1,201 @@
+{
+  "repository": "redis/redis",
+  "graph_snapshot_id": "redis_fixture_crg_v1",
+  "nodes": [
+    {
+      "node_id": "fn_ae_main",
+      "type": "function",
+      "name": "aeMain",
+      "qualified_name": "redis.aeMain",
+      "signature": "void aeMain(aeEventLoop *eventLoop)",
+      "location": {"file": "src/ae.c", "start_line": 496, "end_line": 501},
+      "evidence_ids": ["ev_redis_ae_main_decl"]
+    },
+    {
+      "node_id": "fn_ae_process_events",
+      "type": "function",
+      "name": "aeProcessEvents",
+      "qualified_name": "redis.aeProcessEvents",
+      "signature": "int aeProcessEvents(aeEventLoop *eventLoop, int flags)",
+      "location": {"file": "src/ae.c", "start_line": 351, "end_line": 487},
+      "evidence_ids": ["ev_redis_process_events_decl"]
+    },
+    {
+      "node_id": "fn_ae_api_poll",
+      "type": "function",
+      "name": "aeApiPoll",
+      "qualified_name": "redis.aeApiPoll",
+      "signature": "static int aeApiPoll(aeEventLoop *eventLoop, struct timeval *tvp)",
+      "location": {"file": "src/ae_epoll.c", "start_line": 81, "end_line": 104},
+      "evidence_ids": ["ev_redis_api_poll_decl"]
+    },
+    {
+      "node_id": "fn_read_query",
+      "type": "callback",
+      "name": "readQueryFromClient",
+      "qualified_name": "redis.readQueryFromClient",
+      "signature": "void readQueryFromClient(connection *conn)",
+      "location": {"file": "src/networking.c", "start_line": 2800, "end_line": 2880},
+      "evidence_ids": ["ev_redis_read_query_decl"]
+    },
+    {
+      "node_id": "fn_process_input_buffer",
+      "type": "function",
+      "name": "processInputBuffer",
+      "qualified_name": "redis.processInputBuffer",
+      "signature": "void processInputBuffer(client *c)",
+      "location": {"file": "src/networking.c", "start_line": 2600, "end_line": 2700},
+      "evidence_ids": ["ev_redis_process_input_decl"]
+    },
+    {
+      "node_id": "fn_process_command",
+      "type": "function",
+      "name": "processCommand",
+      "qualified_name": "redis.processCommand",
+      "signature": "int processCommand(client *c)",
+      "location": {"file": "src/server.c", "start_line": 4000, "end_line": 4200},
+      "evidence_ids": ["ev_redis_process_command_decl"]
+    },
+    {
+      "node_id": "fn_call",
+      "type": "function",
+      "name": "call",
+      "qualified_name": "redis.call",
+      "signature": "void call(client *c, int flags)",
+      "location": {"file": "src/server.c", "start_line": 3600, "end_line": 3800},
+      "evidence_ids": ["ev_redis_call_decl"]
+    },
+    {
+      "node_id": "fn_get_command",
+      "type": "callback",
+      "name": "getCommand",
+      "qualified_name": "redis.getCommand",
+      "signature": "void getCommand(client *c)",
+      "location": {"file": "src/t_string.c", "start_line": 200, "end_line": 260},
+      "evidence_ids": ["ev_redis_get_decl"]
+    },
+    {
+      "node_id": "fn_set_command",
+      "type": "callback",
+      "name": "setCommand",
+      "qualified_name": "redis.setCommand",
+      "signature": "void setCommand(client *c)",
+      "location": {"file": "src/t_string.c", "start_line": 60, "end_line": 150},
+      "evidence_ids": ["ev_redis_set_decl"]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "edge_redis_001",
+      "source_node_id": "fn_ae_main",
+      "target_node_id": "fn_ae_process_events",
+      "type": "direct_call",
+      "call_site": {"file": "src/ae.c", "start_line": 498, "end_line": 498, "snippet": "aeProcessEvents(eventLoop, AE_ALL_EVENTS|AE_CALL_BEFORE_SLEEP|AE_CALL_AFTER_SLEEP);"},
+      "condition": null,
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_redis_001"]
+    },
+    {
+      "edge_id": "edge_redis_002",
+      "source_node_id": "fn_ae_process_events",
+      "target_node_id": "fn_ae_api_poll",
+      "type": "direct_call",
+      "call_site": {"file": "src/ae.c", "start_line": 430, "end_line": 430, "snippet": "numevents = aeApiPoll(eventLoop, tvp);"},
+      "condition": "HAVE_EPOLL",
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_redis_002"]
+    },
+    {
+      "edge_id": "edge_redis_003",
+      "source_node_id": "fn_ae_process_events",
+      "target_node_id": "fn_read_query",
+      "type": "callback_edge",
+      "call_site": {"file": "src/ae.c", "start_line": 465, "end_line": 465, "snippet": "fe->rfileProc(eventLoop,fd,fe->clientData,mask);"},
+      "registration_site": {"file": "src/networking.c", "start_line": 1, "end_line": 1, "snippet": "connSetReadHandler(conn, readQueryFromClient);"},
+      "condition": null,
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": true},
+      "confidence": 0.92,
+      "evidence_ids": ["ev_redis_003", "ev_redis_003_registration"]
+    },
+    {
+      "edge_id": "edge_redis_004",
+      "source_node_id": "fn_read_query",
+      "target_node_id": "fn_process_input_buffer",
+      "type": "direct_call",
+      "call_site": {"file": "src/networking.c", "start_line": 2860, "end_line": 2860, "snippet": "processInputBuffer(c);"},
+      "condition": null,
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_redis_004"]
+    },
+    {
+      "edge_id": "edge_redis_005",
+      "source_node_id": "fn_process_input_buffer",
+      "target_node_id": "fn_process_command",
+      "type": "direct_call",
+      "call_site": {"file": "src/networking.c", "start_line": 2670, "end_line": 2670, "snippet": "if (processCommandAndResetClient(c) == C_ERR) return;"},
+      "condition": null,
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 0.98,
+      "evidence_ids": ["ev_redis_005"]
+    },
+    {
+      "edge_id": "edge_redis_006",
+      "source_node_id": "fn_process_command",
+      "target_node_id": "fn_call",
+      "type": "direct_call",
+      "call_site": {"file": "src/server.c", "start_line": 4160, "end_line": 4160, "snippet": "call(c, CMD_CALL_FULL);"},
+      "condition": null,
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 1.0,
+      "evidence_ids": ["ev_redis_006"]
+    },
+    {
+      "edge_id": "edge_redis_007",
+      "source_node_id": "fn_call",
+      "target_node_id": "fn_get_command",
+      "type": "indirect_call",
+      "call_site": {"file": "src/server.c", "start_line": 3700, "end_line": 3700, "snippet": "c->cmd->proc(c);"},
+      "condition": "c->cmd resolved from command table",
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 0.65,
+      "candidate_node_ids": ["fn_get_command", "fn_set_command"],
+      "evidence_ids": ["ev_redis_007_call", "ev_redis_007_assignment", "ev_redis_007_type"]
+    },
+    {
+      "edge_id": "edge_redis_008",
+      "source_node_id": "fn_call",
+      "target_node_id": "fn_set_command",
+      "type": "indirect_call",
+      "call_site": {"file": "src/server.c", "start_line": 3700, "end_line": 3700, "snippet": "c->cmd->proc(c);"},
+      "condition": "c->cmd resolved from command table",
+      "execution_context": {"process": "redis-server", "thread": "main_thread", "event_loop": "aeMain", "async_boundary": false},
+      "confidence": 0.65,
+      "candidate_node_ids": ["fn_get_command", "fn_set_command"],
+      "evidence_ids": ["ev_redis_007_call", "ev_redis_007_assignment", "ev_redis_007_type"]
+    }
+  ],
+  "evidence": [
+    {"id": "ev_redis_ae_main_decl", "kind": "declaration", "location": {"file": "src/ae.c", "start_line": 496, "end_line": 501}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_process_events_decl", "kind": "declaration", "location": {"file": "src/ae.c", "start_line": 351, "end_line": 487}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_api_poll_decl", "kind": "declaration", "location": {"file": "src/ae_epoll.c", "start_line": 81, "end_line": 104}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_read_query_decl", "kind": "declaration", "location": {"file": "src/networking.c", "start_line": 2800, "end_line": 2880}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_process_input_decl", "kind": "declaration", "location": {"file": "src/networking.c", "start_line": 2600, "end_line": 2700}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_process_command_decl", "kind": "declaration", "location": {"file": "src/server.c", "start_line": 4000, "end_line": 4200}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_call_decl", "kind": "declaration", "location": {"file": "src/server.c", "start_line": 3600, "end_line": 3800}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_get_decl", "kind": "declaration", "location": {"file": "src/t_string.c", "start_line": 200, "end_line": 260}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_set_decl", "kind": "declaration", "location": {"file": "src/t_string.c", "start_line": 60, "end_line": 150}, "role": "context", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_001", "kind": "call_site", "location": {"file": "src/ae.c", "start_line": 498, "end_line": 498, "snippet": "aeProcessEvents(eventLoop, AE_ALL_EVENTS|AE_CALL_BEFORE_SLEEP|AE_CALL_AFTER_SLEEP);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_002", "kind": "call_site", "location": {"file": "src/ae.c", "start_line": 430, "end_line": 430, "snippet": "numevents = aeApiPoll(eventLoop, tvp);"}, "role": "supports", "build_profile": "linux-gcc-release", "macro_stack": ["HAVE_EPOLL"]},
+    {"id": "ev_redis_003", "kind": "call_site", "location": {"file": "src/ae.c", "start_line": 465, "end_line": 465, "snippet": "fe->rfileProc(eventLoop,fd,fe->clientData,mask);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_003_registration", "kind": "registration", "location": {"file": "src/networking.c", "start_line": 1, "end_line": 1, "snippet": "connSetReadHandler(conn, readQueryFromClient);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_004", "kind": "call_site", "location": {"file": "src/networking.c", "start_line": 2860, "end_line": 2860, "snippet": "processInputBuffer(c);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_005", "kind": "call_site", "location": {"file": "src/networking.c", "start_line": 2670, "end_line": 2670, "snippet": "if (processCommandAndResetClient(c) == C_ERR) return;"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_006", "kind": "call_site", "location": {"file": "src/server.c", "start_line": 4160, "end_line": 4160, "snippet": "call(c, CMD_CALL_FULL);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_007_call", "kind": "call_site", "location": {"file": "src/server.c", "start_line": 3700, "end_line": 3700, "snippet": "c->cmd->proc(c);"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_007_assignment", "kind": "assignment", "location": {"file": "src/commands.c", "start_line": 1, "end_line": 1, "snippet": "commandTable[i].proc = commandImplementation;"}, "role": "supports", "build_profile": "linux-gcc-release"},
+    {"id": "ev_redis_007_type", "kind": "type_constraint", "location": {"file": "src/server.h", "start_line": 1, "end_line": 1, "snippet": "void (*proc)(client *c);"}, "role": "supports", "build_profile": "linux-gcc-release"}
+  ]
+}

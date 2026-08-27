@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/symbols.schema.json",
+  "title": "SymbolIndex（源码索引产物）",
+  "description": "01-index 阶段产物：编译单元与符号清单。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "status",
+    "generated_at",
+    "compile_units",
+    "symbols"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "stage": {"const": "01-index"},
+    "status": {"$ref": "common.schema.json#/$defs/status"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "compile_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "build_profile", "compiler", "flags"],
+        "properties": {
+          "file": {"type": "string"},
+          "build_profile": {"type": "string"},
+          "compiler": {"type": "string"},
+          "flags": {"type": "array", "items": {"type": "string"}},
+          "defines": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind", "file", "line"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "kind": {
+            "type": "string",
+            "enum": ["function", "variable", "type", "macro", "callback_field", "struct_field"]
+          },
+          "file": {"type": "string"},
+          "line": {"type": "integer", "minimum": 1},
+          "signature": {"type": "string"},
+          "linkage": {"type": "string", "enum": ["static", "external", "internal"]},
+          "references": {
+            "type": "array",
+            "items": {"$ref": "common.schema.json#/$defs/source_location"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

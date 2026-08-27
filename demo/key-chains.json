@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_20260827_clang_demo",
+  "entry": "app_main",
+  "paths": [
+    {
+      "id": "key_70b3fe5dfa0e",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_stop"
+      ],
+      "edges": [
+        "e_04cc5f4fbfe8"
+      ],
+      "summary": "app_main -> loop_stop",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_4a7f352884fa",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_register"
+      ],
+      "edges": [
+        "e_30aa428c0aae"
+      ],
+      "summary": "app_main -> loop_register",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_4a7f352884fa",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_register"
+      ],
+      "edges": [
+        "e_83b9d14a7fe0"
+      ],
+      "summary": "app_main -> loop_register",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_4a7f352884fa",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_register"
+      ],
+      "edges": [
+        "e_8d30c11e34fd"
+      ],
+      "summary": "app_main -> loop_register",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_6d965beb4c64",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_run",
+        "fn:demo::wait_for_events"
+      ],
+      "edges": [
+        "e_97e35172986e",
+        "e_8afe78101a36"
+      ],
+      "summary": "app_main -> loop_run -> wait_for_events",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_e8714f28d89a",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_run",
+        "fn:demo::run_ready_watchers",
+        "fn:demo::dispatch_once",
+        "cb:Watcher::callback",
+        "fn:demo::on_readable"
+      ],
+      "edges": [
+        "e_97e35172986e",
+        "e_dce19199a6c8",
+        "e_0187c0802f02",
+        "e_b27f0235676b",
+        "e_27cedd2c83e7"
+      ],
+      "summary": "app_main -> loop_run -> run_ready_watchers -> dispatch_once -> Watcher::callback -> on_readable",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_11bc12e7dd0b",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_run",
+        "fn:demo::run_ready_watchers",
+        "fn:demo::dispatch_once",
+        "cb:Watcher::callback",
+        "fn:demo::on_once"
+      ],
+      "edges": [
+        "e_97e35172986e",
+        "e_dce19199a6c8",
+        "e_0187c0802f02",
+        "e_b27f0235676b",
+        "e_29f9ea6da8c9"
+      ],
+      "summary": "app_main -> loop_run -> run_ready_watchers -> dispatch_once -> Watcher::callback -> on_once",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_0f259873bb12",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_run",
+        "fn:demo::run_ready_watchers",
+        "fn:demo::dispatch_once",
+        "cb:Watcher::callback",
+        "fn:demo::on_writable"
+      ],
+      "edges": [
+        "e_97e35172986e",
+        "e_dce19199a6c8",
+        "e_0187c0802f02",
+        "e_b27f0235676b",
+        "e_c3b9126e9c2d"
+      ],
+      "summary": "app_main -> loop_run -> run_ready_watchers -> dispatch_once -> Watcher::callback -> on_writable",
+      "termination_reason": "leaf"
+    },
+    {
+      "id": "key_69a6bc769cba",
+      "nodes": [
+        "fn:demo::app_main",
+        "fn:demo::loop_init"
+      ],
+      "edges": [
+        "e_b61e1436c380"
+      ],
+      "summary": "app_main -> loop_init",
+      "termination_reason": "leaf"
+    }
+  ]
+}

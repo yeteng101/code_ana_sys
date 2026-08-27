@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/artifacts.schema.json",
+  "title": "ArtifactList",
+  "description": "GET /api/v1/runs/{run_id}/artifacts 的中间产物清单。",
+  "type": "object",
+  "required": ["run_id", "artifacts"],
+  "properties": {
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "artifacts": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/artifact_ref"}}
+  },
+  "additionalProperties": false
+}

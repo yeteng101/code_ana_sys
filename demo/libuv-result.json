@@ -1,12 +1,36 @@
 {
   "schema_version": "1.0",
+  "run_id": "run_20260826_demo_libuv",
   "task_id": "demo-libuv-loop",
-  "status": "success",
+  "status": "succeeded",
+  "query": {
+    "type": "call_chain",
+    "entry_symbols": ["uv_run"],
+    "depth": 8,
+    "include_async": true,
+    "include_function_pointers": true
+  },
+  "summary": "uv_run 在 Unix 事件循环中依次执行 pending / prepare / io_poll 等阶段；io_poll 就绪后通过 watcher 回调派发事件。",
   "findings": [
-    {"kind": "direct_call", "source": "uv_run", "target": "uv__run_pending", "condition": "linux-debug", "confidence": 0.99, "evidence": [{"file": "src/unix/core.c", "line": 1}]},
-    {"kind": "direct_call", "source": "uv_run", "target": "uv__io_poll", "condition": "linux-debug", "confidence": 0.99, "evidence": [{"file": "src/unix/core.c", "line": 1}]},
-    {"kind": "callback_edge", "source": "uv__io_poll", "target": "watcher.callback", "event": "fd_ready", "execution_context": "event_loop_thread", "confidence": 0.90, "evidence": [{"file": "src/unix/core.c", "line": 1}]}
+    {"kind": "direct_call", "source": "uv_run", "target": "uv__run_pending", "condition": "linux-debug", "confidence": 0.99, "evidence_ids": ["ev_1"]},
+    {"kind": "direct_call", "source": "uv_run", "target": "uv__io_poll", "condition": "linux-debug", "confidence": 0.99, "evidence_ids": ["ev_2"]},
+    {"kind": "callback_edge", "source": "uv__io_poll", "target": "watcher.callback", "event": "fd_ready", "execution_context": "event_loop_thread", "confidence": 0.90, "evidence_ids": ["ev_3"]}
   ],
-  "artifacts": ["graph://demo/libuv-loop"],
+  "evidence": [
+    {"id": "ev_1", "kind": "call_site", "location": {"file": "src/unix/core.c", "line": 1, "snippet": "uv__run_pending(loop);"}, "role": "supports", "build_profile": "linux-debug"},
+    {"id": "ev_2", "kind": "call_site", "location": {"file": "src/unix/core.c", "line": 1, "snippet": "uv__io_poll(loop, timeout);"}, "role": "supports", "build_profile": "linux-debug"},
+    {"id": "ev_3", "kind": "call_site", "location": {"file": "src/unix/linux-core.c", "line": 1, "snippet": "w->cb(loop, w, events);"}, "role": "supports", "build_profile": "linux-debug"}
+  ],
+  "stats": {
+    "started_at": "2026-08-26T08:00:00Z",
+    "finished_at": "2026-08-26T08:01:00Z",
+    "duration_ms": 60000,
+    "symbols": 0,
+    "nodes": 4,
+    "edges": 3
+  },
+  "artifacts": [
+    {"name": "callgraph", "schema": "graph.schema.json", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"}
+  ],
   "warnings": ["line=1 is a fixture placeholder; real adapter must emit exact source lines"]
 }

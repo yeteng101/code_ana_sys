@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "task_redis_chain_001",
+  "action": "get_call_chains",
+  "repository": {
+    "provider": "github",
+    "name": "redis/redis",
+    "commit_sha": "demo-redis-7x",
+    "graph_snapshot_id": "redis_fixture_crg_v1"
+  },
+  "targets": [
+    {
+      "target_id": "target_001",
+      "node_id": "fn_process_command",
+      "type": "function",
+      "name": "processCommand",
+      "qualified_name": "redis.processCommand",
+      "signature": "int processCommand(client *c)",
+      "location": {"file": "src/server.c", "start_line": 4000, "end_line": 4200},
+      "role": "changed_function"
+    }
+  ],
+  "analysis": {
+    "direction": "both",
+    "max_depth": 8,
+    "max_paths_per_target": 20,
+    "include_callbacks": true,
+    "include_indirect_calls": true,
+    "include_external_calls": false,
+    "build_profile": "linux-gcc-release"
+  }
+}

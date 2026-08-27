@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/graph.schema.json",
+  "title": "EvidenceGraph",
+  "description": "调用关系 / 证据图：节点 + 边 + 证据，供图渲染与自然语言分析使用。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "meta", "nodes", "edges", "evidence"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "meta": {
+      "type": "object",
+      "required": ["repository", "commit", "build_profile", "analyzer", "generated_at"],
+      "properties": {
+        "repository": {"type": "string"},
+        "commit": {"type": "string"},
+        "build_profile": {"type": "string"},
+        "analyzer": {"type": "string", "description": "例如 clang-libtooling v18"},
+        "generated_at": {"type": "string", "format": "date-time"},
+        "origin": {"type": "string", "description": "图来源（graph.json / 合成器）"}
+      },
+      "additionalProperties": false
+    },
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "evidence": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/evidence"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["id", "kind", "name", "file", "line"],
+      "properties": {
+        "id": {"type": "string", "examples": ["fn:uv_run"]},
+        "kind": {
+          "type": "string",
+          "enum": ["function", "callback", "event_source", "build_configuration", "module", "external"]
+        },
+        "name": {"type": "string"},
+        "file": {"type": "string"},
+        "line": {"type": "integer", "minimum": 1},
+        "signature": {"type": "string"},
+        "module": {"type": "string"},
+        "async": {"type": "boolean", "description": "是否异步执行"}
+      },
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "target", "kind", "confidence", "evidence_ids"],
+      "properties": {
+        "id": {"type": "string"},
+        "source": {"type": "string", "description": "节点 id"},
+        "target": {"type": "string", "description": "节点 id"},
+        "kind": {
+          "type": "string",
+          "enum": [
+            "direct_call",
+            "callback_edge",
+            "registers",
+            "completes",
+            "implementation_of",
+            "data_flow",
+            "macro_expansion",
+            "indirect_call",
+            "external"
+          ]
+        },
+        "call_site": {"$ref": "common.schema.json#/$defs/source_location"},
+        "event": {"type": "string", "description": "触发该边的事件名（callback_edge 必填），如 fd_ready"},
+        "condition": {"type": "string", "description": "生效的宏 / 平台条件，如 UV_USE_EPOLL"},
+        "execution_context": {"type": "string", "description": "线程 / 进程 / 事件循环上下文"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

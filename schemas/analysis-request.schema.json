@@ -53,6 +53,16 @@
         "timeout_seconds": {"type": "integer", "minimum": 1}
       },
       "additionalProperties": false
+    },
+    "webhook_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "任务完成时的回调地址（可选），服务端将向其 POST 一个 run-result"
+    },
+    "output_formats": {
+      "type": "array",
+      "description": "期望的报告 / 图输出格式（可选）",
+      "items": {"type": "string", "enum": ["json", "mermaid", "dot", "svg", "markdown"]}
     }
   },
   "additionalProperties": false

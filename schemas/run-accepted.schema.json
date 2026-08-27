@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/run-accepted.schema.json",
+  "title": "RunAccepted",
+  "description": "POST /api/v1/analyze 成功后的 202 响应：任务已受理。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "task_id", "status", "links"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "task_id": {"$ref": "common.schema.json#/$defs/task_id"},
+    "status": {"const": "queued"},
+    "links": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "format": "uri"},
+        "graph": {"type": "string", "format": "uri"},
+        "artifacts": {"type": "string", "format": "uri"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

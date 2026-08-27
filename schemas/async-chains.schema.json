@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/async-chains.schema.json",
+  "title": "AsyncChains（异步事件链产物）",
+  "description": "05-async 阶段产物：事件源 → 注册 → 触发 → 回调的异步链。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "stage", "status", "generated_at", "chains"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "stage": {"const": "05-async"},
+    "status": {"$ref": "common.schema.json#/$defs/status"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "common.schema.json#/$defs/evidence"}
+    },
+    "chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "event_source", "registration", "trigger", "callbacks", "confidence"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "event_source": {
+            "type": "object",
+            "required": ["kind", "file", "line"],
+            "properties": {
+              "kind": {"type": "string", "enum": ["fd_ready", "timer", "signal", "thread_complete", "custom"]},
+              "file": {"type": "string"},
+              "line": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": false
+          },
+          "registration": {"$ref": "common.schema.json#/$defs/source_location"},
+          "trigger": {"$ref": "common.schema.json#/$defs/source_location"},
+          "callbacks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "file", "line", "execution_context", "confidence"],
+              "properties": {
+                "name": {"type": "string"},
+                "file": {"type": "string"},
+                "line": {"type": "integer", "minimum": 1},
+                "execution_context": {"type": "string"},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "evidence_ids": {"type": "array", "items": {"type": "string"}}
+              },
+              "additionalProperties": false
+            }
+          },
+          "loop_back": {"type": "boolean", "description": "是否回到事件循环形成闭环"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

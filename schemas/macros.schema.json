@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/macros.schema.json",
+  "title": "MacroAnalysis（编译宏分析产物）",
+  "description": "02-macro 阶段产物：宏定义 / 展开 / 条件编译区域。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "stage",
+    "status",
+    "generated_at",
+    "expansions",
+    "conditional_regions"
+  ],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "stage": {"const": "02-macro"},
+    "status": {"$ref": "common.schema.json#/$defs/status"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "expansions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "definition", "file", "line", "build_profile"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "definition": {"type": "string"},
+          "parameters": {"type": "array", "items": {"type": "string"}},
+          "expanded_text": {"type": "string"},
+          "file": {"type": "string"},
+          "line": {"type": "integer", "minimum": 1},
+          "build_profile": {"type": "string"},
+          "call_sites": {
+            "type": "array",
+            "items": {"$ref": "common.schema.json#/$defs/source_location"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "conditional_regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["file", "start_line", "end_line", "condition", "branch", "active_in_profiles"],
+        "properties": {
+          "file": {"type": "string"},
+          "start_line": {"type": "integer", "minimum": 1},
+          "end_line": {"type": "integer", "minimum": 1},
+          "condition": {"type": "string"},
+          "branch": {"type": "string", "enum": ["then", "else"]},
+          "active_in_profiles": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

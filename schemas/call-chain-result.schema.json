@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/call-chain-result.schema.json",
+  "title": "CallChainResult",
+  "description": "第一组向第三组返回的函数调用链结果。不包含 PR 缺陷判断、影响半径或 Patch。",
+  "type": "object",
+  "required": ["schema_version", "run_id", "task_id", "status", "generated_at", "findings", "evidence", "coverage", "warnings", "errors"],
+  "properties": {
+    "schema_version": {"$ref": "common.schema.json#/$defs/schema_version"},
+    "run_id": {"$ref": "common.schema.json#/$defs/run_id"},
+    "task_id": {"$ref": "common.schema.json#/$defs/task_id"},
+    "status": {"$ref": "common.schema.json#/$defs/status"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "analysis_context": {"$ref": "#/$defs/analysis_context"},
+    "target_resolution": {"$ref": "#/$defs/target_resolution"},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/call_chain"}},
+    "evidence": {"type": "array", "items": {"$ref": "common.schema.json#/$defs/evidence"}},
+    "coverage": {"$ref": "#/$defs/coverage"},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "errors": {"type": "array", "items": {"$ref": "#/$defs/error"}}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "analysis_context": {
+      "type": "object",
+      "required": ["repository", "commit_sha", "graph_snapshot_id", "build_profile", "analyzer"],
+      "properties": {
+        "repository": {"type": "string"},
+        "commit_sha": {"type": "string"},
+        "graph_snapshot_id": {"type": "string"},
+        "build_profile": {"type": "string"},
+        "analyzer": {
+          "type": "object",
+          "required": ["name", "version", "config_sha256"],
+          "properties": {
+            "name": {"type": "string"},
+            "version": {"type": "string"},
+            "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "target_resolution": {
+      "type": "object",
+      "required": ["requested_total", "resolved_total", "unresolved_targets"],
+      "properties": {
+        "requested_total": {"type": "integer", "minimum": 0},
+        "resolved_total": {"type": "integer", "minimum": 0},
+        "unresolved_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["target_id", "reason"],
+            "properties": {
+              "target_id": {"type": "string"},
+              "reason": {"type": "string"},
+              "candidate_node_ids": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "node": {
+      "type": "object",
+      "required": ["node_id", "type", "name", "qualified_name", "signature", "location"],
+      "properties": {
+        "node_id": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": ["function", "callback", "event_source", "build_configuration", "module", "external"]
+        },
+        "name": {"type": "string"},
+        "qualified_name": {"type": "string"},
+        "signature": {"type": ["string", "null"]},
+        "location": {"$ref": "common.schema.json#/$defs/source_location"}
+      },
+      "additionalProperties": true
+    },
+    "execution_context": {
+      "type": "object",
+      "required": ["process", "thread", "event_loop", "async_boundary"],
+      "properties": {
+        "process": {"type": ["string", "null"]},
+        "thread": {"type": ["string", "null"]},
+        "event_loop": {"type": ["string", "null"]},
+        "async_boundary": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": ["edge_id", "source_node_id", "target_node_id", "type", "call_site", "condition", "execution_context", "confidence", "evidence_ids"],
+      "properties": {
+        "edge_id": {"type": "string"},
+        "source_node_id": {"type": "string"},
+        "target_node_id": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": ["direct_call", "callback_edge", "registers", "completes", "implementation_of", "data_flow", "macro_expansion", "external", "indirect_call"]
+        },
+        "call_site": {"$ref": "common.schema.json#/$defs/source_location"},
+        "condition": {"type": ["string", "null"]},
+        "execution_context": {"$ref": "#/$defs/execution_context"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "registration_site": {"$ref": "common.schema.json#/$defs/source_location"},
+        "candidate_node_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["status", "candidate_node_ids"],
+      "properties": {
+        "status": {"type": "string", "enum": ["unique", "multiple_candidates", "unresolved"]},
+        "candidate_node_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "call_chain": {
+      "type": "object",
+      "required": ["id", "kind", "target_id", "root_node_id", "direction", "nodes", "edges", "complete", "termination_reason", "resolution", "confidence", "evidence_ids"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"const": "call_chain"},
+        "target_id": {"type": "string"},
+        "root_node_id": {"type": "string"},
+        "direction": {"type": "string", "enum": ["caller_to_callee", "callee_to_caller"]},
+        "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+        "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+        "complete": {"type": "boolean"},
+        "termination_reason": {"type": "string", "enum": ["leaf", "max_depth", "cycle", "unresolved_indirect_call", "analysis_limit", "external_call"]},
+        "resolution": {"$ref": "#/$defs/resolution"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["complete", "roots_total", "roots_analyzed", "truncated_chains", "unresolved_indirect_calls", "skipped_files"],
+      "properties": {
+        "complete": {"type": "boolean"},
+        "roots_total": {"type": "integer", "minimum": 0},
+        "roots_analyzed": {"type": "integer", "minimum": 0},
+        "targets_total": {"type": "integer", "minimum": 0},
+        "targets_analyzed": {"type": "integer", "minimum": 0},
+        "truncated_chains": {"type": "integer", "minimum": 0},
+        "unresolved_indirect_calls": {"type": "integer", "minimum": 0},
+        "skipped_files": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": ["INVALID_REQUEST", "INVALID_TARGETS", "TARGET_NOT_FOUND", "REPOSITORY_NOT_FOUND", "GRAPH_BUILD_FAILED", "COMPILE_PROFILE_MISSING", "ANALYSIS_TIMEOUT", "UNSUPPORTED_LANGUAGE", "INTERNAL_ERROR"]
+        },
+        "message": {"type": "string"},
+        "retryable": {"type": "boolean"},
+        "target_id": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

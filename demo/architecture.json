@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_20260827_clang_demo",
+  "components": [
+    {
+      "id": "app",
+      "name": "app (应用回调)",
+      "files": [
+        "demo/sample/app.cpp"
+      ],
+      "symbols": [
+        {
+          "id": "fn:demo::app_main",
+          "name": "app_main",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::on_once",
+          "name": "on_once",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::on_readable",
+          "name": "on_readable",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::on_writable",
+          "name": "on_writable",
+          "kind": "function"
+        }
+      ],
+      "responsibilities": [
+        "应用回调",
+        "核心逻辑"
+      ]
+    },
+    {
+      "id": "event_loop",
+      "name": "event_loop (事件循环)",
+      "files": [
+        "demo/sample/event_loop.cpp",
+        "demo/sample/event_loop.h"
+      ],
+      "symbols": [
+        {
+          "id": "cb:Watcher::callback",
+          "name": "Watcher::callback",
+          "kind": "callback"
+        },
+        {
+          "id": "fn:demo::dispatch_once",
+          "name": "dispatch_once",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::loop_init",
+          "name": "loop_init",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::loop_register",
+          "name": "loop_register",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::loop_run",
+          "name": "loop_run",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::loop_stop",
+          "name": "loop_stop",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::run_ready_watchers",
+          "name": "run_ready_watchers",
+          "kind": "function"
+        },
+        {
+          "id": "fn:demo::wait_for_events",
+          "name": "wait_for_events",
+          "kind": "function"
+        }
+      ],
+      "responsibilities": [
+        "事件分发",
+        "事件循环驱动",
+        "事件等待",
+        "回调注册",
+        "核心逻辑"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "source": "app",
+      "target": "event_loop"
+    },
+    {
+      "source": "event_loop",
+      "target": "app"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+flowchart TD
+  subgraph sg_app["app (应用回调)"]
+    N1["app_main"]
+    N2["on_once"]
+    N3["on_readable"]
+    N4["on_writable"]
+  end
+  subgraph sg_event_loop["event_loop (事件循环)"]
+    N5["Watcher::callback"]
+    N6["dispatch_once"]
+    N7["loop_init"]
+    N8["loop_register"]
+    N9["loop_run"]
+    N10["loop_stop"]
+    N11["run_ready_watchers"]
+    N12["wait_for_events"]
+  end
+  N11 --> N6
+  N1 --> N10
+  N1 --> N8
+  N1 --> N8
+  N9 --> N12
+  N1 --> N8
+  N1 --> N9
+  N6 -. CALL_WATCHER .-> N5
+  N1 --> N7
+  N9 --> N11
+  N5 -. fd_ready .-> N2
+  N5 -. fd_ready .-> N3
+  N5 -. fd_ready .-> N4
