@@ -13,9 +13,7 @@
 - `demo/libuv/`：libuv v1.50.0 真实分析产物（调用图、模块架构、关键链、自然语言分析）。
 - `clang_pipeline/`：7 阶段 Clang 流水线（index → macro → callgraph → fptr → async → verify → report）。
 - `scripts/run_libuv.sh`：一键 clone libuv v1.50.0、生成 compile_commands 并运行流水线。
-- `Code-Reverse-Agent-汇报.pptx`：面向初学者的汇报 PPT。
-- `scripts/build_ppt.js`：技术版 PPT 生成脚本。
-- `scripts/build_beginner_ppt.js`：初学者版 PPT 生成脚本。
+
 
 ## Demo
 
