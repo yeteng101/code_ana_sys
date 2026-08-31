@@ -294,6 +294,33 @@ workspace/{run_id}/
 - `0.5 - 0.79`：存在多个候选，但上下文有较强约束。
 - `<0.5`：启发式推断，只能作为待验证线索。
 
+
+# Agent 工具层设计思路
+
+## 1. 核心思想
+
+不要把 7 个阶段直接拆成 7 个大模型工具，而是：
+
+> 7 阶段流水线继续保持内部实现不变，外面包一层大模型能调用的高层工具。
+
+```text
+大模型 Agent
+   │
+   ▼
+工具层（Tool Layer）
+├── analyze_repo
+├── get_call_graph
+├── get_key_chains
+├── get_architecture
+├── get_evidence
+└── get_source_snippet
+   │
+   ▼
+现有 7 阶段流水线
+   │
+   ▼
+Evidence Graph
+```
 Schema 统一放在 `schemas/` 目录：
 
 ```text
