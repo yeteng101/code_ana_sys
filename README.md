@@ -324,6 +324,18 @@ Evidence Graph
 
 
 
+##  推荐工具列表
+
+只给大模型它真正需要的操作：
+
+| 工具 | 作用 | 大模型使用场景 |
+|---|---|---|
+| `analyze_repo` | 跑完整 7 阶段流水线 | “分析一下 libuv” |
+| `get_call_graph` | 获取调用图 | “uv_run 调用了谁” |
+| `get_key_chains` | 获取关键调用链 | “关键路径是什么” |
+| `get_architecture` | 获取模块架构 | “整体模块结构是什么” |
+| `get_evidence` | 按 evidence_id 查证据 | “这条结论的证据在哪” |
+| `get_source_snippet` | 查看源码原文 | “把这段源码贴给我看” |
 
 
 
@@ -346,21 +358,6 @@ Evidence Graph
 
 
 
-
-Schema 统一放在 `schemas/` 目录：
-
-```text
-common.schema.json          共享定义
-analysis-request.schema.json 分析请求
-run-result.schema.json       任务结果
-graph.schema.json            调用关系图
-symbols.schema.json          01-index
-macros.schema.json           02-macro
-fptr-candidates.schema.json  04-fptr
-async-chains.schema.json     05-async
-verification.schema.json     06-verify
-pipeline.schema.json         pipeline 配置
-```
 
 总结：对外是 JSON 消息，对内是 JSON 文件接力，所有结论都必须带源码证据。
 
