@@ -321,6 +321,32 @@ workspace/{run_id}/
    ▼
 Evidence Graph
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Schema 统一放在 `schemas/` 目录：
 
 ```text
