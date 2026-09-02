@@ -27,6 +27,7 @@ def run_claude_code(
     cwd: Path | str | None = None,
     timeout: int = 600,
     json_schema: dict[str, Any] | None = None,
+    add_dirs: list[Path | str] | None = None,
 ) -> dict[str, Any]:
     command = claude_code_command()
     if command is None:
@@ -36,6 +37,8 @@ def run_claude_code(
         arguments += ["--append-system-prompt", system_prompt]
     if model:
         arguments += ["--model", model]
+    for directory in add_dirs or []:
+        arguments += ["--add-dir", str(directory)]
     arguments += ["--output-format", "json"]
     if json_schema:
         arguments += ["--json-schema", json.dumps(json_schema, ensure_ascii=False)]

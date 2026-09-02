@@ -12,7 +12,16 @@
         "workspace": {"type": "string", "description": "分析产物目录，默认 demo/libuv"},
         "run_id": {"type": "string", "minLength": 1},
         "max_steps": {"type": "integer", "minimum": 1, "maximum": 20, "default": 6},
-        "model": {"type": "string"}
+        "model": {"type": "string"},
+        "backend": {
+          "type": "string",
+          "enum": ["auto", "openai", "claude-code"],
+          "default": "auto"
+        },
+        "focus": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
       },
       "additionalProperties": false
     },

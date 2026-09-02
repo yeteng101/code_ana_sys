@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from .agent import AGENT_TOOLS, AgentContext, run_agent
+from .agent import AGENT_TOOLS, AgentContext
+from .agent_runner import ask_question
 from .llm_bridge import LLMNotConfigured
 
 
@@ -74,16 +75,20 @@ class AgentHandler(BaseHTTPRequestHandler):
             workspace = Path(body.get("workspace") or default_workspace()).resolve()
             run_id = str(body.get("run_id") or "run_libuv_1.50.0")
             max_steps = int(body.get("max_steps", 6))
+            backend = str(body.get("backend") or "auto")
+            focus = body.get("focus") or []
             ctx = AgentContext(
                 workspace,
                 repo_root=ROOT,
                 run_id=run_id,
             )
-            result = run_agent(
+            result = ask_question(
                 str(body["question"]).strip(),
                 ctx,
+                backend=backend,
                 max_steps=max_steps,
                 model=body.get("model"),
+                focus=focus if isinstance(focus, list) else None,
             )
             self._write_json(HTTPStatus.OK, result)
         except LLMNotConfigured as exc:

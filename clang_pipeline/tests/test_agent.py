@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from clang_pipeline.agent import AgentContext, execute_tool, fallback_answer
+from clang_pipeline.agent_context import build_agent_context, write_agent_context
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,6 +45,17 @@ class AgentToolTests(unittest.TestCase):
         result = fallback_answer("uv_run 调用了谁？", self.ctx)
         self.assertEqual("partial", result["status"])
         self.assertIn("规则模板", result["answer"])
+
+    def test_agent_context_file(self) -> None:
+        payload = build_agent_context(
+            self.ctx,
+            "uv_run 调用了谁？",
+            focus=["uv_run"],
+        )
+        self.assertIn("artifact_paths", payload)
+        self.assertTrue(payload["artifact_paths"]["graph"])
+        path = write_agent_context(self.ctx, "uv_run 调用了谁？", focus=["uv_run"])
+        self.assertTrue(path.exists())
 
 
 if __name__ == "__main__":
