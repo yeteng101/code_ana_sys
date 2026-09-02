@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/agent.schema.json",
+  "title": "Code Reverse Agent Ask",
+  "description": "大模型 Agent 自然语言提问接口的请求与响应。",
+  "$defs": {
+    "request": {
+      "type": "object",
+      "required": ["question"],
+      "properties": {
+        "question": {"type": "string", "minLength": 1},
+        "workspace": {"type": "string", "description": "分析产物目录，默认 demo/libuv"},
+        "run_id": {"type": "string", "minLength": 1},
+        "max_steps": {"type": "integer", "minimum": 1, "maximum": 20, "default": 6},
+        "model": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "response": {
+      "type": "object",
+      "required": ["run_id", "question", "answer", "confidence", "evidence_chain", "status"],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "question": {"type": "string"},
+        "answer": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_chain": {
+          "type": "array",
+          "items": {"$ref": "common.schema.json#/$defs/evidence"}
+        },
+        "paths": {"type": "array"},
+        "disclaimer": {"type": "string"},
+        "status": {"type": "string", "enum": ["succeeded", "partial", "failed"]},
+        "tool_calls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tool", "status"],
+            "properties": {
+              "tool": {"type": "string"},
+              "status": {"type": "string", "enum": ["ok", "error"]},
+              "arguments": {"type": "object"}
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
