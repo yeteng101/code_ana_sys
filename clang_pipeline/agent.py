@@ -88,6 +88,27 @@ AGENT_TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "analyze_repo",
+            "description": "运行完整 7 阶段 Clang 流水线并生成 JSON 产物。",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "source": {"type": "string", "description": "源码目录"},
+                    "workspace": {"type": "string", "description": "产物工作目录"},
+                    "run_id": {"type": "string"},
+                    "compile_commands": {
+                        "type": "string",
+                        "description": "可选，compile_commands.json 路径",
+                    },
+                    "build_profile": {"type": "string", "default": "default"},
+                },
+                "required": ["source", "workspace", "run_id"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_call_graph",
             "description": "获取调用关系图，可按入口函数和深度过滤。",
             "parameters": {
@@ -238,7 +259,31 @@ def _tool_read_analysis_report(ctx: AgentContext, args: dict[str, Any]) -> Any:
     return {"analysis": text[:MAX_TOOL_RESULT_CHARS]}
 
 
+def _tool_analyze_repo(ctx: AgentContext, args: dict[str, Any]) -> Any:
+    from .pipeline import run_pipeline
+
+    compile_commands = None
+    if args.get("compile_commands"):
+        from .clang_ast import read_json
+
+        compile_commands = list(read_json(Path(args["compile_commands"]).resolve()))
+    outcome = run_pipeline(
+        source_root=Path(args["source"]).resolve(),
+        workspace=Path(args["workspace"]).resolve(),
+        run_id=str(args["run_id"]),
+        build_profile=str(args.get("build_profile") or "default"),
+        publish_dir=None,
+        compile_commands=compile_commands,
+    )
+    return {
+        "status": "succeeded",
+        "run_id": outcome["run_id"],
+        "workspace": outcome["workspace"],
+    }
+
+
 TOOL_IMPLEMENTATIONS: dict[str, Callable[[AgentContext, dict[str, Any]], Any]] = {
+    "analyze_repo": _tool_analyze_repo,
     "get_call_graph": _tool_get_call_graph,
     "get_key_chains": _tool_get_key_chains,
     "get_architecture": _tool_get_architecture,

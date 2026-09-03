@@ -5,6 +5,7 @@ from pathlib import Path
 
 from clang_pipeline.agent import AgentContext, execute_tool, fallback_answer
 from clang_pipeline.agent_context import build_agent_context, write_agent_context
+from clang_pipeline.mcp_server import _mcp_tools, _respond
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -56,6 +57,21 @@ class AgentToolTests(unittest.TestCase):
         self.assertTrue(payload["artifact_paths"]["graph"])
         path = write_agent_context(self.ctx, "uv_run 调用了谁？", focus=["uv_run"])
         self.assertTrue(path.exists())
+
+    def test_mcp_tool_protocol(self) -> None:
+        tools = _mcp_tools()
+        self.assertIn("get_call_graph", [item["name"] for item in tools])
+        listed = _respond({"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
+        self.assertEqual(1, listed["id"])
+        called = _respond(
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {"name": "get_key_chains", "arguments": {}},
+            }
+        )
+        self.assertFalse(called["result"]["isError"])
 
 
 if __name__ == "__main__":

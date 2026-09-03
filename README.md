@@ -266,6 +266,75 @@ claude  = Claude Code
 export CLAUDE_CODE_BIN=/path/to/claude
 ```
 
+## Claude Code 通过 MCP 调用工具层
+
+本项目提供 MCP 工具服务，Claude Code 可以直接调用我们的工具：
+
+```bash
+export CRA_WORKSPACE=/path/to/code_ana_sys/demo/libuv
+export CRA_REPO_ROOT=/path/to/code_ana_sys
+
+claude mcp add code-reverse-agent \
+  -- python3 -m clang_pipeline.mcp_server
+```
+
+Claude Code 中会看到这些工具：
+
+```text
+analyze_repo
+get_call_graph
+get_key_chains
+get_architecture
+get_evidence
+get_source_snippet
+get_macro_analysis
+read_analysis_report
+```
+
+也可以手动测试 MCP 服务：
+
+```bash
+printf '%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
+  '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+  '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_key_chains","arguments":{}}}' \
+  | python3 -m clang_pipeline.mcp_server
+```
+
+## 调用图存入图数据库
+
+启动 Neo4j：
+
+```bash
+bash scripts/start_neo4j.sh
+```
+
+设置连接参数：
+
+```bash
+export NEO4J_URI=http://127.0.0.1:7474
+export NEO4J_USER=neo4j
+export NEO4J_PASSWORD=codeana123
+```
+
+写入调用图：
+
+```bash
+python3 -m clang_pipeline.cli graphdb \
+  --workspace demo/libuv \
+  --run-id run_libuv_1.50.0
+```
+
+Neo4j 中会创建：
+
+```text
+CodeNode   函数 / 回调节点
+Evidence   源码证据
+CALLS      调用关系
+HAS_EVIDENCE  调用边到证据的关联
+```
+
 ## 常见问题
 
 ### 没有 API Key 会怎样？
@@ -286,6 +355,10 @@ export CLAUDE_CODE_BIN=/path/to/claude
 ```bash
 bash scripts/run_libuv.sh
 ```
+
+### Neo4j 镜像下载慢？
+
+`scripts/start_neo4j.sh` 会拉取 `neo4j:5.26`，首次可能需要较长时间；也可以使用已有 Neo4j，设置 `NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD` 后直接执行 `cli graphdb`。
 
 ### 想把分析接到自己仓库？
 

@@ -11,6 +11,7 @@ from .agent_context import write_agent_context
 from .agent_runner import ask_question
 from .agent_server import AgentHandler
 from .clang_ast import read_json
+from .graph_store import store_graph_json
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
 
 
@@ -85,6 +86,29 @@ def command_tools(args: argparse.Namespace) -> None:
     print(json.dumps({"tools": AGENT_TOOLS}, ensure_ascii=False, indent=2))
 
 
+def command_graphdb(args: argparse.Namespace) -> None:
+    ctx = AgentContext(
+        Path(args.workspace).resolve(),
+        repo_root=Path(args.repo_root or ROOT).resolve(),
+        run_id=args.run_id,
+    )
+    graph = ctx.load_graph()
+    counts = store_graph_json(
+        graph,
+        args.run_id,
+        uri=args.uri or None,
+        user=args.user or None,
+        password=args.password or None,
+    )
+    print(
+        json.dumps(
+            {"status": "succeeded", "run_id": args.run_id, **counts},
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="code-reverse-agent",
@@ -131,6 +155,15 @@ def main() -> None:
 
     tools = subparsers.add_parser("tools", help="列出大模型可调用工具")
     tools.set_defaults(func=command_tools)
+
+    graphdb = subparsers.add_parser("graphdb", help="把调用图写入 Neo4j")
+    graphdb.add_argument("--workspace", default="demo/libuv")
+    graphdb.add_argument("--repo-root", default=str(ROOT))
+    graphdb.add_argument("--run-id", default="run_libuv_1.50.0")
+    graphdb.add_argument("--uri", default="")
+    graphdb.add_argument("--user", default="")
+    graphdb.add_argument("--password", default="")
+    graphdb.set_defaults(func=command_graphdb)
 
     args = parser.parse_args()
     args.func(args)
