@@ -343,7 +343,10 @@ Neo4j 中会创建：
 CodeNode   函数 / 回调节点
 Evidence   源码证据
 CALLS      调用关系
-HAS_EVIDENCE  调用边到证据的关联
+CallEdge    调用边的重实体，保存 kind/confidence/evidence_ids
+HAS_CALL_EDGE  CodeNode 到 CallEdge
+CALL_TARGET    CallEdge 到目标 CodeNode
+HAS_EVIDENCE   CallEdge 到 Evidence
 ```
 
 也可以直接运行端到端校验脚本。它会等待 Neo4j 就绪，写入调用图，然后回查

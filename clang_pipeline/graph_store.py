@@ -119,7 +119,7 @@ class Neo4jGraphStore:
                     "MATCH (b:CodeNode {run_id:$run_id, id:$target}) "
                     "MERGE (a)-[r:CALLS {run_id:$run_id, id:$edge_id}]->(b) "
                     "SET r.kind=$kind, r.confidence=$confidence, "
-                    "r.file=$file, r.line=$line",
+                    "r.file=$file, r.line=$line, r.evidence_ids=$evidence_ids",
                     {
                         "run_id": run_id,
                         "source": edge.get("source", ""),
@@ -129,16 +129,43 @@ class Neo4jGraphStore:
                         "confidence": float(edge.get("confidence", 0)),
                         "file": call_site.get("file", ""),
                         "line": int(call_site.get("line", 0)),
+                        "evidence_ids": [
+                            str(item) for item in edge.get("evidence_ids", [])
+                        ],
+                    },
+                )
+            )
+            statements.append(
+                (
+                    "MERGE (edge:CallEdge {run_id:$run_id, id:$edge_id}) "
+                    "SET edge.kind=$kind, edge.confidence=$confidence, "
+                    "edge.file=$file, edge.line=$line, edge.evidence_ids=$evidence_ids "
+                    "WITH edge "
+                    "MATCH (a:CodeNode {run_id:$run_id, id:$source}) "
+                    "MATCH (b:CodeNode {run_id:$run_id, id:$target}) "
+                    "MERGE (a)-[:HAS_CALL_EDGE]->(edge) "
+                    "MERGE (edge)-[:CALL_TARGET]->(b)",
+                    {
+                        "run_id": run_id,
+                        "source": edge.get("source", ""),
+                        "target": edge.get("target", ""),
+                        "edge_id": edge.get("id", ""),
+                        "kind": edge.get("kind", ""),
+                        "confidence": float(edge.get("confidence", 0)),
+                        "file": call_site.get("file", ""),
+                        "line": int(call_site.get("line", 0)),
+                        "evidence_ids": [
+                            str(item) for item in edge.get("evidence_ids", [])
+                        ],
                     },
                 )
             )
             for evidence_id in edge.get("evidence_ids", []):
                 statements.append(
                     (
-                        "MATCH (:CodeNode {run_id:$run_id})-[r:CALLS {run_id:$run_id, id:$edge_id}]->"
-                        "(:CodeNode {run_id:$run_id}) "
+                        "MATCH (edge:CallEdge {run_id:$run_id, id:$edge_id}) "
                         "MATCH (e:Evidence {run_id:$run_id, id:$evidence_id}) "
-                        "MERGE (r)-[:HAS_EVIDENCE]->(e)",
+                        "MERGE (edge)-[:HAS_EVIDENCE]->(e)",
                         {
                             "run_id": run_id,
                             "edge_id": edge.get("id", ""),
@@ -151,6 +178,7 @@ class Neo4jGraphStore:
         return {
             "nodes": len(nodes),
             "edges": len(edges),
+            "call_edges": len(edges),
             "evidence": len(evidence),
         }
 
@@ -163,7 +191,8 @@ class Neo4jGraphStore:
             "nodes": len(graph.get("nodes", [])),
             "edges": len(graph.get("edges", [])),
             "evidence": len(graph.get("evidence", [])),
-            "edges_with_evidence": sum(
+            "call_edges": len(graph.get("edges", [])),
+            "call_edges_with_evidence": sum(
                 1 for edge in graph.get("edges", []) if edge.get("evidence_ids")
             ),
         }
@@ -196,11 +225,14 @@ class Neo4jGraphStore:
                 "evidence",
                 "MATCH (e:Evidence {run_id:$run_id}) RETURN count(e) AS count",
             ),
-            "edges_with_evidence": scalar(
-                "edges_with_evidence",
-                "MATCH (:CodeNode {run_id:$run_id})-[r:CALLS {run_id:$run_id}]->"
-                "(:CodeNode {run_id:$run_id})-[:HAS_EVIDENCE]->"
-                "(:Evidence {run_id:$run_id}) RETURN count(DISTINCT r) AS count",
+            "call_edges": scalar(
+                "call_edges",
+                "MATCH (edge:CallEdge {run_id:$run_id}) RETURN count(edge) AS count",
+            ),
+            "call_edges_with_evidence": scalar(
+                "call_edges_with_evidence",
+                "MATCH (edge:CallEdge {run_id:$run_id})-[:HAS_EVIDENCE]->"
+                "(:Evidence {run_id:$run_id}) RETURN count(DISTINCT edge) AS count",
             ),
         }
 
