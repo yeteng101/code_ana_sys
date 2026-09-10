@@ -1,0 +1,90 @@
+name: Regression
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Clang
+        run: sudo apt-get update && sudo apt-get install -y clang libclang-dev
+      - name: Compile Python sources
+        run: python -m compileall -q clang_pipeline call_chain_demo scripts
+      - name: Pipeline and Agent/MCP regression
+        run: python -m unittest discover -s clang_pipeline/tests -v
+      - name: HTTP JSON regression
+        run: python -m unittest discover -s call_chain_demo/tests -v
+      - name: MCP smoke test
+        run: |
+          printf '%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"github-actions","version":"1.0"}}}' \
+            '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+            '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_key_chains","arguments":{}}}' \
+            | python -m clang_pipeline.mcp_server > /tmp/mcp.jsonl
+          python - <<'PY'
+          import json
+          messages = [json.loads(line) for line in open("/tmp/mcp.jsonl", encoding="utf-8")]
+          by_id = {message.get("id"): message for message in messages}
+          assert "get_call_graph" in {
+              tool["name"] for tool in by_id[2]["result"]["tools"]
+          }
+          assert by_id[3]["result"]["isError"] is False
+          print("MCP smoke: ok")
+          PY
+
+  neo4j-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      neo4j:
+        image: neo4j:5.26
+        env:
+          NEO4J_AUTH: neo4j/testtest123
+        ports:
+          - 7474:7474
+          - 7687:7687
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Write graph and read it back
+        run: |
+          python scripts/verify_neo4j.py \
+            --workspace demo/libuv \
+            --run-id run_libuv_1.50.0 \
+            --uri http://127.0.0.1:7474 \
+            --user neo4j \
+            --password testtest123
+
+  openai-e2e:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: OpenAI end-to-end
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY secret is not configured; skipping."
+            exit 0
+          fi
+          python scripts/verify_openai.py --workspace demo/libuv

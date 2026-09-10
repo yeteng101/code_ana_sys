@@ -28,7 +28,7 @@ class Neo4jGraphStore:
         if not self.password:
             raise GraphStoreError("缺少 NEO4J_PASSWORD")
 
-    def _run(self, statements: list[tuple[str, dict[str, Any]]]) -> None:
+    def _run(self, statements: list[tuple[str, dict[str, Any]]]) -> dict[str, Any]:
         url = f"{self.uri}/db/{self.database}/tx/commit"
         payload = {
             "statements": [
@@ -55,6 +55,25 @@ class Neo4jGraphStore:
         errors = data.get("errors") or []
         if errors:
             raise GraphStoreError(f"Neo4j 执行失败: {json.dumps(errors, ensure_ascii=False)}")
+        return data
+
+    def query(
+        self,
+        statement: str,
+        parameters: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        data = self._run([(statement, parameters or {})])
+        results = data.get("results") or []
+        if not results:
+            return []
+        result = results[0]
+        columns = result.get("columns") or []
+        rows = result.get("data") or []
+        return [
+            dict(zip(columns, item.get("row") or []))
+            for item in rows
+            if isinstance(item, dict)
+        ]
 
     def store_graph(self, graph: dict[str, Any], run_id: str) -> dict[str, int]:
         statements: list[tuple[str, dict[str, Any]]] = []
@@ -134,6 +153,72 @@ class Neo4jGraphStore:
             "evidence": len(evidence),
         }
 
+    def verify_graph(
+        self,
+        graph: dict[str, Any],
+        run_id: str,
+    ) -> dict[str, Any]:
+        expected = {
+            "nodes": len(graph.get("nodes", [])),
+            "edges": len(graph.get("edges", [])),
+            "evidence": len(graph.get("evidence", [])),
+            "edges_with_evidence": sum(
+                1 for edge in graph.get("edges", []) if edge.get("evidence_ids")
+            ),
+        }
+        checks: list[dict[str, Any]] = []
+
+        def scalar(name: str, statement: str) -> int:
+            rows = self.query(statement, {"run_id": run_id})
+            value = int(rows[0].get("count", 0)) if rows else 0
+            checks.append(
+                {
+                    "name": name,
+                    "expected": expected.get(name),
+                    "actual": value,
+                    "passed": value == expected.get(name),
+                }
+            )
+            return value
+
+        actual = {
+            "nodes": scalar(
+                "nodes",
+                "MATCH (n:CodeNode {run_id:$run_id}) RETURN count(n) AS count",
+            ),
+            "edges": scalar(
+                "edges",
+                "MATCH (:CodeNode {run_id:$run_id})-[r:CALLS {run_id:$run_id}]->"
+                "(:CodeNode {run_id:$run_id}) RETURN count(r) AS count",
+            ),
+            "evidence": scalar(
+                "evidence",
+                "MATCH (e:Evidence {run_id:$run_id}) RETURN count(e) AS count",
+            ),
+            "edges_with_evidence": scalar(
+                "edges_with_evidence",
+                "MATCH (:CodeNode {run_id:$run_id})-[r:CALLS {run_id:$run_id}]->"
+                "(:CodeNode {run_id:$run_id})-[:HAS_EVIDENCE]->"
+                "(:Evidence {run_id:$run_id}) RETURN count(DISTINCT r) AS count",
+            ),
+        }
+
+        entry_rows = self.query(
+            "MATCH (a:CodeNode {run_id:$run_id, name:$name})-[r:CALLS {run_id:$run_id}]->"
+            "(b:CodeNode) RETURN b.name AS name, b.kind AS kind, r.kind AS edge_kind "
+            "ORDER BY b.name LIMIT 20",
+            {"run_id": run_id, "name": "uv_run"},
+        )
+        result = {
+            "status": "verified" if all(check["passed"] for check in checks) else "failed",
+            "run_id": run_id,
+            "expected": expected,
+            "actual": actual,
+            "checks": checks,
+            "sample_uv_run_targets": entry_rows,
+        }
+        return result
+
 
 def store_graph_json(
     graph: dict[str, Any],
@@ -145,3 +230,15 @@ def store_graph_json(
 ) -> dict[str, int]:
     store = Neo4jGraphStore(uri=uri, user=user, password=password)
     return store.store_graph(graph, run_id)
+
+
+def verify_graph_json(
+    graph: dict[str, Any],
+    run_id: str,
+    *,
+    uri: str | None = None,
+    user: str | None = None,
+    password: str | None = None,
+) -> dict[str, Any]:
+    store = Neo4jGraphStore(uri=uri, user=user, password=password)
+    return store.verify_graph(graph, run_id)

@@ -11,7 +11,7 @@ from .agent_context import write_agent_context
 from .agent_runner import ask_question
 from .agent_server import AgentHandler
 from .clang_ast import read_json
-from .graph_store import store_graph_json
+from .graph_store import store_graph_json, verify_graph_json
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
 
 
@@ -100,13 +100,21 @@ def command_graphdb(args: argparse.Namespace) -> None:
         user=args.user or None,
         password=args.password or None,
     )
-    print(
-        json.dumps(
-            {"status": "succeeded", "run_id": args.run_id, **counts},
-            ensure_ascii=False,
-            indent=2,
+    result: dict[str, Any] = {"status": "succeeded", "run_id": args.run_id, **counts}
+    if args.verify:
+        verification = verify_graph_json(
+            graph,
+            args.run_id,
+            uri=args.uri or None,
+            user=args.user or None,
+            password=args.password or None,
         )
-    )
+        result["verification"] = verification
+        if verification.get("status") != "verified":
+            result["status"] = "failed"
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    if result["status"] != "succeeded":
+        raise SystemExit(1)
 
 
 def main() -> None:
@@ -163,6 +171,11 @@ def main() -> None:
     graphdb.add_argument("--uri", default="")
     graphdb.add_argument("--user", default="")
     graphdb.add_argument("--password", default="")
+    graphdb.add_argument(
+        "--verify",
+        action="store_true",
+        help="写入后回查节点、边、证据数量和 uv_run 出边",
+    )
     graphdb.set_defaults(func=command_graphdb)
 
     args = parser.parse_args()

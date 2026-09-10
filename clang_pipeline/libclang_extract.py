@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+import glob
 import shlex
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,9 @@ LIBRARY_PATHS = [
     "/usr/local/opt/llvm/lib/libclang.dylib",
     "/opt/homebrew/opt/llvm/lib/libclang.dylib",
     "libclang.so",
+    "/usr/lib/llvm-*/lib/libclang.so",
+    "/usr/lib/llvm-*/lib/libclang.so.*",
+    "/usr/lib/*/libclang-*.so*",
 ]
 
 
@@ -57,11 +61,13 @@ CXCursorVisitor = ctypes.CFUNCTYPE(
 
 def _load_library() -> ctypes.CDLL:
     last_error: Exception | None = None
-    for path in LIBRARY_PATHS:
-        try:
-            return ctypes.CDLL(path)
-        except OSError as exc:
-            last_error = exc
+    for pattern in LIBRARY_PATHS:
+        candidates = sorted(glob.glob(pattern)) if glob.has_magic(pattern) else [pattern]
+        for path in candidates:
+            try:
+                return ctypes.CDLL(path)
+            except OSError as exc:
+                last_error = exc
     raise RuntimeError(f"无法加载 libclang: {last_error}")
 
 

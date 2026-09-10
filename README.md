@@ -251,6 +251,16 @@ python3 -m unittest discover -s clang_pipeline/tests -v
 python3 -m unittest discover -s call_chain_demo/tests -v
 ```
 
+GitHub Actions 会在 push 和 pull request 时自动执行：
+
+- 样例 Clang 七阶段流水线回归
+- Agent 工具与 MCP stdio 协议回归
+- `call_chain_demo` 的 JSON/HTTP 回归
+- Neo4j 写入、回查节点/边/证据数量和 `uv_run` 出边
+
+OpenAI 真实调用只在手动触发 `workflow_dispatch` 且仓库配置了
+`OPENAI_API_KEY` secret 时执行，避免普通提交产生 API 成本。
+
 ## Claude Code 注意
 
 macOS 上：
@@ -323,7 +333,8 @@ export NEO4J_PASSWORD=codeana123
 ```bash
 python3 -m clang_pipeline.cli graphdb \
   --workspace demo/libuv \
-  --run-id run_libuv_1.50.0
+  --run-id run_libuv_1.50.0 \
+  --verify
 ```
 
 Neo4j 中会创建：
@@ -333,6 +344,25 @@ CodeNode   函数 / 回调节点
 Evidence   源码证据
 CALLS      调用关系
 HAS_EVIDENCE  调用边到证据的关联
+```
+
+也可以直接运行端到端校验脚本。它会等待 Neo4j 就绪，写入调用图，然后回查
+`CodeNode`、`CALLS`、`Evidence`、`HAS_EVIDENCE` 数量，并抽样验证
+`uv_run` 的出边：
+
+```bash
+python3 scripts/verify_neo4j.py \
+  --workspace demo/libuv \
+  --run-id run_libuv_1.50.0
+```
+
+如果 Neo4j 不在本机默认端口，传入：
+
+```bash
+python3 scripts/verify_neo4j.py \
+  --uri http://127.0.0.1:7474 \
+  --user neo4j \
+  --password codeana123
 ```
 
 ## 常见问题
@@ -347,6 +377,29 @@ HAS_EVIDENCE  调用边到证据的关联
   "answer": "当前未配置大模型 API Key..."
 }
 ```
+
+### 怎么验证 OpenAI API Key 端到端可用？
+
+先设置 Key 和模型：
+
+```bash
+export OPENAI_API_KEY='sk-...'
+export OPENAI_MODEL='gpt-5'
+```
+
+然后执行：
+
+```bash
+python3 scripts/verify_openai.py --workspace demo/libuv
+```
+
+脚本检查三件事：
+
+1. `OPENAI_API_KEY` 是否存在；
+2. 模型是否能通过 Agent 调用 `get_call_graph` 等工具；
+3. 最终是否返回 `status=succeeded` 的 JSON 答案。
+
+如果没有 Key，脚本会返回 `status=skipped` 并打印下一步命令，不会伪造成功。
 
 ### libuv 的 workspace 不在 Git 里？
 
