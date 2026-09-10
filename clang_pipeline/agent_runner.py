@@ -77,7 +77,8 @@ def _ask_claude_code(
     context_path = write_agent_context(ctx, question, focus=focus)
     prompt = (
         f"请先读取上下文文件 {context_path}，再回答下面的问题。\n"
-        f"上下文文件里包含 artifact_paths，如需要可继续读取对应产物。\n\n"
+        f"上下文文件里包含 artifact_paths，如需要可继续读取对应产物。\n"
+        f"证据 ID 必须从上下文 evidence[].id 或工具返回结果中选取；没有证据时返回空数组。\n\n"
         f"问题：{question}"
     )
     payload = run_claude_code(
@@ -88,7 +89,9 @@ def _ask_claude_code(
         json_schema=ANSWER_SCHEMA,
         add_dirs=[ctx.workspace],
     )
-    content = payload.get("result")
+    content = payload.get("structured_output")
+    if content is None:
+        content = payload.get("result")
     if isinstance(content, str):
         try:
             parsed = json.loads(content)

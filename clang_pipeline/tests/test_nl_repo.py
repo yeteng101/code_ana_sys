@@ -21,6 +21,13 @@ class NaturalLanguageRepositoryTests(unittest.TestCase):
             question = f"请分析仓库 {repo}，看看 main 调用了谁"
             self.assertEqual(repo.resolve(), extract_repo_path(question))
 
+    def test_invalid_explicit_path_fails_fast(self) -> None:
+        with self.assertRaisesRegex(ValueError, "不存在或不是源码仓库"):
+            extract_repo_path(
+                "请分析仓库 /definitely/not/an/existing/repo",
+                strict=True,
+            )
+
     def test_discover_compile_commands_in_build_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp) / "sample_repo"

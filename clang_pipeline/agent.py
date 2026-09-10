@@ -363,6 +363,7 @@ def chat_completion(
 SYSTEM_PROMPT = (
     "你是代码逆向分析专家 Agent。你可以调用工具获取调用图、关键链、架构、证据和源码。"
     "所有结论必须基于工具返回的事实，禁止编造源码。"
+    "evidence_ids 必须来自上下文文件或工具返回的 evidence 列表，不能自己生成。"
     "最终必须返回 JSON object，格式为 "
     '{"answer": "...", "confidence": 0.0-1.0, "evidence_ids": [...], "disclaimer": "..."}。'
 )

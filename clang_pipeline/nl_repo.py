@@ -26,7 +26,7 @@ def _is_repository(path: Path) -> bool:
     return False
 
 
-def _path_candidates(question: str, cwd: Path) -> list[Path]:
+def _raw_path_candidates(question: str, cwd: Path) -> list[Path]:
     candidates: list[Path] = []
     quoted = re.findall(r'"([^"]+)"|\'([^\']+)\'', question)
     for left, right in quoted:
@@ -49,9 +49,17 @@ def _path_candidates(question: str, cwd: Path) -> list[Path]:
             candidate = candidate.resolve()
         except OSError:
             continue
-        if _is_repository(candidate) and candidate not in result:
+        if candidate not in result:
             result.append(candidate)
     return result
+
+
+def _path_candidates(question: str, cwd: Path) -> list[Path]:
+    return [
+        candidate
+        for candidate in _raw_path_candidates(question, cwd)
+        if _is_repository(candidate)
+    ]
 
 
 def extract_repo_path(
@@ -59,15 +67,25 @@ def extract_repo_path(
     *,
     explicit: str | Path | None = None,
     cwd: str | Path | None = None,
+    strict: bool = False,
 ) -> Path | None:
     if explicit:
         path = Path(explicit).expanduser()
         if not path.is_absolute():
             path = Path(cwd or Path.cwd()) / path
         path = path.resolve()
-        return path if _is_repository(path) else None
-    for path in _path_candidates(question, Path(cwd or Path.cwd()).resolve()):
+        if _is_repository(path):
+            return path
+        if strict:
+            raise ValueError(f"路径不是可分析的源码仓库: {path}")
+        return None
+    root = Path(cwd or Path.cwd()).resolve()
+    for path in _path_candidates(question, root):
         return path
+    if strict:
+        raw = _raw_path_candidates(question, root)
+        if raw:
+            raise ValueError(f"问题中的路径不存在或不是源码仓库: {raw[0]}")
     return None
 
 
@@ -161,8 +179,9 @@ def analyze_from_question(
     repository: str | None = None,
     commit: str = "local",
     entry_symbols: list[str] | None = None,
+    strict: bool = False,
 ) -> dict[str, Any] | None:
-    repo = extract_repo_path(question, explicit=source)
+    repo = extract_repo_path(question, explicit=source, strict=strict)
     if repo is None:
         return None
     return analyze_repository(
@@ -198,6 +217,7 @@ def prepare_question_context(
             compile_commands=compile_commands,
             publish_dir=publish_dir,
             build_profile=build_profile,
+            strict=True,
         )
         if auto_analyze
         else None

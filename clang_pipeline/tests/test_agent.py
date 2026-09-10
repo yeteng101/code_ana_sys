@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from clang_pipeline.agent import AgentContext, execute_tool, fallback_answer
 from clang_pipeline.agent_context import build_agent_context, write_agent_context
+from clang_pipeline.agent_runner import _ask_claude_code
 from clang_pipeline.mcp_server import _mcp_tools, _respond
 
 
@@ -72,6 +74,28 @@ class AgentToolTests(unittest.TestCase):
             }
         )
         self.assertFalse(called["result"]["isError"])
+
+    def test_claude_code_structured_output_is_parsed(self) -> None:
+        payload = {
+            "structured_output": {
+                "answer": "uv_run 调用 uv__io_poll",
+                "confidence": 0.9,
+                "evidence_ids": ["ev_a3dcf6ec0abb"],
+            }
+        }
+        with patch(
+            "clang_pipeline.agent_runner.run_claude_code",
+            return_value=payload,
+        ):
+            result = _ask_claude_code(
+                "uv_run 调用了谁？",
+                self.ctx,
+                model=None,
+                focus=None,
+            )
+        self.assertEqual("uv_run 调用 uv__io_poll", result["answer"])
+        self.assertEqual(0.9, result["confidence"])
+        self.assertEqual("ev_a3dcf6ec0abb", result["evidence_chain"][0]["id"])
 
 
 if __name__ == "__main__":
