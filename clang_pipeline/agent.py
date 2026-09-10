@@ -260,26 +260,16 @@ def _tool_read_analysis_report(ctx: AgentContext, args: dict[str, Any]) -> Any:
 
 
 def _tool_analyze_repo(ctx: AgentContext, args: dict[str, Any]) -> Any:
-    from .pipeline import run_pipeline
+    from .nl_repo import analyze_repository
 
-    compile_commands = None
-    if args.get("compile_commands"):
-        from .clang_ast import read_json
-
-        compile_commands = list(read_json(Path(args["compile_commands"]).resolve()))
-    outcome = run_pipeline(
-        source_root=Path(args["source"]).resolve(),
-        workspace=Path(args["workspace"]).resolve(),
+    return analyze_repository(
+        args["source"],
+        workspace=args["workspace"],
         run_id=str(args["run_id"]),
+        compile_commands=args.get("compile_commands"),
         build_profile=str(args.get("build_profile") or "default"),
         publish_dir=None,
-        compile_commands=compile_commands,
     )
-    return {
-        "status": "succeeded",
-        "run_id": outcome["run_id"],
-        "workspace": outcome["workspace"],
-    }
 
 
 TOOL_IMPLEMENTATIONS: dict[str, Callable[[AgentContext, dict[str, Any]], Any]] = {

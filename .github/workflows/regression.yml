@@ -71,7 +71,13 @@ jobs:
             --run-id run_libuv_1.50.0 \
             --uri http://127.0.0.1:7474 \
             --user neo4j \
-            --password testtest123
+            --password testtest123 > demo/neo4j-verification.json
+          cat demo/neo4j-verification.json
+      - name: Upload Neo4j verification artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neo4j-verification
+          path: demo/neo4j-verification.json
 
   openai-e2e:
     if: github.event_name == 'workflow_dispatch'

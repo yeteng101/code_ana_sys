@@ -12,6 +12,7 @@ from .agent_runner import ask_question
 from .agent_server import AgentHandler
 from .clang_ast import read_json
 from .graph_store import store_graph_json, verify_graph_json
+from .nl_repo import prepare_question_context
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
 
 
@@ -38,10 +39,18 @@ def command_analyze(args: argparse.Namespace) -> None:
 
 
 def command_ask(args: argparse.Namespace) -> None:
-    ctx = AgentContext(
-        Path(args.workspace).resolve(),
-        repo_root=Path(args.repo_root).resolve(),
+    workspace, run_id, analysis = prepare_question_context(
+        args.question,
+        source=args.source,
+        workspace=args.workspace,
         run_id=args.run_id,
+        compile_commands=args.compile_commands,
+        auto_analyze=args.auto_analyze,
+    )
+    ctx = AgentContext(
+        workspace,
+        repo_root=Path(args.repo_root).resolve(),
+        run_id=run_id,
     )
     result = ask_question(
         args.question,
@@ -51,6 +60,8 @@ def command_ask(args: argparse.Namespace) -> None:
         model=args.model,
         focus=args.focus or None,
     )
+    if analysis is not None:
+        result["analysis"] = analysis
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
@@ -139,9 +150,21 @@ def main() -> None:
 
     ask = subparsers.add_parser("ask", help="自然语言提问并输出 JSON")
     ask.add_argument("--question", required=True)
-    ask.add_argument("--workspace", default="demo/libuv")
+    ask.add_argument("--workspace", default=None)
     ask.add_argument("--repo-root", default=str(ROOT))
-    ask.add_argument("--run-id", default="run_libuv_1.50.0")
+    ask.add_argument("--run-id", default=None)
+    ask.add_argument(
+        "--source",
+        default=None,
+        help="可选：直接指定源码目录；问题中也可以直接写仓库路径",
+    )
+    ask.add_argument("--compile-commands", default=None)
+    ask.add_argument(
+        "--auto-analyze",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="问题中包含源码仓库路径时，先自动运行七阶段流水线",
+    )
     ask.add_argument("--backend", choices=["auto", "openai", "claude-code"], default="auto")
     ask.add_argument("--max-steps", type=int, default=6)
     ask.add_argument("--model", default=None)

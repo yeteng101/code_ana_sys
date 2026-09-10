@@ -47,11 +47,20 @@ def build_compile_commands(
     root = Path.cwd().resolve()
     include_dir = relpath(root, str(source_root))
     commands: list[dict[str, Any]] = []
-    files = sorted(source_root.rglob("*.cpp")) + sorted(source_root.rglob("*.cc"))
+    files = (
+        sorted(source_root.rglob("*.c"))
+        + sorted(source_root.rglob("*.cpp"))
+        + sorted(source_root.rglob("*.cc"))
+    )
     headers = sorted(source_root.rglob("*.h")) + sorted(source_root.rglob("*.hpp"))
     for path in files + headers:
         file = relpath(root, str(path))
-        arguments = [compiler, "-std=c++17", "-I", include_dir]
+        unit_compiler = compiler
+        standard = "-std=c++17"
+        if path.suffix == ".c":
+            unit_compiler = "clang"
+            standard = "-std=c11"
+        arguments = [unit_compiler, standard, "-I", include_dir]
         if path.suffix in {".h", ".hpp"}:
             arguments += ["-x", "c++"]
         arguments += [f"-D{define}" for define in defines]
@@ -62,7 +71,7 @@ def build_compile_commands(
                 "file": file,
                 "arguments": arguments,
                 "build_profile": build_profile,
-                "compiler": compiler,
+                "compiler": unit_compiler,
                 "defines": defines,
             }
         )

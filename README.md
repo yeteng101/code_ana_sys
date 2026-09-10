@@ -1,3 +1,310 @@
+# 周会汇报（2026-09-10）
+
+> 本周主题：把代码逆向分析系统从“能跑流水线”推进到“能自然语言分析、能写入图数据库、能自动回归”的完整闭环。
+
+## 一、本周目标
+
+围绕 C/C++ 代码逆向分析，完成四件事：
+
+1. 用 Clang 真正解析源码，产出带证据的调用图和关键调用链。
+2. 把分析能力包装成大模型可以调用的工具层。
+3. 让自然语言输入仓库路径后，自动完成分析并回答代码问题。
+4. 把调用图写入 Neo4j，并接入 GitHub Actions 自动回归。
+
+## 二、本周完成内容
+
+### 1. Clang 七阶段分析流水线
+
+已完成并跑通以下阶段：
+
+```text
+源码索引
+  → 宏分析
+  → 调用图
+  → 函数指针分析
+  → 异步回调链
+  → 证据验证
+  → 报告与架构图
+```
+
+每个阶段通过 JSON 文件接力，上一阶段输出作为下一阶段输入，不依赖中心化 Orchestrator。
+
+真实 libuv v1.50.0 分析结果：
+
+| 指标 | 结果 |
+|---|---:|
+| 函数/回调节点 | 633 |
+| 调用边 | 1481 |
+| 源码证据 | 1543 |
+| 验证覆盖率 | 79.37% |
+| 当前状态 | partial |
+
+样例工程 `demo/sample` 已做到完整通过，覆盖直接调用、函数指针、异步回调和证据片段。
+
+### 2. 自然语言驱动的仓库分析
+
+新增了“问题中包含仓库路径，自动先分析再回答”的能力。
+
+示例：
+
+```bash
+python3 -m clang_pipeline.cli ask \
+  --question "请分析仓库 /path/to/libuv，uv_run 调用了谁？" \
+  --backend claude-code
+```
+
+执行过程：
+
+1. 从自然语言中识别仓库路径。
+2. 自动查找 `compile_commands.json`，找不到时生成通用编译数据库。
+3. 自动运行七阶段流水线。
+4. 生成 Agent 上下文。
+5. 调用 Claude Code / OpenAI 回答。
+6. 输出 JSON 结果、分析工作目录和证据链。
+
+如果只想查询已有产物，不重新分析，可以加：
+
+```bash
+python3 -m clang_pipeline.cli ask \
+  --question "uv_run 调用了谁？" \
+  --workspace demo/libuv \
+  --no-auto-analyze \
+  --backend claude-code
+```
+
+### 3. Agent 工具层与 MCP
+
+项目向大模型暴露以下工具：
+
+```text
+analyze_repo
+get_call_graph
+get_key_chains
+get_architecture
+get_evidence
+get_source_snippet
+get_macro_analysis
+read_analysis_report
+```
+
+已完成三种接入方式：
+
+| 接入方式 | 用途 |
+|---|---|
+| Claude Code CLI | 本地直接调用 Claude Code 分析 |
+| MCP stdio 服务 | 让 Claude Code 调用我们的代码分析工具 |
+| HTTP JSON 服务 | 给外部程序或后续网页调用 |
+
+Claude Code 注册我们自己的 MCP：
+
+```bash
+claude mcp add code-reverse-agent \
+  -s user \
+  -e CRA_WORKSPACE=/Users/andye/Documents/ChatGPT/8.18huawei/demo/libuv \
+  -e CRA_REPO_ROOT=/Users/andye/Documents/ChatGPT/8.18huawei \
+  -e PYTHONPATH=/Users/andye/Documents/ChatGPT/8.18huawei \
+  -- python3 -m clang_pipeline.mcp_server
+```
+
+### 4. Neo4j 图数据库
+
+调用图现在可以写入 Neo4j 5.26。
+
+本次采用“调用边重实体”模型：
+
+```text
+CodeNode      源码函数或回调节点
+CallEdge      一条调用边的重实体
+Evidence      源码证据
+
+CodeNode -[:HAS_CALL_EDGE]-> CallEdge
+CallEdge -[:CALL_TARGET]-> CodeNode
+CallEdge -[:HAS_EVIDENCE]-> Evidence
+```
+
+这样每条调用边都能直接关联多条源码证据，不会出现“关系再连关系”的非法图模型。
+
+GitHub Actions 真实 Neo4j 容器回查结果：
+
+| 指标 | 写入 | 回查 |
+|---|---:|---:|
+| CodeNode | 633 | 633 |
+| CallEdge | 1481 | 1481 |
+| Evidence | 1543 | 1543 |
+| 带证据的调用边 | 1481 | 1481 |
+
+本地启动 Neo4j：
+
+```bash
+bash scripts/start_neo4j.sh
+```
+
+写入并回查：
+
+```bash
+python3 scripts/verify_neo4j.py \
+  --workspace demo/libuv \
+  --run-id run_libuv_1.50.0
+```
+
+### 5. GitHub Actions 自动回归
+
+新增工作流：
+
+```text
+.github/workflows/regression.yml
+```
+
+每次 push 或 pull request 自动执行：
+
+- 样例 Clang 七阶段流水线
+- Agent 工具层测试
+- MCP stdio 协议测试
+- HTTP JSON 接口测试
+- Neo4j 写入与回查
+
+Neo4j 回查结果会作为 `neo4j-verification` artifact 上传，可在 GitHub Actions 运行页面下载。
+
+### 6. 任务看板同步
+
+当前 Kanb 看板已建立 9 个任务：
+
+- libuv 真实流水线：已完成
+- Agent / HTTP / MCP 框架：已完成
+- GitHub Actions 回归：已完成
+- Neo4j 端到端验证：已完成
+- 毕业实习报告：已完成
+- libuv 覆盖率提升到 90%：待办
+- Redis 真实仓库分析：待办
+- Claude Code MCP 端到端提问：待办
+- OpenAI API Key 端到端验证：进行中
+
+## 三、关键产物在哪里
+
+### 1. 分析产物
+
+```text
+demo/libuv/graph.json          调用图
+demo/libuv/architecture.json   模块架构
+demo/libuv/key-chains.json     关键调用链
+demo/libuv/analysis.md         自然语言分析报告
+demo/libuv/run-result.json     统一运行结果
+```
+
+### 2. 完整七阶段产物
+
+```text
+demo/run_libuv_v1.50.0/
+├── 01-index/symbols.json
+├── 02-macro/macros.json
+├── 03-callgraph/callgraph.json
+├── 04-fptr/fptr-candidates.json
+├── 05-async/async-chains.json
+├── 06-verify/verification.json
+└── 07-report/
+```
+
+### 3. Neo4j 数据库产物
+
+Neo4j 的真实数据库文件在 Docker 容器数据卷里，不在 Git 仓库中。仓库里保存的是“源图”和“可验证结果”：
+
+```text
+demo/libuv/graph.json
+  写入 Neo4j 的源调用图
+
+GitHub Actions artifact: neo4j-verification
+  Neo4j 写入后回查得到的验证 JSON
+```
+
+如果需要重新导出 Neo4j 中的数据，可以执行 Cypher：
+
+```cypher
+MATCH (n:CodeNode {run_id: 'run_libuv_1.50.0'})
+RETURN n.id, n.name, n.kind
+LIMIT 50;
+```
+
+```cypher
+MATCH (a:CodeNode {run_id: 'run_libuv_1.50.0'})
+      -[r:CALLS {run_id: 'run_libuv_1.50.0'}]->(b)
+RETURN a.name, r.kind, b.name, r.confidence
+LIMIT 50;
+```
+
+## 四、本周遇到的问题与解决
+
+### 问题 1：Neo4j 不能把关系直接连到关系
+
+最初设计为：
+
+```text
+CALLS -> HAS_EVIDENCE -> Evidence
+```
+
+但 Neo4j 属性图里，关系只能连接节点，不能连接其他关系。CI 真容器运行后暴露了问题，最后改成 `CallEdge` 节点重实体模型，调用边和证据现在都能被正确回查。
+
+### 问题 2：本机 Docker daemon 不可用
+
+本机无法稳定启动 Neo4j 容器，因此把真实 Neo4j 验证放入 GitHub Actions：
+
+- 使用 `neo4j:5.26` service container
+- 写入真实的 1481 条调用边
+- 回查节点、边、证据和 `uv_run` 出边
+- 上传验证 artifact
+
+这样不依赖本机 Docker，也能保证回归结果可复现。
+
+### 问题 3：CI 缺少 libuv 源码
+
+CI 首次运行时 Agent 测试找不到 `third_party/libuv/src/unix/core.c`，因为源码目录被 `.gitignore` 排除了。工作流已增加固定版本 libuv 源码 checkout，测试恢复通过。
+
+## 五、周会现场可以演示什么
+
+推荐演示顺序：
+
+1. 打开 Kanb 看板，展示本周任务状态和依赖关系。
+2. 运行自然语言分析：
+
+```bash
+python3 -m clang_pipeline.cli ask \
+  --question "请分析仓库 /Users/andye/Documents/ChatGPT/8.18huawei/demo/sample，loop_run 调用了谁？" \
+  --backend claude-code
+```
+
+3. 展示 `demo/libuv/graph.json` 和 `key-chains.json`。
+4. 打开 GitHub Actions Regression 页面，展示：
+   - Python/Clang 回归通过
+   - MCP 协议通过
+   - Neo4j 真容器回查通过
+   - `neo4j-verification` artifact 可下载
+5. 展示 Claude Code 通过 MCP 调用 `get_call_graph` 或 `get_key_chains`。
+
+## 六、下周计划
+
+| 优先级 | 任务 | 目标 |
+|---|---|---|
+| P0 | 提升 libuv 验证覆盖率 | 79.4% → 90% |
+| P0 | Redis 固定 commit 真实分析 | 跑通 CMake + compile_commands |
+| P1 | Claude Code MCP 全链路 | 自然语言提问 → 工具调用 → JSON 答案 |
+| P1 | OpenAI Key 端到端 | 配置 secret 后跑真实模型验证 |
+| P2 | 导出 Neo4j 查询结果 | 生成节点/边/证据 CSV 或 JSON |
+
+## 七、风险和待确认
+
+- libuv 仍有约 20.6% 调用边无法唯一确认，主要来自函数指针和平台条件编译。
+- Redis 目前仍是 fixture，不能算真实仓库分析结果。
+- OpenAI 真实调用需要先在 GitHub 仓库配置 `OPENAI_API_KEY` secret。
+- Neo4j 数据默认在容器卷中；如果要作为汇报附件，需要额外导出节点/边 JSON 或 CSV。
+
+## 八、相关链接
+
+- GitHub 分支：<https://github.com/yeteng101/code_ana_sys/tree/codex/agent-llm-framework>
+- GitHub Actions：<https://github.com/yeteng101/code_ana_sys/actions/workflows/regression.yml>
+- Kanb 看板：<https://workflow.yeteng.xin>
+- 项目原 README：从下一节开始保留
+
+---
+
 # Code Reverse Agent
 
 一个完整可运行的代码逆向分析项目：
