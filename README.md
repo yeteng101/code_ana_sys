@@ -1,6 +1,10 @@
 # 周会汇报（2026-09-10）
 
 > 本周主题：把代码逆向分析系统从“能跑流水线”推进到“能自然语言分析、能写入图数据库、能自动回归”的完整闭环。
+>
+> 外部接口文档：[docs/external-interfaces.md](docs/external-interfaces.md)
+>
+> 调用链验证集：[validation/call-chains/README.md](validation/call-chains/README.md)
 
 ## 一、本周目标
 
@@ -278,6 +282,40 @@ python3 -m clang_pipeline.cli ask \
    - Neo4j 真容器回查通过
    - `neo4j-verification` artifact 可下载
 5. 展示 Claude Code 通过 MCP 调用 `get_call_graph` 或 `get_key_chains`。
+
+### 验证集当前进度
+
+调用链正负样本第一版已完成：
+
+```text
+validation/call-chains/dataset.json
+```
+
+当前包含：
+
+| 类型 | 数量 |
+|---|---:|
+| 正样本 | 10 |
+| 负样本 | 6 |
+| 合计 | 16 |
+
+校验命令：
+
+```bash
+python3 scripts/check_call_chain_validation.py \
+  --dataset validation/call-chains/dataset.json \
+  --graph demo/graph.json \
+  --graph demo/libuv/graph.json
+```
+
+当前校验结果：
+
+```text
+status: verified
+positive: 10
+negative: 6
+errors: 0
+```
 
 ## 六、下周计划
 

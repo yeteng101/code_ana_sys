@@ -25,6 +25,12 @@ jobs:
             https://github.com/libuv/libuv.git third_party/libuv
       - name: Compile Python sources
         run: python -m compileall -q clang_pipeline call_chain_demo scripts
+      - name: Validate call-chain dataset
+        run: |
+          python scripts/check_call_chain_validation.py \
+            --dataset validation/call-chains/dataset.json \
+            --graph demo/graph.json \
+            --graph demo/libuv/graph.json
       - name: Pipeline and Agent/MCP regression
         run: python -m unittest discover -s clang_pipeline/tests -v
       - name: HTTP JSON regression
