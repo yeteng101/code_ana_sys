@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/code-reverse-agent/schemas/resource-flow.schema.json",
+  "title": "ResourceFlow（外部资源流结果）",
+  "type": "object",
+  "required": ["schema_version", "run_id", "result_type", "status", "items", "evidence", "warnings"],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "run_id": {"type": "string"},
+    "result_type": {"const": "resource_flow"},
+    "status": {"type": "string", "enum": ["succeeded", "partial", "failed", "not_available"]},
+    "generated_at": {"type": "string"},
+    "source": {"type": "object"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "resource", "resource_type", "operations", "confidence", "evidence_ids"],
+        "properties": {
+          "id": {"type": "string"},
+          "resource": {"type": "string"},
+          "resource_type": {
+            "type": "string",
+            "enum": ["file_descriptor", "memory", "lock", "connection", "handle", "reference", "other"]
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "file", "line", "evidence_ids"],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "acquire",
+                    "hold",
+                    "transfer",
+                    "wait",
+                    "release",
+                    "leak_suspected",
+                    "use_after_release_suspected"
+                  ]
+                },
+                "file": {"type": "string"},
+                "line": {"type": "integer", "minimum": 1},
+                "snippet": {"type": "string"},
+                "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+              },
+              "additionalProperties": true
+            }
+          },
+          "owner": {"type": ["string", "null"]},
+          "thread": {"type": ["string", "null"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    },
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}
