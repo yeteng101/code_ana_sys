@@ -135,7 +135,8 @@ class Neo4jGraphStore:
             for evidence_id in edge.get("evidence_ids", []):
                 statements.append(
                     (
-                        "MATCH (r:CALLS {run_id:$run_id, id:$edge_id}) "
+                        "MATCH (:CodeNode {run_id:$run_id})-[r:CALLS {run_id:$run_id, id:$edge_id}]->"
+                        "(:CodeNode {run_id:$run_id}) "
                         "MATCH (e:Evidence {run_id:$run_id, id:$evidence_id}) "
                         "MERGE (r)-[:HAS_EVIDENCE]->(e)",
                         {

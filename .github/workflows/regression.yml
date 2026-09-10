@@ -19,6 +19,10 @@ jobs:
           python-version: "3.11"
       - name: Install Clang
         run: sudo apt-get update && sudo apt-get install -y clang libclang-dev
+      - name: Fetch pinned libuv source
+        run: |
+          git clone --depth 1 --branch v1.50.0 \
+            https://github.com/libuv/libuv.git third_party/libuv
       - name: Compile Python sources
         run: python -m compileall -q clang_pipeline call_chain_demo scripts
       - name: Pipeline and Agent/MCP regression
