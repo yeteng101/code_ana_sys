@@ -1,0 +1,484 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "resource-flow-validation-v1",
+  "description": "资源流和泄漏标注第一版：libuv 真实资源生命周期 + 合成边界 fixture。",
+  "created_at": "2026-09-10",
+  "resources": [
+    {
+      "id": "rf_libuv_fs_fd_v1",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": ["ev_rf_fs_acquire"]
+        },
+        {
+          "operation_id": "op_fs_transfer",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": ["ev_rf_fs_transfer"]
+        },
+        {
+          "operation_id": "op_fs_release",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": ["ev_rf_fs_release"]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return",
+          "condition": "normal_return",
+          "operations": ["op_fs_acquire", "op_fs_transfer", "op_fs_release"],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire",
+            "ev_rf_fs_transfer",
+            "ev_rf_fs_release"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "confirmed"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": ["ev_rf_pw_acquire"]
+        },
+        {
+          "operation_id": "op_pw_release",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": ["ev_rf_pw_release"]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns",
+          "condition": "all_visible_returns",
+          "operations": ["op_pw_acquire", "op_pw_release"],
+          "complete": true,
+          "evidence_ids": ["ev_rf_pw_acquire", "ev_rf_pw_release"]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "confirmed"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf_libuv_async_fd_v1",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": ["ev_rf_async_acquire"]
+        },
+        {
+          "operation_id": "op_async_transfer",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": ["ev_rf_async_transfer"]
+        },
+        {
+          "operation_id": "op_async_release_wfd",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": ["ev_rf_async_release_wfd"]
+        },
+        {
+          "operation_id": "op_async_release_io",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": ["ev_rf_async_release_io"]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire",
+            "op_async_transfer",
+            "op_async_release_wfd",
+            "op_async_release_io"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire",
+            "ev_rf_async_transfer",
+            "ev_rf_async_release_wfd",
+            "ev_rf_async_release_io"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "confirmed_with_condition"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": ["ev_rf_leak_acquire"]
+        },
+        {
+          "operation_id": "op_leak_release",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": ["ev_rf_leak_release"]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return",
+          "condition": "normal_return",
+          "operations": ["op_leak_acquire", "op_leak_release"],
+          "complete": true,
+          "evidence_ids": ["ev_rf_leak_acquire", "ev_rf_leak_release"]
+        },
+        {
+          "path_id": "leak_error_return",
+          "condition": "error_return",
+          "operations": ["op_leak_acquire"],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": ["ev_rf_leak_acquire", "ev_rf_leak_error_return"]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "confirmed"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf_synth_ownership_transfer_v1",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_transferred_buffer",
+      "operations": [
+        {
+          "operation_id": "op_transfer_acquire",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "make_buffer",
+          "location": {
+            "file": "validation/resource-flow/fixtures/ownership_transfer.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(128);"
+          },
+          "evidence_ids": ["ev_rf_transfer_acquire"]
+        },
+        {
+          "operation_id": "op_transfer_escape",
+          "kind": "escape",
+          "api": "return buf",
+          "function": "make_buffer",
+          "from": "make_buffer",
+          "to": "caller",
+          "location": {
+            "file": "validation/resource-flow/fixtures/ownership_transfer.c",
+            "line": 7,
+            "snippet": "return buf;"
+          },
+          "evidence_ids": ["ev_rf_transfer_escape"]
+        }
+      ],
+      "ownership_model": "transferred_to_caller",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "ownership_transfer_path",
+          "condition": "normal_return",
+          "operations": ["op_transfer_acquire", "op_transfer_escape"],
+          "complete": false,
+          "termination_reason": "resource_escaped",
+          "evidence_ids": ["ev_rf_transfer_acquire", "ev_rf_transfer_escape"]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "所有权返回给调用方，本函数结束后由 caller 负责释放，不能按本函数缺 release 判泄漏",
+        "review": "confirmed"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_transfer_acquire",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/ownership_transfer.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(128);"
+          }
+        },
+        {
+          "id": "ev_rf_transfer_escape",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/ownership_transfer.c",
+            "line": 7,
+            "snippet": "return buf;"
+          }
+        }
+      ]
+    }
+  ]
+}

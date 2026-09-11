@@ -317,6 +317,26 @@ negative: 6
 errors: 0
 ```
 
+资源流样本第一版也已完成：
+
+```text
+validation/resource-flow/dataset.json
+```
+
+| 类型 | 数量 |
+|---|---:|
+| no_leak | 4 |
+| leak | 1 |
+| uncertain | 0 |
+| 合计 | 5 |
+
+资源流校验命令：
+
+```bash
+python3 scripts/check_resource_flow_validation.py \
+  --dataset validation/resource-flow/dataset.json
+```
+
 ## 六、下周计划
 
 | 优先级 | 任务 | 目标 |

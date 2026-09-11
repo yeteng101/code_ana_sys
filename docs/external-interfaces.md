@@ -323,3 +323,14 @@ schemas/sync-relations.schema.json
 3. 同步关系：锁、原子操作、等待/通知和 happens-before 是否正确。
 
 验证集任务已经布置到 Kanb 看板，优先从 libuv v1.50.0 的真实产物开始。
+
+当前已落地的验证数据：
+
+```text
+validation/call-chains/dataset.json
+validation/resource-flow/dataset.json
+```
+
+资源流接口的验证重点不是直接判断“是否泄漏”，而是验证第一组是否能正确返回
+`acquire / use / transfer / release / escape` 事实，以及错误路径是否存在
+`release_not_found`。最终是否构成内存缺陷由第三组结合 PR diff 判断。

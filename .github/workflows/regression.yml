@@ -31,6 +31,10 @@ jobs:
             --dataset validation/call-chains/dataset.json \
             --graph demo/graph.json \
             --graph demo/libuv/graph.json
+      - name: Validate resource-flow dataset
+        run: |
+          python scripts/check_resource_flow_validation.py \
+            --dataset validation/resource-flow/dataset.json
       - name: Pipeline and Agent/MCP regression
         run: python -m unittest discover -s clang_pipeline/tests -v
       - name: HTTP JSON regression
