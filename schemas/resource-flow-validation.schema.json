@@ -83,7 +83,10 @@
             "type": "object",
             "required": ["classification", "reason", "review"],
             "properties": {
-              "classification": {"type": "string", "enum": ["no_leak", "leak", "uncertain"]},
+              "classification": {
+                "type": "string",
+                "enum": ["no_leak", "leak", "double_free", "use_after_free", "uncertain"]
+              },
               "reason": {"type": "string"},
               "review": {"type": "string"}
             },

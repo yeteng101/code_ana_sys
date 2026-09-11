@@ -49,11 +49,16 @@ ground_truth.classification = no_leak / leak / uncertain
 | `rf_libuv_fs_fd_v1` | 文件描述符生命周期 | `no_leak` |
 | `rf_libuv_getpwuid_buf_v1` | 堆内存生命周期 | `no_leak` |
 | `rf_libuv_async_fd_v1` | loop 异步唤醒 fd | `no_leak` |
+| `rf_libuv_getaddrinfo_v1` | addrinfo 所有权转移和释放 | `no_leak` |
+| `rf_libuv_scandir_entries_v1` | 目录项数组生命周期 | `no_leak` |
+| `rf_libuv_dlopen_handle_v1` | 动态库句柄生命周期 | `no_leak` |
 | `rf_synth_leak_error_path_v1` | 错误路径泄漏 | `leak` |
 | `rf_synth_ownership_transfer_v1` | 所有权转移 | `no_leak` |
+| `rf_synth_double_free_v1` | 重复释放 | `double_free` |
+| `rf_synth_use_after_free_v1` | 释放后使用 | `use_after_free` |
 
-前三个来自 libuv 的真实源码，后两个是仓库内固定的合成 fixture，用于精确测试
-“错误路径漏 release”和“所有权 escape 不是泄漏”这两个边界。
+前六个来自 libuv 的真实源码，后四个是仓库内固定的合成 fixture，用于精确测试
+错误路径漏 release、所有权 escape、double free 和 use-after-free 四类边界。
 
 ## 校验
 
@@ -69,4 +74,6 @@ python3 scripts/check_resource_flow_validation.py \
 3. path 引用的 operation 是否存在；
 4. evidence_ids 是否都能在资源 evidence 中找到；
 5. `leak` 样本必须存在 `release_not_found` 路径；
-6. 源码存在时，evidence 的文件、行号和 snippet 是否匹配。
+6. `double_free` 样本必须至少出现两次 release；
+7. `use_after_free` 样本必须出现 release 后的 use；
+8. 源码存在时，evidence 的文件、行号和 snippet 是否匹配。

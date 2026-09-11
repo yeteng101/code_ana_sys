@@ -18,7 +18,13 @@ def check_dataset(dataset: Path) -> tuple[dict, list[str]]:
     errors: list[str] = []
     resources = data.get("resources", [])
     ids: set[str] = set()
-    classifications = {"no_leak": 0, "leak": 0, "uncertain": 0}
+    classifications = {
+        "no_leak": 0,
+        "leak": 0,
+        "double_free": 0,
+        "use_after_free": 0,
+        "uncertain": 0,
+    }
     for resource in resources:
         resource_id = resource.get("id", "<missing>")
         if resource_id in ids:
@@ -73,12 +79,24 @@ def check_dataset(dataset: Path) -> tuple[dict, list[str]]:
             )
             if not has_missing_release:
                 errors.append(f"{resource_id}: leak 样本缺少 release_not_found 路径")
+        if classification == "double_free":
+            release_count = sum(1 for item in operations if item.get("kind") == "release")
+            if release_count < 2:
+                errors.append(f"{resource_id}: double_free 样本少于两次 release")
+        if classification == "use_after_free":
+            kinds = [item.get("kind") for item in operations]
+            if "release" not in kinds or "use" not in kinds:
+                errors.append(f"{resource_id}: use_after_free 样本缺少 release 或 use")
+            elif kinds.index("use") < kinds.index("release"):
+                errors.append(f"{resource_id}: use_after_free 样本的 use 发生在 release 前")
 
     return {
         "dataset": str(dataset),
         "resources": len(resources),
         "no_leak": classifications["no_leak"],
         "leak": classifications["leak"],
+        "double_free": classifications["double_free"],
+        "use_after_free": classifications["use_after_free"],
         "uncertain": classifications["uncertain"],
         "errors": errors,
         "status": "verified" if not errors else "failed",

@@ -325,10 +325,12 @@ validation/resource-flow/dataset.json
 
 | 类型 | 数量 |
 |---|---:|
-| no_leak | 4 |
+| no_leak | 7 |
 | leak | 1 |
+| double_free | 1 |
+| use_after_free | 1 |
 | uncertain | 0 |
-| 合计 | 5 |
+| 合计 | 10 |
 
 资源流校验命令：
 

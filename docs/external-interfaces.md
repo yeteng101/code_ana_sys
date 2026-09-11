@@ -334,3 +334,12 @@ validation/resource-flow/dataset.json
 资源流接口的验证重点不是直接判断“是否泄漏”，而是验证第一组是否能正确返回
 `acquire / use / transfer / release / escape` 事实，以及错误路径是否存在
 `release_not_found`。最终是否构成内存缺陷由第三组结合 PR diff 判断。
+
+资源流第一版当前有 10 个样本：
+
+```text
+7 个 no_leak
+1 个 leak
+1 个 double_free
+1 个 use_after_free
+```

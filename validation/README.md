@@ -8,7 +8,7 @@
 | 类型 | 验证目标 | 验证集标签 | 对外接口禁止直接写 |
 |---|---|---|---|
 | 调用链 | source、target、edge kind 是否正确 | positive / negative / uncertain | 不返回最终缺陷结论 |
-| 资源流 | acquire、use、transfer、release 和逃逸路径是否完整 | no_leak / leak / uncertain | 不直接写 `memory_leak=true` |
+| 资源流 | acquire、use、transfer、release 和逃逸路径是否完整 | no_leak / leak / double_free / use_after_free / uncertain | 不直接写 `memory_leak=true` |
 | 同步关系 | 共享访问、held_locks、happens-before 是否正确 | consistent / inconsistent / unknown | 不直接写 `deadlock=true` 或 `race=true` |
 
 ## 调用链
