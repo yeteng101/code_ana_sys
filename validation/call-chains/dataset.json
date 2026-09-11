@@ -28,7 +28,10 @@
           "snippet": "loop_run(&loop);"
         }
       ],
-      "tags": ["demo", "direct_call"],
+      "tags": [
+        "demo",
+        "direct_call"
+      ],
       "notes": "app_main 直接调用 loop_run"
     },
     {
@@ -50,7 +53,10 @@
           "snippet": "int events = wait_for_events(loop, 100);"
         }
       ],
-      "tags": ["demo", "direct_call"],
+      "tags": [
+        "demo",
+        "direct_call"
+      ],
       "notes": "事件循环主循环直接等待事件"
     },
     {
@@ -72,7 +78,10 @@
           "snippet": "run_ready_watchers(loop, events);"
         }
       ],
-      "tags": ["demo", "direct_call"],
+      "tags": [
+        "demo",
+        "direct_call"
+      ],
       "notes": "事件返回后进入 watcher 分发"
     },
     {
@@ -94,7 +103,10 @@
           "snippet": "dispatch_once(loop, watcher, events);"
         }
       ],
-      "tags": ["demo", "direct_call"],
+      "tags": [
+        "demo",
+        "direct_call"
+      ],
       "notes": "watcher 就绪后直接调用分发函数"
     },
     {
@@ -120,7 +132,11 @@
           "snippet": "CALL_WATCHER(watcher, events);"
         }
       ],
-      "tags": ["demo", "callback_edge", "macro"],
+      "tags": [
+        "demo",
+        "callback_edge",
+        "macro"
+      ],
       "notes": "CALL_WATCHER 宏通过结构体字段触发回调，候选目标不唯一"
     },
     {
@@ -146,7 +162,10 @@
           "snippet": "loop_register(&loop, 0, on_readable);"
         }
       ],
-      "tags": ["demo", "callback_edge"],
+      "tags": [
+        "demo",
+        "callback_edge"
+      ],
       "notes": "注册点证明 on_readable 是候选，但不应声称这是唯一目标"
     },
     {
@@ -168,7 +187,10 @@
           "snippet": "uv__io_poll(loop, timeout);"
         }
       ],
-      "tags": ["libuv", "direct_call"],
+      "tags": [
+        "libuv",
+        "direct_call"
+      ],
       "notes": "uv_run 的事件轮询入口"
     },
     {
@@ -190,7 +212,10 @@
           "snippet": "uv__run_timers(loop);"
         }
       ],
-      "tags": ["libuv", "direct_call"],
+      "tags": [
+        "libuv",
+        "direct_call"
+      ],
       "notes": "uv_run 的定时器阶段"
     },
     {
@@ -212,7 +237,11 @@
           "snippet": "uv_timer_again(handle);"
         }
       ],
-      "tags": ["libuv", "direct_call", "timer"],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "timer"
+      ],
       "notes": "重复定时器的重新挂载"
     },
     {
@@ -234,7 +263,11 @@
           "snippet": "w->cb(loop, w, ev->fflags); /* XXX always uv__fs_event() */"
         }
       ],
-      "tags": ["libuv", "callback_edge", "kqueue"],
+      "tags": [
+        "libuv",
+        "callback_edge",
+        "kqueue"
+      ],
       "notes": "回调字段 w->cb 的目标集合需要结合赋值流继续收敛"
     },
     {
@@ -256,7 +289,11 @@
           "snippet": "CALL_WATCHER(watcher, events);"
         }
       ],
-      "tags": ["demo", "negative", "false_direct_call"],
+      "tags": [
+        "demo",
+        "negative",
+        "false_direct_call"
+      ],
       "notes": "真实关系是经过 Watcher::callback 的 callback_edge，不是 direct_call"
     },
     {
@@ -278,7 +315,11 @@
           "snippet": "loop_register(&loop, 2, on_once);"
         }
       ],
-      "tags": ["demo", "negative", "callback_registration"],
+      "tags": [
+        "demo",
+        "negative",
+        "callback_registration"
+      ],
       "notes": "loop_run 只负责事件循环，不直接调用 on_once"
     },
     {
@@ -300,7 +341,11 @@
           "snippet": "uv__queue_remove(queue_node);"
         }
       ],
-      "tags": ["libuv", "negative", "indirect_reachability"],
+      "tags": [
+        "libuv",
+        "negative",
+        "indirect_reachability"
+      ],
       "notes": "uv_run 只能经 uv__run_timers 间接到达 uv__queue_remove"
     },
     {
@@ -322,7 +367,11 @@
           "snippet": "uv_timer_again(handle);"
         }
       ],
-      "tags": ["libuv", "negative", "wrong_edge"],
+      "tags": [
+        "libuv",
+        "negative",
+        "wrong_edge"
+      ],
       "notes": "uv__run_timers 不直接调用 uv__io_poll"
     },
     {
@@ -344,7 +393,11 @@
           "snippet": "uv__io_poll(loop, timeout);"
         }
       ],
-      "tags": ["libuv", "negative", "wrong_kind"],
+      "tags": [
+        "libuv",
+        "negative",
+        "wrong_kind"
+      ],
       "notes": "source/target 存在，但正确 kind 是 direct_call，不是 callback_edge"
     },
     {
@@ -366,8 +419,532 @@
           "snippet": "loop_register(&loop, 2, on_once);"
         }
       ],
-      "tags": ["demo", "negative", "wrong_kind"],
+      "tags": [
+        "demo",
+        "negative",
+        "wrong_kind"
+      ],
       "notes": "真实注册关系通过 callback_edge 表达，不是 direct_call"
+    },
+    {
+      "id": "cc_pos_libuv_005",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__loop_alive",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 432,
+          "snippet": "r = uv__loop_alive(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 在循环开始前检查 loop 是否还活着"
+    },
+    {
+      "id": "cc_pos_libuv_006",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__update_time",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 434,
+          "snippet": "uv__update_time(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 在循环开头更新时间"
+    },
+    {
+      "id": "cc_pos_libuv_007",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_pending",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 450,
+          "snippet": "uv__run_pending(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 执行 pending 阶段"
+    },
+    {
+      "id": "cc_pos_libuv_008",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_idle",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 451,
+          "snippet": "uv__run_idle(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 执行 idle 阶段"
+    },
+    {
+      "id": "cc_pos_libuv_009",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_prepare",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 452,
+          "snippet": "uv__run_prepare(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 执行 prepare 阶段"
+    },
+    {
+      "id": "cc_pos_libuv_010",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__backend_timeout",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 456,
+          "snippet": "timeout = uv__backend_timeout(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 计算 backend timeout"
+    },
+    {
+      "id": "cc_pos_libuv_011",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_check",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 474,
+          "snippet": "uv__run_check(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 执行 check 阶段"
+    },
+    {
+      "id": "cc_pos_libuv_012",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_closing_handles",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 475,
+          "snippet": "uv__run_closing_handles(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 执行 closing handles 阶段"
+    },
+    {
+      "id": "cc_pos_libuv_013",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__queue_empty",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 447,
+          "snippet": "uv__queue_empty(&loop->pending_queue) &&"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv_run"
+      ],
+      "notes": "uv_run 判断 pending queue 是否为空"
+    },
+    {
+      "id": "cc_pos_libuv_014",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__io_poll",
+        "target": "fn:uv__update_time",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/kqueue.c",
+          "line": 306,
+          "snippet": "uv__update_time(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv__io_poll"
+      ],
+      "notes": "uv__io_poll 在进入 poll 前更新时间"
+    },
+    {
+      "id": "cc_pos_libuv_015",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__io_poll",
+        "target": "fn:uv__queue_remove",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/kqueue.c",
+          "line": 194,
+          "snippet": "uv__queue_remove(q);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv__io_poll"
+      ],
+      "notes": "uv__io_poll 从 watcher queue 移除已注册项"
+    },
+    {
+      "id": "cc_pos_libuv_016",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__io_poll",
+        "target": "fn:uv__queue_head",
+        "kind": "direct_call"
+      },
+      "label": "positive",
+      "expected_exists": true,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/kqueue.c",
+          "line": 193,
+          "snippet": "q = uv__queue_head(&loop->watcher_queue);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "direct_call",
+        "uv__io_poll"
+      ],
+      "notes": "uv__io_poll 读取 watcher queue 头部"
+    },
+    {
+      "id": "cc_neg_libuv_004",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_timers",
+        "kind": "callback_edge"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "multiple_candidates",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 442,
+          "snippet": "uv__run_timers(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "callback_edge"
+      ],
+      "notes": "uv_run 到 uv__run_timers 是 direct_call；source/target 相同但 kind 错误，仍为 negative"
+    },
+    {
+      "id": "cc_neg_libuv_005",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__io_poll",
+        "kind": "indirect_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 460,
+          "snippet": "uv__io_poll(loop, timeout);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "indirect_call"
+      ],
+      "notes": "uv_run 到 uv__io_poll 是直接调用，不是 indirect_call"
+    },
+    {
+      "id": "cc_neg_libuv_006",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__run_prepare",
+        "kind": "callback_edge"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "multiple_candidates",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 452,
+          "snippet": "uv__run_prepare(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "callback_edge"
+      ],
+      "notes": "uv_run 到 uv__run_prepare 是直接调用，不是 callback_edge"
+    },
+    {
+      "id": "cc_neg_libuv_007",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv_run",
+        "target": "fn:uv__kqueue_delete",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 460,
+          "snippet": "uv__io_poll(loop, timeout);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "direct_call"
+      ],
+      "notes": "uv_run 不直接调用后续 poll 内部的 kqueue 删除逻辑"
+    },
+    {
+      "id": "cc_neg_libuv_008",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__io_poll",
+        "target": "fn:uv__run_check",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 474,
+          "snippet": "uv__run_check(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "direct_call"
+      ],
+      "notes": "uv__run_check 是 uv_run 的阶段调用，不是 uv__io_poll 的直接调用"
+    },
+    {
+      "id": "cc_neg_libuv_009",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__io_poll",
+        "target": "fn:uv__run_pending",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 465,
+          "snippet": "uv__run_pending(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "direct_call"
+      ],
+      "notes": "uv__run_pending 是 uv_run 的阶段调用，不是 uv__io_poll 的直接调用"
+    },
+    {
+      "id": "cc_neg_libuv_010",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__update_time",
+        "target": "fn:uv_run",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 434,
+          "snippet": "uv__update_time(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "direct_call"
+      ],
+      "notes": "方向错误：真实关系是 uv_run -> uv__update_time"
+    },
+    {
+      "id": "cc_neg_libuv_011",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:uv__run_timers",
+        "target": "fn:uv__update_time",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "unique",
+      "candidate_targets": [],
+      "evidence": [
+        {
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 478,
+          "snippet": "uv__run_timers(loop);"
+        }
+      ],
+      "tags": [
+        "libuv",
+        "negative",
+        "direct_call"
+      ],
+      "notes": "两者是 uv_run 的不同阶段，不存在 uv__run_timers -> uv__update_time 的直接调用"
     }
   ]
 }
