@@ -1,0 +1,3478 @@
+{
+  "schema_version": "1.0",
+  "run_id": "redis-7.2.4-validation",
+  "components": [
+    {
+      "id": "core",
+      "name": "core",
+      "files": [],
+      "symbols": [
+        {
+          "id": "cb:defragalloc",
+          "name": "defragalloc",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:defragkey",
+          "name": "defragkey",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:defragval",
+          "name": "defragval",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:fn",
+          "name": "fn",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:getMonotonicUs",
+          "name": "getMonotonicUs",
+          "kind": "callback"
+        }
+      ],
+      "responsibilities": [
+        "核心逻辑"
+      ]
+    },
+    {
+      "id": "src",
+      "name": "src",
+      "files": [
+        "third_party/redis/src/adlist.c",
+        "third_party/redis/src/adlist.h",
+        "third_party/redis/src/ae.c",
+        "third_party/redis/src/ae.h",
+        "third_party/redis/src/ae_epoll.c",
+        "third_party/redis/src/anet.h",
+        "third_party/redis/src/bio.c",
+        "third_party/redis/src/cluster.h",
+        "third_party/redis/src/connection.h",
+        "third_party/redis/src/db.c",
+        "third_party/redis/src/dict.c",
+        "third_party/redis/src/dict.h",
+        "third_party/redis/src/endianconv.h",
+        "third_party/redis/src/functions.h",
+        "third_party/redis/src/latency.h",
+        "third_party/redis/src/lazyfree.c",
+        "third_party/redis/src/listpack.h",
+        "third_party/redis/src/monotonic.h",
+        "third_party/redis/src/mt19937-64.h",
+        "third_party/redis/src/networking.c",
+        "third_party/redis/src/rax.h",
+        "third_party/redis/src/rdb.h",
+        "third_party/redis/src/redisassert.h",
+        "third_party/redis/src/rio.h",
+        "third_party/redis/src/script.h",
+        "third_party/redis/src/sds.h",
+        "third_party/redis/src/server.h",
+        "third_party/redis/src/stream.h",
+        "third_party/redis/src/t_string.c",
+        "third_party/redis/src/util.h",
+        "third_party/redis/src/zmalloc.h"
+      ],
+      "symbols": [
+        {
+          "id": "cb:ConnectionType::accept",
+          "name": "ConnectionType::accept",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::addr",
+          "name": "ConnectionType::addr",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::blocking_connect",
+          "name": "ConnectionType::blocking_connect",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::close",
+          "name": "ConnectionType::close",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::configure",
+          "name": "ConnectionType::configure",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::conn_create",
+          "name": "ConnectionType::conn_create",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::conn_create_accepted",
+          "name": "ConnectionType::conn_create_accepted",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::connect",
+          "name": "ConnectionType::connect",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::get_last_error",
+          "name": "ConnectionType::get_last_error",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::get_peer_cert",
+          "name": "ConnectionType::get_peer_cert",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::get_type",
+          "name": "ConnectionType::get_type",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::is_local",
+          "name": "ConnectionType::is_local",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::listen",
+          "name": "ConnectionType::listen",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::read",
+          "name": "ConnectionType::read",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::set_read_handler",
+          "name": "ConnectionType::set_read_handler",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::set_write_handler",
+          "name": "ConnectionType::set_write_handler",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::shutdown",
+          "name": "ConnectionType::shutdown",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::sync_read",
+          "name": "ConnectionType::sync_read",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::sync_readline",
+          "name": "ConnectionType::sync_readline",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::sync_write",
+          "name": "ConnectionType::sync_write",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::write",
+          "name": "ConnectionType::write",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:ConnectionType::writev",
+          "name": "ConnectionType::writev",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:_rio::flush",
+          "name": "_rio::flush",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:_rio::read",
+          "name": "_rio::read",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:_rio::tell",
+          "name": "_rio::tell",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:_rio::update_cksum",
+          "name": "_rio::update_cksum",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:_rio::write",
+          "name": "_rio::write",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeEventLoop::aftersleep",
+          "name": "aeEventLoop::aftersleep",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeEventLoop::beforesleep",
+          "name": "aeEventLoop::beforesleep",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeFileEvent::rfileProc",
+          "name": "aeFileEvent::rfileProc",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeFileEvent::wfileProc",
+          "name": "aeFileEvent::wfileProc",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeTimeEvent::finalizerProc",
+          "name": "aeTimeEvent::finalizerProc",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:aeTimeEvent::timeProc",
+          "name": "aeTimeEvent::timeProc",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:bio_job::struct (unnamed at /home/runner/work/code_ana_sys/code_ana_sys/third_party/redis/src/bio.c:105:5)::free_fn",
+          "name": "bio_job::struct (unnamed at /home/runner/work/code_ana_sys/code_ana_sys/third_party/redis/src/bio.c:105:5)::free_fn",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::afterReplaceEntry",
+          "name": "dictType::afterReplaceEntry",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::dictEntryMetadataBytes",
+          "name": "dictType::dictEntryMetadataBytes",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::dictMetadataBytes",
+          "name": "dictType::dictMetadataBytes",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::expandAllowed",
+          "name": "dictType::expandAllowed",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::hashFunction",
+          "name": "dictType::hashFunction",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::keyCompare",
+          "name": "dictType::keyCompare",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::keyDestructor",
+          "name": "dictType::keyDestructor",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::keyDup",
+          "name": "dictType::keyDup",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::valDestructor",
+          "name": "dictType::valDestructor",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:dictType::valDup",
+          "name": "dictType::valDup",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:list::dup",
+          "name": "list::dup",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:list::free",
+          "name": "list::free",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:list::match",
+          "name": "list::match",
+          "kind": "callback"
+        },
+        {
+          "id": "cb:redisCommand::getkeys_proc",
+          "name": "redisCommand::getkeys_proc",
+          "kind": "callback"
+        },
+        {
+          "id": "fn:ACLAuthenticateUser",
+          "name": "ACLAuthenticateUser",
+          "kind": "function"
+        },
+        {
+          "id": "fn:ACLGetUserByName",
+          "name": "ACLGetUserByName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:AddReplyFromClient",
+          "name": "AddReplyFromClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:IOThreadMain",
+          "name": "IOThreadMain",
+          "kind": "function"
+        },
+        {
+          "id": "fn:LFUDecrAndReturn",
+          "name": "LFUDecrAndReturn",
+          "kind": "function"
+        },
+        {
+          "id": "fn:LFUGetTimeInMinutes",
+          "name": "LFUGetTimeInMinutes",
+          "kind": "function"
+        },
+        {
+          "id": "fn:LFULogIncr",
+          "name": "LFULogIncr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:LRU_CLOCK",
+          "name": "LRU_CLOCK",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_addReplyProtoToList",
+          "name": "_addReplyProtoToList",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_addReplyToBuffer",
+          "name": "_addReplyToBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_addReplyToBufferOrList",
+          "name": "_addReplyToBufferOrList",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictClear",
+          "name": "_dictClear",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictExpand",
+          "name": "_dictExpand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictExpandIfNeeded",
+          "name": "_dictExpandIfNeeded",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictGetStatsHt",
+          "name": "_dictGetStatsHt",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictInit",
+          "name": "_dictInit",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictNextExp",
+          "name": "_dictNextExp",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictRehashStep",
+          "name": "_dictRehashStep",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_dictReset",
+          "name": "_dictReset",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_serverAssert",
+          "name": "_serverAssert",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_serverAssertWithInfo",
+          "name": "_serverAssertWithInfo",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_serverLog",
+          "name": "_serverLog",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_serverPanic",
+          "name": "_serverPanic",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_writeToClient",
+          "name": "_writeToClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:_writevToClient",
+          "name": "_writevToClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:abortShutdown",
+          "name": "abortShutdown",
+          "kind": "function"
+        },
+        {
+          "id": "fn:acceptCommonHandler",
+          "name": "acceptCommonHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addAuthErrReply",
+          "name": "addAuthErrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReply",
+          "name": "addReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyAggregateLen",
+          "name": "addReplyAggregateLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyArrayLen",
+          "name": "addReplyArrayLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyAttributeLen",
+          "name": "addReplyAttributeLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBigNum",
+          "name": "addReplyBigNum",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBool",
+          "name": "addReplyBool",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulk",
+          "name": "addReplyBulk",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulkCBuffer",
+          "name": "addReplyBulkCBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulkCString",
+          "name": "addReplyBulkCString",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulkLen",
+          "name": "addReplyBulkLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulkLongLong",
+          "name": "addReplyBulkLongLong",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyBulkSds",
+          "name": "addReplyBulkSds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyDeferredLen",
+          "name": "addReplyDeferredLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyDouble",
+          "name": "addReplyDouble",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyError",
+          "name": "addReplyError",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorArity",
+          "name": "addReplyErrorArity",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorExpireTime",
+          "name": "addReplyErrorExpireTime",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorFormat",
+          "name": "addReplyErrorFormat",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorFormatEx",
+          "name": "addReplyErrorFormatEx",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorFormatInternal",
+          "name": "addReplyErrorFormatInternal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorLength",
+          "name": "addReplyErrorLength",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorObject",
+          "name": "addReplyErrorObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorSds",
+          "name": "addReplyErrorSds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorSdsEx",
+          "name": "addReplyErrorSdsEx",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyErrorSdsSafe",
+          "name": "addReplyErrorSdsSafe",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyHelp",
+          "name": "addReplyHelp",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyHumanLongDouble",
+          "name": "addReplyHumanLongDouble",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyLoadedModules",
+          "name": "addReplyLoadedModules",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyLongLong",
+          "name": "addReplyLongLong",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyLongLongWithPrefix",
+          "name": "addReplyLongLongWithPrefix",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyMapLen",
+          "name": "addReplyMapLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyNull",
+          "name": "addReplyNull",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyNullArray",
+          "name": "addReplyNullArray",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyOrErrorObject",
+          "name": "addReplyOrErrorObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyProto",
+          "name": "addReplyProto",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyPushLen",
+          "name": "addReplyPushLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplySds",
+          "name": "addReplySds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplySetLen",
+          "name": "addReplySetLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyStatus",
+          "name": "addReplyStatus",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyStatusFormat",
+          "name": "addReplyStatusFormat",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyStatusLength",
+          "name": "addReplyStatusLength",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplySubcommandSyntaxError",
+          "name": "addReplySubcommandSyntaxError",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addReplyVerbatim",
+          "name": "addReplyVerbatim",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiAddEvent",
+          "name": "aeApiAddEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiCreate",
+          "name": "aeApiCreate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiDelEvent",
+          "name": "aeApiDelEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiFree",
+          "name": "aeApiFree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiName",
+          "name": "aeApiName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiPoll",
+          "name": "aeApiPoll",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeApiResize",
+          "name": "aeApiResize",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeCreateEventLoop",
+          "name": "aeCreateEventLoop",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeCreateFileEvent",
+          "name": "aeCreateFileEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeCreateTimeEvent",
+          "name": "aeCreateTimeEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeDeleteEventLoop",
+          "name": "aeDeleteEventLoop",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeDeleteFileEvent",
+          "name": "aeDeleteFileEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeGetApiName",
+          "name": "aeGetApiName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeMain",
+          "name": "aeMain",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeProcessEvents",
+          "name": "aeProcessEvents",
+          "kind": "function"
+        },
+        {
+          "id": "fn:aeResizeSetSize",
+          "name": "aeResizeSetSize",
+          "kind": "function"
+        },
+        {
+          "id": "fn:afterErrorReply",
+          "name": "afterErrorReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:alsoPropagate",
+          "name": "alsoPropagate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:anetCloexec",
+          "name": "anetCloexec",
+          "kind": "function"
+        },
+        {
+          "id": "fn:anyOtherSlaveWaitRdb",
+          "name": "anyOtherSlaveWaitRdb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:appendCommand",
+          "name": "appendCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:authRequired",
+          "name": "authRequired",
+          "kind": "function"
+        },
+        {
+          "id": "fn:beforeNextClient",
+          "name": "beforeNextClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioCreateCloseAofJob",
+          "name": "bioCreateCloseAofJob",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioCreateCloseJob",
+          "name": "bioCreateCloseJob",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioCreateFsyncJob",
+          "name": "bioCreateFsyncJob",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioCreateLazyFreeJob",
+          "name": "bioCreateLazyFreeJob",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioInit",
+          "name": "bioInit",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioKillThreads",
+          "name": "bioKillThreads",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioProcessBackgroundJobs",
+          "name": "bioProcessBackgroundJobs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioSubmitJob",
+          "name": "bioSubmitJob",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bitfieldGetKeys",
+          "name": "bitfieldGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:blmpopGetKeys",
+          "name": "blmpopGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:blockClientShutdown",
+          "name": "blockClientShutdown",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bzmpopGetKeys",
+          "name": "bzmpopGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:catClientInfoString",
+          "name": "catClientInfoString",
+          "kind": "function"
+        },
+        {
+          "id": "fn:checkAlreadyExpired",
+          "name": "checkAlreadyExpired",
+          "kind": "function"
+        },
+        {
+          "id": "fn:checkClientOutputBufferLimits",
+          "name": "checkClientOutputBufferLimits",
+          "kind": "function"
+        },
+        {
+          "id": "fn:checkPrefixCollisionsOrReply",
+          "name": "checkPrefixCollisionsOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:checkStringLength",
+          "name": "checkStringLength",
+          "kind": "function"
+        },
+        {
+          "id": "fn:checkType",
+          "name": "checkType",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clearClientConnectionState",
+          "name": "clearClientConnectionState",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientAcceptHandler",
+          "name": "clientAcceptHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientCommand",
+          "name": "clientCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientHasPendingReplies",
+          "name": "clientHasPendingReplies",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientSetDefaultAuth",
+          "name": "clientSetDefaultAuth",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientSetName",
+          "name": "clientSetName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientSetNameOrReply",
+          "name": "clientSetNameOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:clientSetinfoCommand",
+          "name": "clientSetinfoCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:closeClientOnOutputBufferLimitReached",
+          "name": "closeClientOnOutputBufferLimitReached",
+          "kind": "function"
+        },
+        {
+          "id": "fn:cmdHasPushAsReply",
+          "name": "cmdHasPushAsReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:commandProcessed",
+          "name": "commandProcessed",
+          "kind": "function"
+        },
+        {
+          "id": "fn:commandTimeSnapshot",
+          "name": "commandTimeSnapshot",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connAccept",
+          "name": "connAccept",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connAddr",
+          "name": "connAddr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connAddrPeerName",
+          "name": "connAddrPeerName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connAddrSockName",
+          "name": "connAddrSockName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connBlockingConnect",
+          "name": "connBlockingConnect",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connClose",
+          "name": "connClose",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connConnect",
+          "name": "connConnect",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connCreate",
+          "name": "connCreate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connCreateAccepted",
+          "name": "connCreateAccepted",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connEnableTcpNoDelay",
+          "name": "connEnableTcpNoDelay",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connFormatAddr",
+          "name": "connFormatAddr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetInfo",
+          "name": "connGetInfo",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetLastError",
+          "name": "connGetLastError",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetPeerCert",
+          "name": "connGetPeerCert",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetPrivateData",
+          "name": "connGetPrivateData",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetState",
+          "name": "connGetState",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connGetType",
+          "name": "connGetType",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connHasReadHandler",
+          "name": "connHasReadHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connHasWriteHandler",
+          "name": "connHasWriteHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connIsLocal",
+          "name": "connIsLocal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connIsTLS",
+          "name": "connIsTLS",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connKeepAlive",
+          "name": "connKeepAlive",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connListen",
+          "name": "connListen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connRead",
+          "name": "connRead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSetPrivateData",
+          "name": "connSetPrivateData",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSetReadHandler",
+          "name": "connSetReadHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSetWriteHandler",
+          "name": "connSetWriteHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSetWriteHandlerWithBarrier",
+          "name": "connSetWriteHandlerWithBarrier",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connShutdown",
+          "name": "connShutdown",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSyncRead",
+          "name": "connSyncRead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSyncReadLine",
+          "name": "connSyncReadLine",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connSyncWrite",
+          "name": "connSyncWrite",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connTypeConfigure",
+          "name": "connTypeConfigure",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connWrite",
+          "name": "connWrite",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connWritev",
+          "name": "connWritev",
+          "kind": "function"
+        },
+        {
+          "id": "fn:connectionTypeTls",
+          "name": "connectionTypeTls",
+          "kind": "function"
+        },
+        {
+          "id": "fn:copyCommand",
+          "name": "copyCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:copyReplicaOutputBuffer",
+          "name": "copyReplicaOutputBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createClient",
+          "name": "createClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createEntryNoValue",
+          "name": "createEntryNoValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createObject",
+          "name": "createObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createRawStringObject",
+          "name": "createRawStringObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createStringObject",
+          "name": "createStringObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createStringObjectFromLongDouble",
+          "name": "createStringObjectFromLongDouble",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createStringObjectFromLongLong",
+          "name": "createStringObjectFromLongLong",
+          "kind": "function"
+        },
+        {
+          "id": "fn:createStringObjectFromLongLongForValue",
+          "name": "createStringObjectFromLongLongForValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:d2string",
+          "name": "d2string",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbAdd",
+          "name": "dbAdd",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbAddInternal",
+          "name": "dbAddInternal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbAddRDBLoad",
+          "name": "dbAddRDBLoad",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbAsyncDelete",
+          "name": "dbAsyncDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbDelete",
+          "name": "dbDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbGenericDelete",
+          "name": "dbGenericDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbRandomKey",
+          "name": "dbRandomKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbReplaceValue",
+          "name": "dbReplaceValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbSetValue",
+          "name": "dbSetValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbSwapDatabases",
+          "name": "dbSwapDatabases",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbSyncDelete",
+          "name": "dbSyncDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbUnshareStringValue",
+          "name": "dbUnshareStringValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dbsizeCommand",
+          "name": "dbsizeCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:decodeEntryNoValue",
+          "name": "decodeEntryNoValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:decodeMaskedPtr",
+          "name": "decodeMaskedPtr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:decrCommand",
+          "name": "decrCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:decrRefCount",
+          "name": "decrRefCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:decrbyCommand",
+          "name": "decrbyCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:deferredAfterErrorReply",
+          "name": "deferredAfterErrorReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:delCommand",
+          "name": "delCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:delGenericCommand",
+          "name": "delGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:deleteExpiredKeyAndPropagate",
+          "name": "deleteExpiredKeyAndPropagate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictAdd",
+          "name": "dictAdd",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictAddOrFind",
+          "name": "dictAddOrFind",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictAddRaw",
+          "name": "dictAddRaw",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictCreate",
+          "name": "dictCreate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictDefragBucket",
+          "name": "dictDefragBucket",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictDelete",
+          "name": "dictDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictEmpty",
+          "name": "dictEmpty",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictEntryMetadata",
+          "name": "dictEntryMetadata",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictExpand",
+          "name": "dictExpand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFetchValue",
+          "name": "dictFetchValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFind",
+          "name": "dictFind",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFindEntryByPtrAndHash",
+          "name": "dictFindEntryByPtrAndHash",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFindPositionForInsert",
+          "name": "dictFindPositionForInsert",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFingerprint",
+          "name": "dictFingerprint",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictFreeUnlinkedEntry",
+          "name": "dictFreeUnlinkedEntry",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGenCaseHashFunction",
+          "name": "dictGenCaseHashFunction",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGenHashFunction",
+          "name": "dictGenHashFunction",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGenericDelete",
+          "name": "dictGenericDelete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetDoubleVal",
+          "name": "dictGetDoubleVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetDoubleValPtr",
+          "name": "dictGetDoubleValPtr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetFairRandomKey",
+          "name": "dictGetFairRandomKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetHash",
+          "name": "dictGetHash",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetIterator",
+          "name": "dictGetIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetKey",
+          "name": "dictGetKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetNext",
+          "name": "dictGetNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetNextRef",
+          "name": "dictGetNextRef",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetRandomKey",
+          "name": "dictGetRandomKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetSafeIterator",
+          "name": "dictGetSafeIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetSignedIntegerVal",
+          "name": "dictGetSignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetSomeKeys",
+          "name": "dictGetSomeKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetStats",
+          "name": "dictGetStats",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetUnsignedIntegerVal",
+          "name": "dictGetUnsignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictGetVal",
+          "name": "dictGetVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictIncrDoubleVal",
+          "name": "dictIncrDoubleVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictIncrSignedIntegerVal",
+          "name": "dictIncrSignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictIncrUnsignedIntegerVal",
+          "name": "dictIncrUnsignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictInitIterator",
+          "name": "dictInitIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictInitSafeIterator",
+          "name": "dictInitSafeIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictInsertAtPosition",
+          "name": "dictInsertAtPosition",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictMetadata",
+          "name": "dictMetadata",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictNext",
+          "name": "dictNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictRehash",
+          "name": "dictRehash",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictRehashMilliseconds",
+          "name": "dictRehashMilliseconds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictRelease",
+          "name": "dictRelease",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictReleaseIterator",
+          "name": "dictReleaseIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictReplace",
+          "name": "dictReplace",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictResetIterator",
+          "name": "dictResetIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictResize",
+          "name": "dictResize",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictScan",
+          "name": "dictScan",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictScanDefrag",
+          "name": "dictScanDefrag",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetDoubleVal",
+          "name": "dictSetDoubleVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetKey",
+          "name": "dictSetKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetNext",
+          "name": "dictSetNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetSignedIntegerVal",
+          "name": "dictSetSignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetUnsignedIntegerVal",
+          "name": "dictSetUnsignedIntegerVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictSetVal",
+          "name": "dictSetVal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictTryExpand",
+          "name": "dictTryExpand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictTwoPhaseUnlinkFind",
+          "name": "dictTwoPhaseUnlinkFind",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictTwoPhaseUnlinkFree",
+          "name": "dictTwoPhaseUnlinkFree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictTypeExpandAllowed",
+          "name": "dictTypeExpandAllowed",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dictUnlink",
+          "name": "dictUnlink",
+          "kind": "function"
+        },
+        {
+          "id": "fn:digits10",
+          "name": "digits10",
+          "kind": "function"
+        },
+        {
+          "id": "fn:disableTracking",
+          "name": "disableTracking",
+          "kind": "function"
+        },
+        {
+          "id": "fn:discardTempDb",
+          "name": "discardTempDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:discardTransaction",
+          "name": "discardTransaction",
+          "kind": "function"
+        },
+        {
+          "id": "fn:disconnectSlaves",
+          "name": "disconnectSlaves",
+          "kind": "function"
+        },
+        {
+          "id": "fn:doesCommandHaveKeys",
+          "name": "doesCommandHaveKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dupClientReplyValue",
+          "name": "dupClientReplyValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:dupStringObject",
+          "name": "dupStringObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:elapsedMs",
+          "name": "elapsedMs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:elapsedStart",
+          "name": "elapsedStart",
+          "kind": "function"
+        },
+        {
+          "id": "fn:elapsedUs",
+          "name": "elapsedUs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:emptyData",
+          "name": "emptyData",
+          "kind": "function"
+        },
+        {
+          "id": "fn:emptyDbAsync",
+          "name": "emptyDbAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:emptyDbStructure",
+          "name": "emptyDbStructure",
+          "kind": "function"
+        },
+        {
+          "id": "fn:enableTracking",
+          "name": "enableTracking",
+          "kind": "function"
+        },
+        {
+          "id": "fn:encodeMaskedPtr",
+          "name": "encodeMaskedPtr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:entryHasValue",
+          "name": "entryHasValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:entryIsKey",
+          "name": "entryIsKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:entryIsNoValue",
+          "name": "entryIsNoValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:entryIsNormal",
+          "name": "entryIsNormal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:evalGetKeys",
+          "name": "evalGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:evictClients",
+          "name": "evictClients",
+          "kind": "function"
+        },
+        {
+          "id": "fn:existsCommand",
+          "name": "existsCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:expireIfNeeded",
+          "name": "expireIfNeeded",
+          "kind": "function"
+        },
+        {
+          "id": "fn:flushAllDataAndResetRDB",
+          "name": "flushAllDataAndResetRDB",
+          "kind": "function"
+        },
+        {
+          "id": "fn:flushSlaveKeysWithExpireList",
+          "name": "flushSlaveKeysWithExpireList",
+          "kind": "function"
+        },
+        {
+          "id": "fn:flushSlavesOutputBuffers",
+          "name": "flushSlavesOutputBuffers",
+          "kind": "function"
+        },
+        {
+          "id": "fn:flushallCommand",
+          "name": "flushallCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:flushdbCommand",
+          "name": "flushdbCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:forceCommandPropagation",
+          "name": "forceCommandPropagation",
+          "kind": "function"
+        },
+        {
+          "id": "fn:formatAddr",
+          "name": "formatAddr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClient",
+          "name": "freeClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientArgv",
+          "name": "freeClientArgv",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientAsync",
+          "name": "freeClientAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientMultiState",
+          "name": "freeClientMultiState",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientOriginalArgv",
+          "name": "freeClientOriginalArgv",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientReplyValue",
+          "name": "freeClientReplyValue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeClientsInAsyncFreeQueue",
+          "name": "freeClientsInAsyncFreeQueue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeFunctionsAsync",
+          "name": "freeFunctionsAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeLuaScriptsAsync",
+          "name": "freeLuaScriptsAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeObjAsync",
+          "name": "freeObjAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeReplicaReferencedReplBuffer",
+          "name": "freeReplicaReferencedReplBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeReplicationBacklogRefMemAsync",
+          "name": "freeReplicationBacklogRefMemAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeTrackingRadixTree",
+          "name": "freeTrackingRadixTree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:freeTrackingRadixTreeAsync",
+          "name": "freeTrackingRadixTreeAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:functionGetKeys",
+          "name": "functionGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:functionsLibCtxClearCurrent",
+          "name": "functionsLibCtxClearCurrent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:functionsLibCtxFree",
+          "name": "functionsLibCtxFree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:functionsLibCtxfunctionsLen",
+          "name": "functionsLibCtxfunctionsLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:genClientAddrString",
+          "name": "genClientAddrString",
+          "kind": "function"
+        },
+        {
+          "id": "fn:genericGetKeys",
+          "name": "genericGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:genrand64_int64",
+          "name": "genrand64_int64",
+          "kind": "function"
+        },
+        {
+          "id": "fn:georadiusGetKeys",
+          "name": "georadiusGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getAllClientsInfoString",
+          "name": "getAllClientsInfoString",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getAllKeySpecsFlags",
+          "name": "getAllKeySpecsFlags",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getChannelsFromCommand",
+          "name": "getChannelsFromCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientEvictionLimit",
+          "name": "getClientEvictionLimit",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientMemoryUsage",
+          "name": "getClientMemoryUsage",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientOutputBufferMemoryUsage",
+          "name": "getClientOutputBufferMemoryUsage",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientPeerId",
+          "name": "getClientPeerId",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientSockname",
+          "name": "getClientSockname",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientType",
+          "name": "getClientType",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClientTypeByName",
+          "name": "getClientTypeByName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getClusterConnectionsCount",
+          "name": "getClusterConnectionsCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getCommand",
+          "name": "getCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getDecodedObject",
+          "name": "getDecodedObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getExpire",
+          "name": "getExpire",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getExpireMillisecondsOrReply",
+          "name": "getExpireMillisecondsOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getFlushCommandFlags",
+          "name": "getFlushCommandFlags",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getGenericCommand",
+          "name": "getGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getIOPendingCount",
+          "name": "getIOPendingCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getIntFromObjectOrReply",
+          "name": "getIntFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysFreeResult",
+          "name": "getKeysFreeResult",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysFromCommand",
+          "name": "getKeysFromCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysFromCommandWithSpecs",
+          "name": "getKeysFromCommandWithSpecs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysPrepareResult",
+          "name": "getKeysPrepareResult",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysUsingKeySpecs",
+          "name": "getKeysUsingKeySpecs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getKeysUsingLegacyRangeSpec",
+          "name": "getKeysUsingLegacyRangeSpec",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getLongDoubleFromObjectOrReply",
+          "name": "getLongDoubleFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getLongFromObjectOrReply",
+          "name": "getLongFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getLongLongFromObjectOrReply",
+          "name": "getLongLongFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getObjectTypeByName",
+          "name": "getObjectTypeByName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getObjectTypeName",
+          "name": "getObjectTypeName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getRangeLongFromObjectOrReply",
+          "name": "getRangeLongFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getStringObjectLen",
+          "name": "getStringObjectLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getStringObjectSdsUsedMemory",
+          "name": "getStringObjectSdsUsedMemory",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getTimeoutFromObjectOrReply",
+          "name": "getTimeoutFromObjectOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getdelCommand",
+          "name": "getdelCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getexCommand",
+          "name": "getexCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getrangeCommand",
+          "name": "getrangeCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getsetCommand",
+          "name": "getsetCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:handleClientsWithPendingReadsUsingThreads",
+          "name": "handleClientsWithPendingReadsUsingThreads",
+          "kind": "function"
+        },
+        {
+          "id": "fn:handleClientsWithPendingWrites",
+          "name": "handleClientsWithPendingWrites",
+          "kind": "function"
+        },
+        {
+          "id": "fn:handleClientsWithPendingWritesUsingThreads",
+          "name": "handleClientsWithPendingWritesUsingThreads",
+          "kind": "function"
+        },
+        {
+          "id": "fn:hasActiveChildProcess",
+          "name": "hasActiveChildProcess",
+          "kind": "function"
+        },
+        {
+          "id": "fn:hashTypeDup",
+          "name": "hashTypeDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:helloCommand",
+          "name": "helloCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrCommand",
+          "name": "incrCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrDecrCommand",
+          "name": "incrDecrCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrRefCount",
+          "name": "incrRefCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrbyCommand",
+          "name": "incrbyCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrbyfloatCommand",
+          "name": "incrbyfloatCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrementErrorCount",
+          "name": "incrementErrorCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:incrementalTrimReplicationBacklog",
+          "name": "incrementalTrimReplicationBacklog",
+          "kind": "function"
+        },
+        {
+          "id": "fn:initClientBlockingState",
+          "name": "initClientBlockingState",
+          "kind": "function"
+        },
+        {
+          "id": "fn:initClientMultiState",
+          "name": "initClientMultiState",
+          "kind": "function"
+        },
+        {
+          "id": "fn:initObjectLRUOrLFU",
+          "name": "initObjectLRUOrLFU",
+          "kind": "function"
+        },
+        {
+          "id": "fn:initTempDb",
+          "name": "initTempDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:initThreadedIO",
+          "name": "initThreadedIO",
+          "kind": "function"
+        },
+        {
+          "id": "fn:installClientWriteHandler",
+          "name": "installClientWriteHandler",
+          "kind": "function"
+        },
+        {
+          "id": "fn:intrev64",
+          "name": "intrev64",
+          "kind": "function"
+        },
+        {
+          "id": "fn:isInsideYieldingLongCommand",
+          "name": "isInsideYieldingLongCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:isPausedActionsWithUpdate",
+          "name": "isPausedActionsWithUpdate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:keyIsExpired",
+          "name": "keyIsExpired",
+          "kind": "function"
+        },
+        {
+          "id": "fn:keysCommand",
+          "name": "keysCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:killIOThreads",
+          "name": "killIOThreads",
+          "kind": "function"
+        },
+        {
+          "id": "fn:killRDBChild",
+          "name": "killRDBChild",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lastsaveCommand",
+          "name": "lastsaveCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:latencyAddSample",
+          "name": "latencyAddSample",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyFreeFunctionsCtx",
+          "name": "lazyFreeFunctionsCtx",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyFreeLuaScripts",
+          "name": "lazyFreeLuaScripts",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyFreeReplicationBacklogRefMem",
+          "name": "lazyFreeReplicationBacklogRefMem",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyFreeTrackingTable",
+          "name": "lazyFreeTrackingTable",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyfreeFreeDatabase",
+          "name": "lazyfreeFreeDatabase",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyfreeFreeObject",
+          "name": "lazyfreeFreeObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lazyfreeGetFreeEffort",
+          "name": "lazyfreeGetFreeEffort",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lcsCommand",
+          "name": "lcsCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:ld2string",
+          "name": "ld2string",
+          "kind": "function"
+        },
+        {
+          "id": "fn:linkClient",
+          "name": "linkClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listAddNodeHead",
+          "name": "listAddNodeHead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listAddNodeTail",
+          "name": "listAddNodeTail",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listCreate",
+          "name": "listCreate",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listDelNode",
+          "name": "listDelNode",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listDup",
+          "name": "listDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listEmpty",
+          "name": "listEmpty",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listGetIterator",
+          "name": "listGetIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listInitNode",
+          "name": "listInitNode",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listInsertNode",
+          "name": "listInsertNode",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listJoin",
+          "name": "listJoin",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listLinkNodeHead",
+          "name": "listLinkNodeHead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listLinkNodeTail",
+          "name": "listLinkNodeTail",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listNext",
+          "name": "listNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listRelease",
+          "name": "listRelease",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listReleaseIterator",
+          "name": "listReleaseIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listRewind",
+          "name": "listRewind",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listSearchKey",
+          "name": "listSearchKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listTypeDup",
+          "name": "listTypeDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:listUnlinkNode",
+          "name": "listUnlinkNode",
+          "kind": "function"
+        },
+        {
+          "id": "fn:ll2string",
+          "name": "ll2string",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lmpopGetKeys",
+          "name": "lmpopGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:logInvalidUseAndFreeClientAsync",
+          "name": "logInvalidUseAndFreeClientAsync",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupClientByID",
+          "name": "lookupClientByID",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupCommandOrOriginal",
+          "name": "lookupCommandOrOriginal",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKey",
+          "name": "lookupKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyRead",
+          "name": "lookupKeyRead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyReadOrReply",
+          "name": "lookupKeyReadOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyReadWithFlags",
+          "name": "lookupKeyReadWithFlags",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyWrite",
+          "name": "lookupKeyWrite",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyWriteOrReply",
+          "name": "lookupKeyWriteOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lookupKeyWriteWithFlags",
+          "name": "lookupKeyWriteWithFlags",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lpFirst",
+          "name": "lpFirst",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lpGet",
+          "name": "lpGet",
+          "kind": "function"
+        },
+        {
+          "id": "fn:lpNext",
+          "name": "lpNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:makeThreadKillable",
+          "name": "makeThreadKillable",
+          "kind": "function"
+        },
+        {
+          "id": "fn:mgetCommand",
+          "name": "mgetCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:migrateGetKeys",
+          "name": "migrateGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleBlockedClientMayTimeout",
+          "name": "moduleBlockedClientMayTimeout",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleFireServerEvent",
+          "name": "moduleFireServerEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleGetCommandChannelsViaAPI",
+          "name": "moduleGetCommandChannelsViaAPI",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleGetCommandKeysViaAPI",
+          "name": "moduleGetCommandKeysViaAPI",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleGetFreeEffort",
+          "name": "moduleGetFreeEffort",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleNotifyKeyUnlink",
+          "name": "moduleNotifyKeyUnlink",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleNotifyUserChanged",
+          "name": "moduleNotifyUserChanged",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleTypeDupOrReply",
+          "name": "moduleTypeDupOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moduleTypeLookupModuleByNameIgnoreCase",
+          "name": "moduleTypeLookupModuleByNameIgnoreCase",
+          "kind": "function"
+        },
+        {
+          "id": "fn:monotonicInit",
+          "name": "monotonicInit",
+          "kind": "function"
+        },
+        {
+          "id": "fn:moveCommand",
+          "name": "moveCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:msetCommand",
+          "name": "msetCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:msetGenericCommand",
+          "name": "msetGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:msetnxCommand",
+          "name": "msetnxCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:mstime",
+          "name": "mstime",
+          "kind": "function"
+        },
+        {
+          "id": "fn:multiStateMemOverhead",
+          "name": "multiStateMemOverhead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:mustObeyClient",
+          "name": "mustObeyClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:notifyKeyspaceEvent",
+          "name": "notifyKeyspaceEvent",
+          "kind": "function"
+        },
+        {
+          "id": "fn:objectTypeCompare",
+          "name": "objectTypeCompare",
+          "kind": "function"
+        },
+        {
+          "id": "fn:parseExtendedStringArgumentsOrReply",
+          "name": "parseExtendedStringArgumentsOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:parseScanCursorOrReply",
+          "name": "parseScanCursorOrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pauseActions",
+          "name": "pauseActions",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pauseClientsByClient",
+          "name": "pauseClientsByClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:postponeClientRead",
+          "name": "postponeClientRead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:prepareClientToWrite",
+          "name": "prepareClientToWrite",
+          "kind": "function"
+        },
+        {
+          "id": "fn:prepareForShutdown",
+          "name": "prepareForShutdown",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processCommand",
+          "name": "processCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processCommandAndResetClient",
+          "name": "processCommandAndResetClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processEventsWhileBlocked",
+          "name": "processEventsWhileBlocked",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processInlineBuffer",
+          "name": "processInlineBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processInputBuffer",
+          "name": "processInputBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processMultibulkBuffer",
+          "name": "processMultibulkBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processPendingCommandAndInputBuffer",
+          "name": "processPendingCommandAndInputBuffer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:processTimeEvents",
+          "name": "processTimeEvents",
+          "kind": "function"
+        },
+        {
+          "id": "fn:propagateDeletion",
+          "name": "propagateDeletion",
+          "kind": "function"
+        },
+        {
+          "id": "fn:protectClient",
+          "name": "protectClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:psetexCommand",
+          "name": "psetexCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pubsubMemOverhead",
+          "name": "pubsubMemOverhead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pubsubUnsubscribeAllChannels",
+          "name": "pubsubUnsubscribeAllChannels",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pubsubUnsubscribeAllPatterns",
+          "name": "pubsubUnsubscribeAllPatterns",
+          "kind": "function"
+        },
+        {
+          "id": "fn:pubsubUnsubscribeShardAllChannels",
+          "name": "pubsubUnsubscribeShardAllChannels",
+          "kind": "function"
+        },
+        {
+          "id": "fn:putClientInPendingWriteQueue",
+          "name": "putClientInPendingWriteQueue",
+          "kind": "function"
+        },
+        {
+          "id": "fn:quitCommand",
+          "name": "quitCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:randomkeyCommand",
+          "name": "randomkeyCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxFind",
+          "name": "raxFind",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxFree",
+          "name": "raxFree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxInsert",
+          "name": "raxInsert",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxNext",
+          "name": "raxNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxRemove",
+          "name": "raxRemove",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxSeek",
+          "name": "raxSeek",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxSize",
+          "name": "raxSize",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxStart",
+          "name": "raxStart",
+          "kind": "function"
+        },
+        {
+          "id": "fn:raxStop",
+          "name": "raxStop",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rdbPipeWriteHandlerConnRemoved",
+          "name": "rdbPipeWriteHandlerConnRemoved",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rdbPopulateSaveInfo",
+          "name": "rdbPopulateSaveInfo",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rdbSave",
+          "name": "rdbSave",
+          "kind": "function"
+        },
+        {
+          "id": "fn:readQueryFromClient",
+          "name": "readQueryFromClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:reclaimFilePageCache",
+          "name": "reclaimFilePageCache",
+          "kind": "function"
+        },
+        {
+          "id": "fn:redactClientCommandArgument",
+          "name": "redactClientCommandArgument",
+          "kind": "function"
+        },
+        {
+          "id": "fn:redisSetCpuAffinity",
+          "name": "redisSetCpuAffinity",
+          "kind": "function"
+        },
+        {
+          "id": "fn:refreshGoodSlavesCount",
+          "name": "refreshGoodSlavesCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rememberSlaveKeyWithExpire",
+          "name": "rememberSlaveKeyWithExpire",
+          "kind": "function"
+        },
+        {
+          "id": "fn:removeClientFromMemUsageBucket",
+          "name": "removeClientFromMemUsageBucket",
+          "kind": "function"
+        },
+        {
+          "id": "fn:removeExpire",
+          "name": "removeExpire",
+          "kind": "function"
+        },
+        {
+          "id": "fn:renameCommand",
+          "name": "renameCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:renameGenericCommand",
+          "name": "renameGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:renamenxCommand",
+          "name": "renamenxCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:replaceClientCommandVector",
+          "name": "replaceClientCommandVector",
+          "kind": "function"
+        },
+        {
+          "id": "fn:replicationCacheMaster",
+          "name": "replicationCacheMaster",
+          "kind": "function"
+        },
+        {
+          "id": "fn:replicationFeedStreamFromMasterStream",
+          "name": "replicationFeedStreamFromMasterStream",
+          "kind": "function"
+        },
+        {
+          "id": "fn:replicationGetSlaveName",
+          "name": "replicationGetSlaveName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:replicationHandleMasterDisconnection",
+          "name": "replicationHandleMasterDisconnection",
+          "kind": "function"
+        },
+        {
+          "id": "fn:reqresAppendResponse",
+          "name": "reqresAppendResponse",
+          "kind": "function"
+        },
+        {
+          "id": "fn:reqresSaveClientReplyOffset",
+          "name": "reqresSaveClientReplyOffset",
+          "kind": "function"
+        },
+        {
+          "id": "fn:resetClient",
+          "name": "resetClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:resetCommand",
+          "name": "resetCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:retainOriginalCommandVector",
+          "name": "retainOriginalCommandVector",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rev",
+          "name": "rev",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rewriteClientCommandArgument",
+          "name": "rewriteClientCommandArgument",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rewriteClientCommandVector",
+          "name": "rewriteClientCommandVector",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rioFlush",
+          "name": "rioFlush",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rioRead",
+          "name": "rioRead",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rioTell",
+          "name": "rioTell",
+          "kind": "function"
+        },
+        {
+          "id": "fn:rioWrite",
+          "name": "rioWrite",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scanCallback",
+          "name": "scanCallback",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scanCommand",
+          "name": "scanCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scanDatabaseForDeletedKeys",
+          "name": "scanDatabaseForDeletedKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scanDatabaseForReadyKeys",
+          "name": "scanDatabaseForReadyKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scanGenericCommand",
+          "name": "scanGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:scriptIsEval",
+          "name": "scriptIsEval",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsAllocPtr",
+          "name": "sdsAllocPtr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsIncrLen",
+          "name": "sdsIncrLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsMakeRoomFor",
+          "name": "sdsMakeRoomFor",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsMakeRoomForNonGreedy",
+          "name": "sdsMakeRoomForNonGreedy",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsZmallocSize",
+          "name": "sdsZmallocSize",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsalloc",
+          "name": "sdsalloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsavail",
+          "name": "sdsavail",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscatfmt",
+          "name": "sdscatfmt",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscatlen",
+          "name": "sdscatlen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscatprintf",
+          "name": "sdscatprintf",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscatrepr",
+          "name": "sdscatrepr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscatvprintf",
+          "name": "sdscatvprintf",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsclear",
+          "name": "sdsclear",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdscmp",
+          "name": "sdscmp",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsdup",
+          "name": "sdsdup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsempty",
+          "name": "sdsempty",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsfree",
+          "name": "sdsfree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsfreesplitres",
+          "name": "sdsfreesplitres",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsgrowzero",
+          "name": "sdsgrowzero",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdslen",
+          "name": "sdslen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsmapchars",
+          "name": "sdsmapchars",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsnew",
+          "name": "sdsnew",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsnewlen",
+          "name": "sdsnewlen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdsrange",
+          "name": "sdsrange",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdssplitargs",
+          "name": "sdssplitargs",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdstoupper",
+          "name": "sdstoupper",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sdstrim",
+          "name": "sdstrim",
+          "kind": "function"
+        },
+        {
+          "id": "fn:securityWarningCommand",
+          "name": "securityWarningCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:selectCommand",
+          "name": "selectCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:selectDb",
+          "name": "selectDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sendReplyToClient",
+          "name": "sendReplyToClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setCommand",
+          "name": "setCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredAggregateLen",
+          "name": "setDeferredAggregateLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredArrayLen",
+          "name": "setDeferredArrayLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredAttributeLen",
+          "name": "setDeferredAttributeLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredMapLen",
+          "name": "setDeferredMapLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredPushLen",
+          "name": "setDeferredPushLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredReply",
+          "name": "setDeferredReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredReplyBulkSds",
+          "name": "setDeferredReplyBulkSds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setDeferredSetLen",
+          "name": "setDeferredSetLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setExpire",
+          "name": "setExpire",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setGenericCommand",
+          "name": "setGenericCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setGetKeys",
+          "name": "setGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setIOPendingCount",
+          "name": "setIOPendingCount",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setKey",
+          "name": "setKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setProtocolError",
+          "name": "setProtocolError",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setTypeDup",
+          "name": "setTypeDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setTypeInitIterator",
+          "name": "setTypeInitIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setTypeNext",
+          "name": "setTypeNext",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setTypeReleaseIterator",
+          "name": "setTypeReleaseIterator",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setexCommand",
+          "name": "setexCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setnxCommand",
+          "name": "setnxCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:setrangeCommand",
+          "name": "setrangeCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:showLatestBacklog",
+          "name": "showLatestBacklog",
+          "kind": "function"
+        },
+        {
+          "id": "fn:shutdownCommand",
+          "name": "shutdownCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:signalDeletedKeyAsReady",
+          "name": "signalDeletedKeyAsReady",
+          "kind": "function"
+        },
+        {
+          "id": "fn:signalFlushedDb",
+          "name": "signalFlushedDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:signalKeyAsReady",
+          "name": "signalKeyAsReady",
+          "kind": "function"
+        },
+        {
+          "id": "fn:signalModifiedKey",
+          "name": "signalModifiedKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sintercardGetKeys",
+          "name": "sintercardGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:siphash",
+          "name": "siphash",
+          "kind": "function"
+        },
+        {
+          "id": "fn:siphash_nocase",
+          "name": "siphash_nocase",
+          "kind": "function"
+        },
+        {
+          "id": "fn:slotToKeyAddEntry",
+          "name": "slotToKeyAddEntry",
+          "kind": "function"
+        },
+        {
+          "id": "fn:slotToKeyDelEntry",
+          "name": "slotToKeyDelEntry",
+          "kind": "function"
+        },
+        {
+          "id": "fn:slotToKeyDestroy",
+          "name": "slotToKeyDestroy",
+          "kind": "function"
+        },
+        {
+          "id": "fn:slotToKeyFlush",
+          "name": "slotToKeyFlush",
+          "kind": "function"
+        },
+        {
+          "id": "fn:slotToKeyInit",
+          "name": "slotToKeyInit",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sortGetKeys",
+          "name": "sortGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:sortROGetKeys",
+          "name": "sortROGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:startThreadedIO",
+          "name": "startThreadedIO",
+          "kind": "function"
+        },
+        {
+          "id": "fn:stopThreadedIO",
+          "name": "stopThreadedIO",
+          "kind": "function"
+        },
+        {
+          "id": "fn:stopThreadedIOIfNeeded",
+          "name": "stopThreadedIOIfNeeded",
+          "kind": "function"
+        },
+        {
+          "id": "fn:streamDup",
+          "name": "streamDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:string2ll",
+          "name": "string2ll",
+          "kind": "function"
+        },
+        {
+          "id": "fn:stringObjectLen",
+          "name": "stringObjectLen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:stringmatchlen",
+          "name": "stringmatchlen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:strlenCommand",
+          "name": "strlenCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:swapMainDbWithTempDb",
+          "name": "swapMainDbWithTempDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:swapdbCommand",
+          "name": "swapdbCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:timeInMilliseconds",
+          "name": "timeInMilliseconds",
+          "kind": "function"
+        },
+        {
+          "id": "fn:touchAllWatchedKeysInDb",
+          "name": "touchAllWatchedKeysInDb",
+          "kind": "function"
+        },
+        {
+          "id": "fn:touchWatchedKey",
+          "name": "touchWatchedKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:trackingInvalidateKey",
+          "name": "trackingInvalidateKey",
+          "kind": "function"
+        },
+        {
+          "id": "fn:trackingInvalidateKeysOnFlush",
+          "name": "trackingInvalidateKeysOnFlush",
+          "kind": "function"
+        },
+        {
+          "id": "fn:trimReplyUnusedTailSpace",
+          "name": "trimReplyUnusedTailSpace",
+          "kind": "function"
+        },
+        {
+          "id": "fn:tryObjectEncoding",
+          "name": "tryObjectEncoding",
+          "kind": "function"
+        },
+        {
+          "id": "fn:typeCommand",
+          "name": "typeCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unblockClient",
+          "name": "unblockClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unblockClientOnError",
+          "name": "unblockClientOnError",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unblockClientOnTimeout",
+          "name": "unblockClientOnTimeout",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unblockPostponedClients",
+          "name": "unblockPostponedClients",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unlinkClient",
+          "name": "unlinkClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unlinkCommand",
+          "name": "unlinkCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unpauseActions",
+          "name": "unpauseActions",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unprotectClient",
+          "name": "unprotectClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:unwatchAllKeys",
+          "name": "unwatchAllKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:updateCachedTime",
+          "name": "updateCachedTime",
+          "kind": "function"
+        },
+        {
+          "id": "fn:updateClientMemUsageAndBucket",
+          "name": "updateClientMemUsageAndBucket",
+          "kind": "function"
+        },
+        {
+          "id": "fn:updateLFU",
+          "name": "updateLFU",
+          "kind": "function"
+        },
+        {
+          "id": "fn:updatePausedActions",
+          "name": "updatePausedActions",
+          "kind": "function"
+        },
+        {
+          "id": "fn:usUntilEarliestTimer",
+          "name": "usUntilEarliestTimer",
+          "kind": "function"
+        },
+        {
+          "id": "fn:validateClientAttr",
+          "name": "validateClientAttr",
+          "kind": "function"
+        },
+        {
+          "id": "fn:validateClientName",
+          "name": "validateClientName",
+          "kind": "function"
+        },
+        {
+          "id": "fn:whileBlockedCron",
+          "name": "whileBlockedCron",
+          "kind": "function"
+        },
+        {
+          "id": "fn:writeToClient",
+          "name": "writeToClient",
+          "kind": "function"
+        },
+        {
+          "id": "fn:xreadGetKeys",
+          "name": "xreadGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zcalloc",
+          "name": "zcalloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zfree",
+          "name": "zfree",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zmalloc",
+          "name": "zmalloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zmalloc_usable",
+          "name": "zmalloc_usable",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zmalloc_used_memory",
+          "name": "zmalloc_used_memory",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zmpopGetKeys",
+          "name": "zmpopGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zrealloc",
+          "name": "zrealloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zrealloc_usable",
+          "name": "zrealloc_usable",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zsetDup",
+          "name": "zsetDup",
+          "kind": "function"
+        },
+        {
+          "id": "fn:ztrycalloc",
+          "name": "ztrycalloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:ztrymalloc",
+          "name": "ztrymalloc",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zunionInterDiffGetKeys",
+          "name": "zunionInterDiffGetKeys",
+          "kind": "function"
+        },
+        {
+          "id": "fn:zunionInterDiffStoreGetKeys",
+          "name": "zunionInterDiffStoreGetKeys",
+          "kind": "function"
+        }
+      ],
+      "responsibilities": [
+        "事件循环驱动",
+        "事件等待",
+        "停止循环",
+        "初始化",
+        "核心逻辑"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "source": "src",
+      "target": "core"
+    }
+  ]
+}

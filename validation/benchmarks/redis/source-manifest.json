@@ -1,0 +1,13 @@
+{
+  "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
+  "sha256_lf": {
+    "third_party/redis/src/adlist.c": "8fee59171ff5591b296af94476d52c48009ea9767ebae4a8cf0cd327e6ead431",
+    "third_party/redis/src/ae.c": "7b38b632421cf205a244c1ad1a75f423205d5bf22b320b9160932aecf529340a",
+    "third_party/redis/src/atomicvar.h": "059508d7a9e5f756dbd7fda6854bb1b505f9de00b0f07749eeb0fad08e5972d9",
+    "third_party/redis/src/bio.c": "aae17661db35fdd3a9c346ca17a23999daa4856041be848f9dccfd508ee61319",
+    "third_party/redis/src/config.h": "045f7de485c7cb596c82c23de97b465904531c2af26ab0d68249a992854007a1",
+    "third_party/redis/src/lazyfree.c": "d559ca70d7c8b1bd07af7e861892437f2ca310ba82917a5776a4a4a78f858bef",
+    "third_party/redis/src/networking.c": "60f35403923bc4c75e0acdda748bb090f1b316815fa6bdeaa26e39fffdbcf2a1",
+    "third_party/redis/src/server.h": "cdfcaada34cd21bff461888213d4edd5f36e9f02d5811eb8325831acaba01dfe"
+  }
+}

@@ -1,0 +1,1824 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "redis-7.2.4-baseline-v1",
+  "scope": "annotated facts only; unlabelled predictions excluded from precision",
+  "scoring": "candidate facts including unconfirmed; confirmed-only metrics reported separately",
+  "review": {
+    "method": "source_review_by_ai; lexical candidate collection followed by explicit source review; not derived from analyzer graph",
+    "human_review": "pending"
+  },
+  "categories": {
+    "call_chain": {
+      "input_status": "partial",
+      "gold_positive": 110,
+      "gold_negative": 10,
+      "tp": 75,
+      "fp": 0,
+      "fn": 35,
+      "tn": 10,
+      "precision": 1.0,
+      "recall": 0.6818181818181818,
+      "f1": 0.8108108108108109,
+      "type_accuracy": 1.0,
+      "evidence_hit_rate": 1.0,
+      "coverage": 0.6818181818181818,
+      "unconfirmed_ratio": 0.05921539600296077,
+      "unlabelled_predictions": 1276,
+      "prediction_count": 1351,
+      "duplicate_predictions": 373,
+      "confirmed_only": {
+        "precision": 1.0,
+        "recall": 0.6818181818181818,
+        "tp": 75,
+        "fp": 0,
+        "f1": 0.8108108108108109
+      },
+      "errors_by_type": {
+        "direct_call": 35
+      },
+      "cases": [
+        {
+          "case_id": "redis_call_023",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateEventLoop",
+            "fn:aeApiCreate"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_021",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateEventLoop",
+            "fn:monotonicInit"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_024",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateEventLoop",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_022",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateEventLoop",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_029",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateFileEvent",
+            "fn:aeApiAddEvent"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_031",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeCreateTimeEvent",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_027",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeDeleteEventLoop",
+            "fn:aeApiFree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_028",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeDeleteEventLoop",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_030",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeDeleteFileEvent",
+            "fn:aeApiDelEvent"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_039",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeGetApiName",
+            "fn:aeApiName"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_038",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeMain",
+            "fn:aeProcessEvents"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_034",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeProcessEvents",
+            "fn:aeApiPoll"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_035",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeProcessEvents",
+            "fn:processTimeEvents"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_033",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeProcessEvents",
+            "fn:usUntilEarliestTimer"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_025",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeResizeSetSize",
+            "fn:aeApiResize"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_026",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeResizeSetSize",
+            "fn:zrealloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_036",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeWait",
+            "fn:memset"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_037",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:aeWait",
+            "fn:poll"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_059",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateCloseAofJob",
+            "fn:bioSubmitJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_058",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateCloseAofJob",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_057",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateCloseJob",
+            "fn:bioSubmitJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_056",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateCloseJob",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_061",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateFsyncJob",
+            "fn:bioSubmitJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_060",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateFsyncJob",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_055",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateLazyFreeJob",
+            "fn:bioSubmitJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_054",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioCreateLazyFreeJob",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_081",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioDrainWorker",
+            "fn:pthread_cond_wait"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_080",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioDrainWorker",
+            "fn:pthread_mutex_lock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_082",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioDrainWorker",
+            "fn:pthread_mutex_unlock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_047",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:_serverLog"
+          ],
+          "notes": "Linux macro-expanded direct call; invocation and macro definition are both required evidence."
+        },
+        {
+          "case_id": "redis_call_049",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:exit"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_042",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:listCreate"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_044",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_attr_getstacksize"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_043",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_attr_init"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_045",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_attr_setstacksize"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_041",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_cond_init"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_046",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_create"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_040",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:pthread_mutex_init"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_048",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioInit",
+            "fn:strerror"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_086",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioKillThreads",
+            "fn:_serverLog"
+          ],
+          "notes": "Linux macro-expanded direct call; invocation and macro definition are both required evidence."
+        },
+        {
+          "case_id": "redis_call_084",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioKillThreads",
+            "fn:pthread_cancel"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_085",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioKillThreads",
+            "fn:pthread_join"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_083",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioKillThreads",
+            "fn:pthread_self"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_087",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioKillThreads",
+            "fn:strerror"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_078",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioPendingJobsOfType",
+            "fn:pthread_mutex_lock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_079",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioPendingJobsOfType",
+            "fn:pthread_mutex_unlock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_069",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:_serverLog"
+          ],
+          "notes": "Linux macro-expanded direct call; invocation and macro definition are both required evidence."
+        },
+        {
+          "case_id": "redis_call_074",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:close"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_076",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:listDelNode"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_064",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:makeThreadKillable"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_077",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_cond_signal"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_071",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_cond_wait"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_065",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_mutex_lock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_072",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_mutex_unlock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_062",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_setname_np"
+          ],
+          "notes": "Linux macro-expanded direct call; invocation and macro definition are both required evidence."
+        },
+        {
+          "case_id": "redis_call_068",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:pthread_sigmask"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_073",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:reclaimFilePageCache"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_063",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:redisSetCpuAffinity"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_067",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:sigaddset"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_066",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:sigemptyset"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_070",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:strerror"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_075",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioProcessBackgroundJobs",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_051",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioSubmitJob",
+            "fn:listAddNodeTail"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_052",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioSubmitJob",
+            "fn:pthread_cond_signal"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_050",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioSubmitJob",
+            "fn:pthread_mutex_lock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_053",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:bioSubmitJob",
+            "fn:pthread_mutex_unlock"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_105",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:emptyDbAsync",
+            "fn:bioCreateLazyFreeJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_104",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:emptyDbAsync",
+            "fn:dictCreate"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_110",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeFunctionsAsync",
+            "fn:functionsLibCtxfunctionsLen"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_108",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeLuaScriptsAsync",
+            "fn:bioCreateLazyFreeJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_109",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeLuaScriptsAsync",
+            "fn:dictRelease"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_102",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeObjAsync",
+            "fn:bioCreateLazyFreeJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_103",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeObjAsync",
+            "fn:decrRefCount"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_101",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeObjAsync",
+            "fn:lazyfreeGetFreeEffort"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_106",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeTrackingRadixTreeAsync",
+            "fn:bioCreateLazyFreeJob"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_107",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:freeTrackingRadixTreeAsync",
+            "fn:freeTrackingRadixTree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_093",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeFunctionsCtx",
+            "fn:functionsLibCtxFree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_092",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeFunctionsCtx",
+            "fn:functionsLibCtxfunctionsLen"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_091",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeLuaScripts",
+            "fn:dictRelease"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_094",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeReplicationBacklogRefMem",
+            "fn:listRelease"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_095",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeReplicationBacklogRefMem",
+            "fn:raxFree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_090",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyFreeTrackingTable",
+            "fn:freeTrackingRadixTree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_089",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeFreeDatabase",
+            "fn:dictRelease"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_088",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeFreeObject",
+            "fn:decrRefCount"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_100",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeGetFreeEffort",
+            "fn:moduleGetFreeEffort"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_098",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeGetFreeEffort",
+            "fn:raxNext"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_097",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeGetFreeEffort",
+            "fn:raxSeek"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_096",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeGetFreeEffort",
+            "fn:raxStart"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_099",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:lazyfreeGetFreeEffort",
+            "fn:raxStop"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_006",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listAddNodeHead",
+            "fn:listLinkNodeHead"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_006",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listAddNodeHead",
+            "fn:listLinkNodeHead"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_005",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listAddNodeHead",
+            "fn:zmalloc"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_005",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listAddNodeHead",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_008",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listAddNodeTail",
+            "fn:listLinkNodeTail"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_008",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listAddNodeTail",
+            "fn:listLinkNodeTail"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_007",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listAddNodeTail",
+            "fn:zmalloc"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_007",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listAddNodeTail",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_001",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listCreate",
+            "fn:zmalloc"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_001",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listCreate",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_010",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listDelNode",
+            "fn:listUnlinkNode"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_010",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDelNode",
+            "fn:listUnlinkNode"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_011",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDelNode",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_018",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDup",
+            "fn:listAddNodeTail"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_014",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDup",
+            "fn:listCreate"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_016",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDup",
+            "fn:listNext"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_017",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDup",
+            "fn:listRelease"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_015",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listDup",
+            "fn:listRewind"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_002",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listEmpty",
+            "fn:zfree"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_002",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listEmpty",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_012",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listGetIterator",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_009",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listInsertNode",
+            "fn:zmalloc"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_009",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listInsertNode",
+            "fn:zmalloc"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_003",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listRelease",
+            "fn:listEmpty"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_003",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listRelease",
+            "fn:listEmpty"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_negative_004",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:listRelease",
+            "fn:zfree"
+          ],
+          "notes": "Direct named call at the evidence location, not callback dispatch."
+        },
+        {
+          "case_id": "redis_call_004",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listRelease",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_013",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listReleaseIterator",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_020",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listSearchKey",
+            "fn:listNext"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_019",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:listSearchKey",
+            "fn:listRewind"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        },
+        {
+          "case_id": "redis_call_032",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:processTimeEvents",
+            "fn:zfree"
+          ],
+          "notes": "Source-reviewed direct invocation; conditional paths need not execute on every run."
+        }
+      ]
+    },
+    "resource_flow": {
+      "input_status": "not_available",
+      "gold_positive": 0,
+      "gold_negative": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "type_accuracy": null,
+      "evidence_hit_rate": null,
+      "coverage": null,
+      "unconfirmed_ratio": null,
+      "unlabelled_predictions": 0,
+      "prediction_count": 0,
+      "duplicate_predictions": 0,
+      "confirmed_only": {
+        "precision": null,
+        "recall": null,
+        "tp": 0,
+        "fp": 0,
+        "f1": null
+      },
+      "errors_by_type": {},
+      "cases": []
+    },
+    "sync_relation": {
+      "input_status": "not_available",
+      "gold_positive": 22,
+      "gold_negative": 3,
+      "tp": 0,
+      "fp": 0,
+      "fn": 22,
+      "tn": 3,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0,
+      "type_accuracy": null,
+      "evidence_hit_rate": null,
+      "coverage": 0.0,
+      "unconfirmed_ratio": null,
+      "unlabelled_predictions": 0,
+      "prediction_count": 0,
+      "duplicate_predictions": 0,
+      "confirmed_only": {
+        "precision": null,
+        "recall": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "f1": 0.0
+      },
+      "errors_by_type": {
+        "happens_before": 19,
+        "concurrent": 1,
+        "unknown": 2
+      },
+      "cases": [
+        {
+          "case_id": "redis_sync_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "IOThreadMain",
+            "IOThreadMain",
+            "third_party/redis/src/networking.c",
+            4192,
+            "third_party/redis/src/networking.c",
+            4193,
+            "成功获取暂停锁"
+          ],
+          "notes": "暂停锁获取返回后释放并进入下一轮检查。"
+        },
+        {
+          "case_id": "redis_sync_021",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "concurrent",
+          "identity": [
+            "IOThreadMain",
+            "IOThreadMain",
+            "third_party/redis/src/networking.c",
+            4207,
+            "third_party/redis/src/networking.c",
+            4207,
+            "两个不同 worker 被同一写批次启动，操作各自列表"
+          ],
+          "notes": "不同 worker 允许并发写不同客户连接，不构成先后顺序。"
+        },
+        {
+          "case_id": "redis_sync_021_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "IOThreadMain",
+            "IOThreadMain",
+            "third_party/redis/src/networking.c",
+            4207,
+            "third_party/redis/src/networking.c",
+            4207,
+            "两个不同 worker 被同一写批次启动，操作各自列表"
+          ],
+          "notes": "不同 worker 允许并发写不同客户连接，不构成先后顺序。"
+        },
+        {
+          "case_id": "redis_sync_018",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "IOThreadMain",
+            "IOThreadMain",
+            "third_party/redis/src/networking.c",
+            4214,
+            "third_party/redis/src/networking.c",
+            4215,
+            "当前批次处理结束"
+          ],
+          "notes": "清空当前线程列表之后发布 pending=0。"
+        },
+        {
+          "case_id": "redis_sync_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioDrainWorker",
+            "bioDrainWorker",
+            "third_party/redis/src/bio.c",
+            317,
+            "third_party/redis/src/bio.c",
+            319,
+            "队列非空，执行等待"
+          ],
+          "notes": "持队列锁检查条件后等待，wait 会暂时释放锁。"
+        },
+        {
+          "case_id": "redis_sync_012",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioKillThreads",
+            "bioKillThreads",
+            "third_party/redis/src/bio.c",
+            335,
+            "third_party/redis/src/bio.c",
+            340,
+            "pthread_join 成功且进入 else 分支"
+          ],
+          "notes": "成功 join 后才输出 terminated 日志。"
+        },
+        {
+          "case_id": "redis_sync_010",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioPendingJobsOfType",
+            "bioPendingJobsOfType",
+            "third_party/redis/src/bio.c",
+            306,
+            "third_party/redis/src/bio.c",
+            307,
+            "成功获取该 worker 的锁"
+          ],
+          "notes": "读取未完成计数在锁保护内。"
+        },
+        {
+          "case_id": "redis_sync_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            233,
+            "third_party/redis/src/bio.c",
+            237,
+            "等待返回后重新检查队列，非空时取请求"
+          ],
+          "notes": "wait 重新获取锁后才可读取队列；虚假唤醒会重新检查。"
+        },
+        {
+          "case_id": "redis_sync_006",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            241,
+            "third_party/redis/src/bio.c",
+            287,
+            "BIO_LAZY_FREE 分支"
+          ],
+          "notes": "回调执行时已释放队列锁。"
+        },
+        {
+          "case_id": "redis_sync_014",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            287,
+            "third_party/redis/src/bio.c",
+            287,
+            "两个不同 lazyfree job 在同一唯一 lazyfree worker 上按取出顺序执行"
+          ],
+          "notes": "单一 worker 同步调用回调，第二个 job 不会在前一个回调返回前执行。"
+        },
+        {
+          "case_id": "redis_sync_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            287,
+            "third_party/redis/src/bio.c",
+            291,
+            "同一回调正常返回"
+          ],
+          "notes": "回调返回后释放 job 对象。"
+        },
+        {
+          "case_id": "redis_sync_008",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            295,
+            "third_party/redis/src/bio.c",
+            296,
+            "处理任务后重新加锁"
+          ],
+          "notes": "删除完成队列项时持锁。"
+        },
+        {
+          "case_id": "redis_sync_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioProcessBackgroundJobs",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            297,
+            "third_party/redis/src/bio.c",
+            298,
+            "同一完成路径"
+          ],
+          "notes": "先减少未完成计数再通知 drain 等待者。"
+        },
+        {
+          "case_id": "redis_sync_013_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioSubmitJob",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            158,
+            "third_party/redis/src/bio.c",
+            287,
+            "未指定 job 配对"
+          ],
+          "notes": "通知不能单独识别此次被执行的 job，也可能唤醒 drain 等待者。"
+        },
+        {
+          "case_id": "redis_sync_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "bioSubmitJob",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            158,
+            "third_party/redis/src/bio.c",
+            287,
+            "未指定 job 配对"
+          ],
+          "notes": "通知不能单独识别此次被执行的 job，也可能唤醒 drain 等待者。"
+        },
+        {
+          "case_id": "redis_sync_004",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioSubmitJob",
+            "bioProcessBackgroundJobs",
+            "third_party/redis/src/bio.c",
+            159,
+            "third_party/redis/src/bio.c",
+            237,
+            "同一 worker 队列，该请求由该次取队列操作读取"
+          ],
+          "notes": "释放锁与 worker 后续获取同一把锁建立发布顺序。"
+        },
+        {
+          "case_id": "redis_sync_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioSubmitJob",
+            "bioSubmitJob",
+            "third_party/redis/src/bio.c",
+            155,
+            "third_party/redis/src/bio.c",
+            156,
+            "同一 worker，成功加锁"
+          ],
+          "notes": "入队前持有 worker 队列锁。"
+        },
+        {
+          "case_id": "redis_sync_002",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioSubmitJob",
+            "bioSubmitJob",
+            "third_party/redis/src/bio.c",
+            156,
+            "third_party/redis/src/bio.c",
+            158,
+            "同一提交"
+          ],
+          "notes": "先入队再通知。"
+        },
+        {
+          "case_id": "redis_sync_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "bioSubmitJob",
+            "bioSubmitJob",
+            "third_party/redis/src/bio.c",
+            157,
+            "third_party/redis/src/bio.c",
+            159,
+            "同一提交"
+          ],
+          "notes": "计数器在锁保护内增加。"
+        },
+        {
+          "case_id": "redis_sync_020",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "handleClientsWithPendingReadsUsingThreads",
+            "handleClientsWithPendingReadsUsingThreads",
+            "third_party/redis/src/networking.c",
+            4480,
+            "third_party/redis/src/networking.c",
+            4484,
+            "已观察到所有线程的 pending 为 0 并退出等待循环"
+          ],
+          "notes": "全部读 worker 完成后切回 IDLE。"
+        },
+        {
+          "case_id": "redis_sync_016",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "handleClientsWithPendingWritesUsingThreads",
+            "handleClientsWithPendingWritesUsingThreads",
+            "third_party/redis/src/networking.c",
+            4363,
+            "third_party/redis/src/networking.c",
+            4366,
+            "写批次非空，启动对应线程"
+          ],
+          "notes": "设置 WRITE 操作后发布 pending 数量。"
+        },
+        {
+          "case_id": "redis_sync_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "handleClientsWithPendingWritesUsingThreads",
+            "handleClientsWithPendingWritesUsingThreads",
+            "third_party/redis/src/networking.c",
+            4381,
+            "third_party/redis/src/networking.c",
+            4385,
+            "已观察到所有线程的 pending 为 0 并退出等待循环"
+          ],
+          "notes": "全部写 worker 完成后切回 IDLE。"
+        },
+        {
+          "case_id": "redis_sync_022_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "lazyfreeFreeObject",
+            "lazyfreeGetFreedObjectsCount",
+            "third_party/redis/src/lazyfree.c",
+            15,
+            "third_party/redis/src/lazyfree.c",
+            81,
+            "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+          ],
+          "notes": "释放计数器 relaxed 更新/读取不单独发布被释放对象的其他内存。"
+        },
+        {
+          "case_id": "redis_sync_022",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "lazyfreeFreeObject",
+            "lazyfreeGetFreedObjectsCount",
+            "third_party/redis/src/lazyfree.c",
+            15,
+            "third_party/redis/src/lazyfree.c",
+            81,
+            "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+          ],
+          "notes": "释放计数器 relaxed 更新/读取不单独发布被释放对象的其他内存。"
+        },
+        {
+          "case_id": "redis_sync_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "setIOPendingCount",
+            "getIOPendingCount",
+            "third_party/redis/src/networking.c",
+            4170,
+            "third_party/redis/src/networking.c",
+            4165,
+            "同一 i，C11 seq_cst 分支，load 读到这次 store 的值"
+          ],
+          "notes": "WithSync 宏使用 seq_cst store/load，建立发布关系。"
+        }
+      ]
+    }
+  }
+}

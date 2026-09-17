@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "result_type": "resource_flow",
+  "status": "not_available",
+  "source": {
+    "repository": "libuv/libuv",
+    "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+    "build_profile": "libuv-macos-clang",
+    "analyzer": "libclang compact AST + clang++",
+    "generated_at": "2026-08-27T08:46:58Z",
+    "origin": "01-index/ast/*.ast.json"
+  },
+  "origin": "analyzer",
+  "items": [],
+  "evidence": [],
+  "warnings": [
+    "Current seven-stage analyzer has no native extractor for this result type. Ground truth is not substituted."
+  ]
+}

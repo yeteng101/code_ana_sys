@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fact-level validation benchmark",
+  "type": "object",
+  "required": ["schema_version", "dataset_id", "repository", "commit", "review", "cases"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "repository": {"type": "string", "minLength": 1},
+    "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "review": {"type": "object"},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "identity", "kind", "expected_exists", "evidence"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "category": {"enum": ["call_chain", "resource_flow", "sync_relation"]},
+          "identity": {"type": "array", "minItems": 2, "items": {"type": ["string", "integer"]}},
+          "kind": {"type": "string", "minLength": 1},
+          "expected_exists": {"type": "boolean"},
+          "evidence": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "required": ["file", "line", "snippet"],
+              "properties": {
+                "file": {"type": "string", "minLength": 1},
+                "line": {"type": "integer", "minimum": 1},
+                "snippet": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+name: Redis validation benchmark
+on:
+  push:
+    branches: [codex/validation-evaluation-benchmarks]
+    paths:
+      - scripts/run_redis_validation.sh
+      - .github/workflows/redis-validation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  redis-build-and-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sudo apt-get update && sudo apt-get install -y clang libclang-dev bear
+      - run: bash scripts/run_redis_validation.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: redis-real-analysis
+          path: demo/redis
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: redis-analysis-diagnostics
+          path: |
+            demo/run_redis_validation/01-index/symbols.json
+            demo/run_redis_validation/03-callgraph/callgraph.json

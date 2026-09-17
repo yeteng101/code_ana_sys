@@ -1,0 +1,16 @@
+{
+  "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+  "sha256_lf": {
+    "third_party/libuv/src/threadpool.c": "e0db34c1bf86f020cc49285a5c3fcc383e9bd2ed7b0b959b5462624705d5322e",
+    "third_party/libuv/src/timer.c": "6c23b86920e312253888c0126611c9499e79e73c65e8d75975d5c3dbf87abec2",
+    "third_party/libuv/src/unix/async.c": "25f5834d39bc58d25ba0a1214597522e4f811ab9be1bf8ee549f0a74a623e552",
+    "third_party/libuv/src/unix/core.c": "51f787d903487bdc30859dacf41c35053da68528bf09cf8109c61663e4f11183",
+    "third_party/libuv/src/unix/dl.c": "fe5d987911461b7f680474ee3886884a6f3325dff0a4bc038734a088ee227ff1",
+    "third_party/libuv/src/unix/fs.c": "f46d8298499034b1377ad235fda00986b71320b2dcbe2947b49ca23943ed3897",
+    "third_party/libuv/src/unix/getaddrinfo.c": "c069c71fe9044bd95d4748990382432ef04d72284bd5dfb5181e347a5aad7dae",
+    "third_party/libuv/src/unix/kqueue.c": "f5bf52eaa2797921f944558f5deb9e99d56e548221acd6aaf2bd9104e07d648b",
+    "third_party/libuv/src/unix/linux.c": "81346c3dd34c836610c774893d126780d48bd6637e8b7c79e9b9bbed4213abc3",
+    "third_party/libuv/src/unix/thread.c": "00eb9de2161ff4c8435c691069416f0bf6faaddb8118a276704cd7dd07039c2c",
+    "third_party/libuv/src/uv-common.c": "c311e17ae0f891c9eba52626adf9ea33a91b7459654eb1c20e56c24d30d6b446"
+  }
+}

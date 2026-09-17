@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Source-reviewed synchronization validation dataset",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "repository",
+    "commit",
+    "source_files",
+    "review",
+    "samples"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "const": "https://github.com/libuv/libuv"
+    },
+    "commit": {
+      "const": "8fb9cb919489a48880680a56efecff6a7dfb4504"
+    },
+    "source_files": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "human_review"
+      ],
+      "properties": {
+        "method": {
+          "const": "source_review_by_ai"
+        },
+        "human_review": {
+          "enum": [
+            "pending",
+            "confirmed"
+          ]
+        }
+      }
+    },
+    "samples": {
+      "type": "array",
+      "minItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "build_profile",
+          "condition",
+          "reason",
+          "relation_type",
+          "source",
+          "target",
+          "claim_order",
+          "order",
+          "label",
+          "classification",
+          "confidence",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "build_profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "relation_type": {
+            "enum": [
+              "mutex_lock",
+              "rwlock",
+              "atomic",
+              "condition_variable",
+              "event_wait",
+              "event_notify",
+              "thread_join",
+              "happens_before"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "function",
+              "thread",
+              "shared_object",
+              "held_locks",
+              "operation",
+              "evidence_ids"
+            ],
+            "properties": {
+              "function": {
+                "type": "string",
+                "minLength": 1
+              },
+              "thread": {
+                "type": "string",
+                "minLength": 1
+              },
+              "shared_object": {
+                "type": "string",
+                "minLength": 1
+              },
+              "operation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "held_locks": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "evidence_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "function",
+              "thread",
+              "shared_object",
+              "held_locks",
+              "operation",
+              "evidence_ids"
+            ],
+            "properties": {
+              "function": {
+                "type": "string",
+                "minLength": 1
+              },
+              "thread": {
+                "type": "string",
+                "minLength": 1
+              },
+              "shared_object": {
+                "type": "string",
+                "minLength": 1
+              },
+              "operation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "held_locks": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "evidence_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "claim_order": {
+            "enum": [
+              "happens_before",
+              "concurrent",
+              "unknown"
+            ]
+          },
+          "order": {
+            "enum": [
+              "happens_before",
+              "concurrent",
+              "unknown"
+            ]
+          },
+          "label": {
+            "enum": [
+              "positive",
+              "negative",
+              "uncertain"
+            ]
+          },
+          "classification": {
+            "enum": [
+              "consistent",
+              "inconsistent",
+              "unknown"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "file",
+                "line",
+                "snippet"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "file": {
+                  "type": "string",
+                  "pattern": "^third_party/libuv/src/"
+                },
+                "line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "snippet": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

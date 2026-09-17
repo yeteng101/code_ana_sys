@@ -1,0 +1,19 @@
+{
+  "repository": "redis/redis",
+  "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
+  "build": "make CC=/usr/bin/clang MALLOC=libc OPTIMIZATION=-O0 BUILD_TLS=no",
+  "capture": "bear",
+  "full_translation_units": 244,
+  "analyzed_translation_units": 8,
+  "scope": [
+    "adlist.c",
+    "ae.c",
+    "bio.c",
+    "db.c",
+    "dict.c",
+    "lazyfree.c",
+    "networking.c",
+    "t_string.c"
+  ],
+  "scope_note": "Full Redis build, eight selected real translation units analyzed; not whole-program coverage."
+}

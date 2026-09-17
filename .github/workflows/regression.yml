@@ -9,6 +9,35 @@ permissions:
   contents: read
 
 jobs:
+  sync-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install validation dependencies
+        run: python -m pip install -r validation/sync-relations/requirements.txt
+      - name: Fetch pinned libuv source
+        run: |
+          git clone --depth 1 --branch v1.50.0 https://github.com/libuv/libuv.git third_party/libuv
+          test "$(git -C third_party/libuv rev-parse HEAD)" = "8fb9cb919489a48880680a56efecff6a7dfb4504"
+      - name: Validate synchronization annotations and rejection cases
+        run: |
+          python scripts/check_sync_validation.py --report /tmp/sync-validation-report.json
+          python -m unittest discover -s validation/tests -v
+      - name: Fetch pinned Redis and reproduce both benchmarks
+        run: |
+          git clone --depth 1 --branch 7.2.4 https://github.com/redis/redis.git third_party/redis
+          test "$(git -C third_party/redis rev-parse HEAD)" = "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7"
+          python scripts/reproduce_validation.py
+          git diff --exit-code -- validation/benchmarks validation/results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sync-validation-report
+          path: /tmp/sync-validation-report.json
+
   python-regression:
     runs-on: ubuntu-latest
     timeout-minutes: 15
