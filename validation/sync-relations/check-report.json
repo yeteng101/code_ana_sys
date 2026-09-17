@@ -1,0 +1,31 @@
+{
+  "dataset_id": "libuv-sync-v1",
+  "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+  "review": {
+    "method": "source_review_by_ai",
+    "human_review": "pending"
+  },
+  "check_scope": "schema_and_source_integrity",
+  "samples": 32,
+  "orders": {
+    "happens_before": 26,
+    "unknown": 4,
+    "concurrent": 2
+  },
+  "labels": {
+    "positive": 26,
+    "negative": 6
+  },
+  "relation_types": {
+    "mutex_lock": 9,
+    "condition_variable": 3,
+    "happens_before": 3,
+    "event_notify": 4,
+    "thread_join": 1,
+    "event_wait": 2,
+    "atomic": 6,
+    "rwlock": 4
+  },
+  "status": "verified",
+  "errors": []
+}

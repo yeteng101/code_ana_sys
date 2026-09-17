@@ -1,0 +1,1583 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "libuv-sync-v1",
+  "repository": "https://github.com/libuv/libuv",
+  "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+  "source_files": {
+    "third_party/libuv/src/threadpool.c": "e0db34c1bf86f020cc49285a5c3fcc383e9bd2ed7b0b959b5462624705d5322e",
+    "third_party/libuv/src/unix/async.c": "25f5834d39bc58d25ba0a1214597522e4f811ab9be1bf8ee549f0a74a623e552",
+    "third_party/libuv/src/unix/linux.c": "81346c3dd34c836610c774893d126780d48bd6637e8b7c79e9b9bbed4213abc3",
+    "third_party/libuv/src/unix/thread.c": "00eb9de2161ff4c8435c691069416f0bf6faaddb8118a276704cd7dd07039c2c"
+  },
+  "review": {
+    "method": "source_review_by_ai",
+    "human_review": "pending"
+  },
+  "samples": [
+    {
+      "id": "sync_001_queue_publication",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "post",
+        "thread": "submitter",
+        "shared_object": "wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_001_queue_publication_source"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "wq",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_001_queue_publication_target"
+        ],
+        "operation": "q = uv__queue_head(&wq);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一队列项已由 post 发布且被 worker 取出",
+      "reason": "post 解锁与随后 worker 对同一 mutex 的获取建立队列发布顺序。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_001_queue_publication_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 160,
+          "snippet": "uv_mutex_unlock(&mutex);"
+        },
+        {
+          "id": "sync_001_queue_publication_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 81,
+          "snippet": "q = uv__queue_head(&wq);"
+        },
+        {
+          "id": "sync_001_queue_publication_support_66",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 66,
+          "snippet": "uv_mutex_lock(&mutex);"
+        },
+        {
+          "id": "sync_001_queue_publication_support_157",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 157,
+          "snippet": "uv__queue_insert_tail(&wq, q);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_002_idle_before_wait",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_002_idle_before_wait_source"
+        ],
+        "operation": "idle_threads += 1;"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_002_idle_before_wait_target"
+        ],
+        "operation": "uv_cond_wait(&cond, &mutex);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一次等待迭代",
+      "reason": "等待前在 mutex 内递增 idle_threads；wait 会释放并重新获取 mutex。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_002_idle_before_wait_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 76,
+          "snippet": "idle_threads += 1;"
+        },
+        {
+          "id": "sync_002_idle_before_wait_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 77,
+          "snippet": "uv_cond_wait(&cond, &mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_003_wait_reacquire",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_003_wait_reacquire_source"
+        ],
+        "operation": "uv_cond_wait(&cond, &mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_003_wait_reacquire_target"
+        ],
+        "operation": "idle_threads -= 1;"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "uv_cond_wait 成功返回",
+      "reason": "返回后持有 mutex，才递减 idle_threads。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_003_wait_reacquire_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 77,
+          "snippet": "uv_cond_wait(&cond, &mutex);"
+        },
+        {
+          "id": "sync_003_wait_reacquire_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 78,
+          "snippet": "idle_threads -= 1;"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_004_signal_not_dispatch",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "post",
+        "thread": "submitter",
+        "shared_object": "cond/wq",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_004_signal_not_dispatch_source"
+        ],
+        "operation": "uv_cond_signal(&cond);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "cond/wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_004_signal_not_dispatch_target"
+        ],
+        "operation": "w->work(w);"
+      },
+      "claim_order": "happens_before",
+      "order": "unknown",
+      "label": "negative",
+      "classification": "unknown",
+      "condition": "没有识别具体被唤醒线程或队列项",
+      "reason": "signal 不保证唤醒特定 worker，也不能将任意 work 与该 signal 配对。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_004_signal_not_dispatch_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 159,
+          "snippet": "uv_cond_signal(&cond);"
+        },
+        {
+          "id": "sync_004_signal_not_dispatch_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 123,
+          "snippet": "w->work(w);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_005_slow_counter_increment",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_005_slow_counter_increment_source"
+        ],
+        "operation": "slow_io_work_running++;"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_005_slow_counter_increment_target"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一次慢 I/O 调度",
+      "reason": "计数递增发生在全局锁释放之前。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_005_slow_counter_increment_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 106,
+          "snippet": "slow_io_work_running++;"
+        },
+        {
+          "id": "sync_005_slow_counter_increment_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 120,
+          "snippet": "uv_mutex_unlock(&mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_006_slow_counter_decrement",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_006_slow_counter_decrement_source"
+        ],
+        "operation": "uv_mutex_lock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_006_slow_counter_decrement_target"
+        ],
+        "operation": "slow_io_work_running--;"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "is_slow_work 为真",
+      "reason": "回调结束后重新获取 mutex 再递减慢 I/O 计数。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_006_slow_counter_decrement_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 134,
+          "snippet": "uv_mutex_lock(&mutex);"
+        },
+        {
+          "id": "sync_006_slow_counter_decrement_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 137,
+          "snippet": "slow_io_work_running--;"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_007_callback_outside_mutex",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "work request",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_007_callback_outside_mutex_source"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "work request",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_007_callback_outside_mutex_target"
+        ],
+        "operation": "w->work(w);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一 work 的正常执行路径",
+      "reason": "先释放全局锁，再调用用户工作函数。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_007_callback_outside_mutex_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 120,
+          "snippet": "uv_mutex_unlock(&mutex);"
+        },
+        {
+          "id": "sync_007_callback_outside_mutex_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 123,
+          "snippet": "w->work(w);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_008_worker_callbacks_overlap",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker-A",
+        "shared_object": "distinct work requests",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_008_worker_callbacks_overlap_source"
+        ],
+        "operation": "w->work(w);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker-B",
+        "shared_object": "distinct work requests",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_008_worker_callbacks_overlap_target"
+        ],
+        "operation": "w->work(w);"
+      },
+      "claim_order": "happens_before",
+      "order": "concurrent",
+      "label": "negative",
+      "classification": "inconsistent",
+      "condition": "线程池至少两个 worker，两个独立请求且用户代码未增加同步",
+      "reason": "用户工作函数在全局锁外执行，两个实例允许并发；不是断言观测到了同时执行。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_008_worker_callbacks_overlap_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 123,
+          "snippet": "w->work(w);"
+        },
+        {
+          "id": "sync_008_worker_callbacks_overlap_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 123,
+          "snippet": "w->work(w);"
+        },
+        {
+          "id": "sync_008_worker_callbacks_overlap_support_120",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 120,
+          "snippet": "uv_mutex_unlock(&mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_009_work_before_completion",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_009_work_before_completion_source"
+        ],
+        "operation": "w->work(w);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_009_work_before_completion_target"
+        ],
+        "operation": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一 work 回调已返回",
+      "reason": "工作回调完成后才将该请求放入完成队列。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_009_work_before_completion_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 123,
+          "snippet": "w->work(w);"
+        },
+        {
+          "id": "sync_009_work_before_completion_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 128,
+          "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_010_completion_lock",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->work",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_010_completion_lock_source"
+        ],
+        "operation": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->work",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_010_completion_lock_target"
+        ],
+        "operation": "w->work = NULL;  /* Signal uv_cancel() that the work req is done"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一请求",
+      "reason": "标记工作完成前获取 loop 局部队列锁。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_010_completion_lock_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 125,
+          "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+        },
+        {
+          "id": "sync_010_completion_lock_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 126,
+          "snippet": "w->work = NULL;  /* Signal uv_cancel() that the work req is done"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_011_completion_notify",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_011_completion_notify_source"
+        ],
+        "operation": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_011_completion_notify_target"
+        ],
+        "operation": "uv_async_send(&w->loop->wq_async);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一请求和 loop",
+      "reason": "先加入完成队列再发异步通知。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_011_completion_notify_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 128,
+          "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+        },
+        {
+          "id": "sync_011_completion_notify_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 129,
+          "snippet": "uv_async_send(&w->loop->wq_async);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_012_completion_transfer",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_012_completion_transfer_source"
+        ],
+        "operation": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_012_completion_transfer_target"
+        ],
+        "operation": "uv__queue_move(&loop->wq, &wq);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一请求被此次 uv__queue_move 取走",
+      "reason": "生产者释放 wq_mutex，消费者持同一把锁搬移队列。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_012_completion_transfer_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 130,
+          "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+        },
+        {
+          "id": "sync_012_completion_transfer_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 319,
+          "snippet": "uv__queue_move(&loop->wq, &wq);"
+        },
+        {
+          "id": "sync_012_completion_transfer_support_318",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 318,
+          "snippet": "uv_mutex_lock(&loop->wq_mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_013_done_outside_mutex",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "local wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_013_done_outside_mutex_source"
+        ],
+        "operation": "uv_mutex_unlock(&loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "local wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_013_done_outside_mutex_target"
+        ],
+        "operation": "w->done(w, err);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "此次搬移中的请求",
+      "reason": "done 回调在局部队列锁释放之后执行。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_013_done_outside_mutex_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 320,
+          "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+        },
+        {
+          "id": "sync_013_done_outside_mutex_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 330,
+          "snippet": "w->done(w, err);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_014_cancel_lock_order",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "mutex -> loop.wq_mutex",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_014_cancel_lock_order_source"
+        ],
+        "operation": "uv_mutex_lock(&mutex);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "mutex -> loop.wq_mutex",
+        "held_locks": [
+          "mutex",
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_014_cancel_lock_order_target"
+        ],
+        "operation": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "uv__work_cancel 进入临界区",
+      "reason": "取消路径先获取全局 mutex，再获取 loop.wq_mutex。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_014_cancel_lock_order_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 286,
+          "snippet": "uv_mutex_lock(&mutex);"
+        },
+        {
+          "id": "sync_014_cancel_lock_order_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 287,
+          "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_015_cancel_unlock_order",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq_mutex -> mutex",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_015_cancel_unlock_order_source"
+        ],
+        "operation": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq_mutex -> mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_015_cancel_unlock_order_target"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "取消检查结束",
+      "reason": "按获取顺序的逆序释放两把锁。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_015_cancel_unlock_order_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 293,
+          "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+        },
+        {
+          "id": "sync_015_cancel_unlock_order_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 294,
+          "snippet": "uv_mutex_unlock(&mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_016_cancel_publication",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_016_cancel_publication_source"
+        ],
+        "operation": "uv__queue_insert_tail(&loop->wq, &w->wq);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_016_cancel_publication_target"
+        ],
+        "operation": "uv_async_send(&loop->wq_async);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "cancelled 为真",
+      "reason": "取消成功时先发布完成队列项，再通知 loop。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_016_cancel_publication_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 301,
+          "snippet": "uv__queue_insert_tail(&loop->wq, &w->wq);"
+        },
+        {
+          "id": "sync_016_cancel_publication_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 302,
+          "snippet": "uv_async_send(&loop->wq_async);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_017_join_before_destroy",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv__threadpool_cleanup",
+        "thread": "cleanup",
+        "shared_object": "threadpool mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_017_join_before_destroy_source"
+        ],
+        "operation": "if (uv_thread_join(threads + i))"
+      },
+      "target": {
+        "function": "uv__threadpool_cleanup",
+        "thread": "cleanup",
+        "shared_object": "threadpool mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_017_join_before_destroy_target"
+        ],
+        "operation": "uv_mutex_destroy(&mutex);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "所有 worker 均成功 join，非 __MVS__ 的正常清理",
+      "reason": "全部线程 join 后才销毁共享 mutex。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_017_join_before_destroy_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 180,
+          "snippet": "if (uv_thread_join(threads + i))"
+        },
+        {
+          "id": "sync_017_join_before_destroy_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 186,
+          "snippet": "uv_mutex_destroy(&mutex);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_018_startup_handshake",
+      "relation_type": "event_wait",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "startup semaphore",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_018_startup_handshake_source"
+        ],
+        "operation": "uv_sem_post((uv_sem_t*) arg);"
+      },
+      "target": {
+        "function": "init_threads",
+        "thread": "initializer",
+        "shared_object": "startup semaphore",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_018_startup_handshake_target"
+        ],
+        "operation": "uv_sem_wait(&sem);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "该 worker 的 post 对应被成功消费的 semaphore token",
+      "reason": "启动信号量的 post/wait 形成初始化握手；不能推出用户工作已经完成。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_018_startup_handshake_source",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 63,
+          "snippet": "uv_sem_post((uv_sem_t*) arg);"
+        },
+        {
+          "id": "sync_018_startup_handshake_target",
+          "file": "third_party/libuv/src/threadpool.c",
+          "line": 239,
+          "snippet": "uv_sem_wait(&sem);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_019_pending_publish",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_019_pending_publish_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_019_pending_publish_target"
+        ],
+        "operation": "if (atomic_exchange(pending, 0) == 0)"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一 handle，接收端 exchange 读到该次发送写入的 1",
+      "reason": "默认 seq_cst 原子交换在读到发送值时建立 release/acquire 同步。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_019_pending_publish_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 108,
+          "snippet": "if (atomic_exchange(pending, 1) == 0)"
+        },
+        {
+          "id": "sync_019_pending_publish_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 202,
+          "snippet": "if (atomic_exchange(pending, 0) == 0)"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_020_relaxed_not_publication",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_020_relaxed_not_publication_source"
+        ],
+        "operation": "if (atomic_load_explicit(pending, memory_order_relaxed) != 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_020_relaxed_not_publication_target"
+        ],
+        "operation": "h->async_cb(h);"
+      },
+      "claim_order": "happens_before",
+      "order": "unknown",
+      "label": "negative",
+      "classification": "unknown",
+      "condition": "发送端仅走 relaxed 读取非零后提前返回的路径",
+      "reason": "relaxed load 本身不能作为发送者任意写入到回调的发布证据。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_020_relaxed_not_publication_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 101,
+          "snippet": "if (atomic_load_explicit(pending, memory_order_relaxed) != 0)"
+        },
+        {
+          "id": "sync_020_relaxed_not_publication_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 208,
+          "snippet": "h->async_cb(h);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_021_busy_before_send",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy/pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_021_busy_before_send_source"
+        ],
+        "operation": "atomic_fetch_add(busy, 1);"
+      },
+      "target": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy/pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_021_busy_before_send_target"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一发送调用通过快速检查",
+      "reason": "增加 busy 计数在 pending 交换之前。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_021_busy_before_send_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 105,
+          "snippet": "atomic_fetch_add(busy, 1);"
+        },
+        {
+          "id": "sync_021_busy_before_send_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 108,
+          "snippet": "if (atomic_exchange(pending, 1) == 0)"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_022_notify_before_not_busy",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_022_notify_before_not_busy_source"
+        ],
+        "operation": "uv__async_send(handle->loop);"
+      },
+      "target": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_022_notify_before_not_busy_target"
+        ],
+        "operation": "atomic_fetch_add(busy, -1);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "pending 原值为 0，执行底层通知",
+      "reason": "通知返回后才减少 busy。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_022_notify_before_not_busy_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 109,
+          "snippet": "uv__async_send(handle->loop);"
+        },
+        {
+          "id": "sync_022_notify_before_not_busy_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 112,
+          "snippet": "atomic_fetch_add(busy, -1);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_023_busy_drain",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_023_busy_drain_source"
+        ],
+        "operation": "atomic_fetch_add(busy, -1);"
+      },
+      "target": {
+        "function": "uv__async_spin",
+        "thread": "loop",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_023_busy_drain_target"
+        ],
+        "operation": "if (atomic_load(busy) == 0)"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一 handle，spin 读取到包含该发送结束的零值，遵守关闭生命周期约束",
+      "reason": "busy 原子减计数与观察到归零的读取同步；不允许关闭后继续发送。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_023_busy_drain_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 112,
+          "snippet": "atomic_fetch_add(busy, -1);"
+        },
+        {
+          "id": "sync_023_busy_drain_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 137,
+          "snippet": "if (atomic_load(busy) == 0)"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_024_spin_before_remove",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__async_close",
+        "thread": "loop",
+        "shared_object": "handle.queue",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_024_spin_before_remove_source"
+        ],
+        "operation": "uv__async_spin(handle);"
+      },
+      "target": {
+        "function": "uv__async_close",
+        "thread": "loop",
+        "shared_object": "handle.queue",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_024_spin_before_remove_target"
+        ],
+        "operation": "uv__queue_remove(&handle->queue);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "合法关闭路径",
+      "reason": "spin 返回后才能移除 handle 队列节点。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_024_spin_before_remove_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 154,
+          "snippet": "uv__async_spin(handle);"
+        },
+        {
+          "id": "sync_024_spin_before_remove_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 155,
+          "snippet": "uv__queue_remove(&handle->queue);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_025_pending_before_callback",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_025_pending_before_callback_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 0) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_025_pending_before_callback_target"
+        ],
+        "operation": "h->async_cb(h);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "pending 原值非零且 async_cb 非空",
+      "reason": "清除 pending 后才调用 async_cb。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_025_pending_before_callback_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 202,
+          "snippet": "if (atomic_exchange(pending, 0) == 0)"
+        },
+        {
+          "id": "sync_025_pending_before_callback_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 208,
+          "snippet": "h->async_cb(h);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_026_send_callback_not_bijection",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_026_send_callback_not_bijection_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_026_send_callback_not_bijection_target"
+        ],
+        "operation": "h->async_cb(h);"
+      },
+      "claim_order": "happens_before",
+      "order": "unknown",
+      "label": "negative",
+      "classification": "unknown",
+      "condition": "并发多次发送，未记录 exchange 的读写来源",
+      "reason": "多次发送可能合并，无法仅凭调用次数配对某次发送和某次回调。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_026_send_callback_not_bijection_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 108,
+          "snippet": "if (atomic_exchange(pending, 1) == 0)"
+        },
+        {
+          "id": "sync_026_send_callback_not_bijection_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 208,
+          "snippet": "h->async_cb(h);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_027_epoll_dispatch",
+      "relation_type": "event_wait",
+      "source": {
+        "function": "uv__io_poll",
+        "thread": "loop",
+        "shared_object": "epoll events",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_027_epoll_dispatch_source"
+        ],
+        "operation": "nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);"
+      },
+      "target": {
+        "function": "uv__io_poll",
+        "thread": "loop",
+        "shared_object": "epoll events",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_027_epoll_dispatch_target"
+        ],
+        "operation": "w->cb(loop, w, pe->events);"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "Linux epoll 返回该 watcher 的有效事件并走普通分发分支",
+      "reason": "返回就绪事件之后才调用对应 watcher 回调。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_027_epoll_dispatch_source",
+          "file": "third_party/libuv/src/unix/linux.c",
+          "line": 1465,
+          "snippet": "nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);"
+        },
+        {
+          "id": "sync_027_epoll_dispatch_target",
+          "file": "third_party/libuv/src/unix/linux.c",
+          "line": 1565,
+          "snippet": "w->cb(loop, w, pe->events);"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_028_eventfd_wakeup",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv__async_send",
+        "thread": "sender",
+        "shared_object": "loop async eventfd",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_028_eventfd_wakeup_source"
+        ],
+        "operation": "r = write(fd, buf, len);"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "loop async eventfd",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_028_eventfd_wakeup_target"
+        ],
+        "operation": "r = read(w->fd, buf, sizeof(buf));"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "Linux 同一 eventfd，本次成功 write 的计数被该 read 消费",
+      "reason": "内核事件通知的因果顺序；不单独作为任意用户内存的 C11 发布证明。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_028_eventfd_wakeup_source",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 244,
+          "snippet": "r = write(fd, buf, len);"
+        },
+        {
+          "id": "sync_028_eventfd_wakeup_target",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 175,
+          "snippet": "r = read(w->fd, buf, sizeof(buf));"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_029_rw_writer_to_reader",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_wrunlock",
+        "thread": "writer",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_029_rw_writer_to_reader_source"
+        ],
+        "operation": "if (pthread_rwlock_unlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_029_rw_writer_to_reader_target"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一锁，读获取成功且在该写释放之后",
+      "reason": "POSIX 写锁释放与后续读锁获取提供同步。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_029_rw_writer_to_reader_source",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 448,
+          "snippet": "if (pthread_rwlock_unlock(rwlock))"
+        },
+        {
+          "id": "sync_029_rw_writer_to_reader_target",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 402,
+          "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_030_rw_writer_to_writer",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_wrunlock",
+        "thread": "writer-A",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_030_rw_writer_to_writer_source"
+        ],
+        "operation": "if (pthread_rwlock_unlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_wrlock",
+        "thread": "writer-B",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:write"
+        ],
+        "evidence_ids": [
+          "sync_030_rw_writer_to_writer_target"
+        ],
+        "operation": "if (pthread_rwlock_wrlock(rwlock))"
+      },
+      "claim_order": "happens_before",
+      "order": "happens_before",
+      "label": "positive",
+      "classification": "consistent",
+      "condition": "同一锁，后续写获取成功",
+      "reason": "写锁独占，释放后后继写者才可获取。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_030_rw_writer_to_writer_source",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 448,
+          "snippet": "if (pthread_rwlock_unlock(rwlock))"
+        },
+        {
+          "id": "sync_030_rw_writer_to_writer_target",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 428,
+          "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_031_rw_readers_overlap",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader-A",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_031_rw_readers_overlap_source"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader-B",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_031_rw_readers_overlap_target"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "claim_order": "happens_before",
+      "order": "concurrent",
+      "label": "negative",
+      "classification": "inconsistent",
+      "condition": "同一锁上两个成功的读锁持有区间，无额外同步",
+      "reason": "共享读锁允许重叠持有，不建立两个 reader 之间的方向性先后关系。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_031_rw_readers_overlap_source",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 402,
+          "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+        },
+        {
+          "id": "sync_031_rw_readers_overlap_target",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 402,
+          "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+        },
+        {
+          "id": "sync_031_rw_readers_overlap_support_428",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 428,
+          "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    },
+    {
+      "id": "sync_032_failed_trylock",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_trywrlock",
+        "thread": "try-writer",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_032_failed_trylock_source"
+        ],
+        "operation": "err = pthread_rwlock_trywrlock(rwlock);"
+      },
+      "target": {
+        "function": "uv_rwlock_wrlock",
+        "thread": "writer",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:write"
+        ],
+        "evidence_ids": [
+          "sync_032_failed_trylock_target"
+        ],
+        "operation": "if (pthread_rwlock_wrlock(rwlock))"
+      },
+      "claim_order": "happens_before",
+      "order": "unknown",
+      "label": "negative",
+      "classification": "unknown",
+      "condition": "trywrlock 返回 EBUSY/EAGAIN；另一线程的获取时序未记录",
+      "reason": "失败的尝试不获得锁，也不能建立跨线程同步边。",
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "id": "sync_032_failed_trylock_source",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 436,
+          "snippet": "err = pthread_rwlock_trywrlock(rwlock);"
+        },
+        {
+          "id": "sync_032_failed_trylock_target",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 428,
+          "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+        },
+        {
+          "id": "sync_032_failed_trylock_support_437",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 437,
+          "snippet": "if (err) {"
+        },
+        {
+          "id": "sync_032_failed_trylock_support_440",
+          "file": "third_party/libuv/src/unix/thread.c",
+          "line": 440,
+          "snippet": "return UV_EBUSY;"
+        }
+      ],
+      "build_profile": "linux-posix-static-source"
+    }
+  ]
+}
