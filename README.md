@@ -1,3 +1,230 @@
+# 周报（2026-09-11 ~ 2026-09-17）
+
+## 一、本周结论
+
+本周新增两个验证交付分支：
+
+```text
+codex/validation-sync-libuv
+codex/validation-evaluation-benchmarks
+```
+
+两条分支都基于集成分支 `codex/agent-llm-framework` 的 `a505c47`：
+
+1. 一条补齐 libuv 同步关系验证集；
+2. 一条把统一评测器、libuv/Redis baseline、Redis 真实构建和三类外部 JSON 串起来。
+
+当前技术状态可以概括为：
+
+- 同步关系验证集已完成 32 条样本和源码证据校验。
+- 统一评测器已完成，能对调用链、资源流、同步关系输出 precision / recall / F1、类型准确率、证据命中率、覆盖率和未确认比例。
+- libuv 和 Redis 首轮 baseline 已产出，Redis 已接入固定 commit 的真实 Makefile + Bear 编译数据库。
+- 三类外部 JSON 已能导出到 `call-chains.json`、`resource-flow.json`、`sync-relations.json`。
+- 分支还没有合入上游；`630` 的 fork 已发布代码，但上游 PR 受 GitHub 权限限制。
+- 资源流和同步关系的**原生分析输出仍未实现**，baseline 中 recall 为 0，当前不能把 reviewed 标注冒充分析器预测。
+
+## 二、分支与交付状态
+
+| 分支 | 认领人 | 最新提交 | 状态 | 主要交付 |
+|---|---|---|---|---|
+| `codex/agent-llm-framework` | sunyeteng | `a505c47` | 已推送 | Agent/MCP/Neo4j/CI、调用链 36 条、资源流 10 条 |
+| `codex/validation-sync-libuv` | 630 | `1ded868` | fork 已推送，未合入上游 | 32 条 libuv 同步关系验证样本 |
+| `codex/validation-evaluation-benchmarks` | 630 | `c7087f2` | fork 已推送，未合入上游 | 统一评测器、libuv/Redis baseline、Redis 真实构建、三类外部 JSON |
+
+### 1. `codex/validation-sync-libuv`
+
+交付内容：
+
+- libuv v1.50.0，固定 commit
+  `8fb9cb919489a48880680a56efecff6a7dfb4504`。
+- 32 条同步关系样本：
+  - 26 条 `happens_before`
+  - 2 条 `concurrent`
+  - 4 条 `unknown`
+  - 26 条正例、6 条反例。
+- 覆盖 mutex、rwlock、atomic、condition variable、event wait/notify、thread join 和 threadpool/async 路径。
+- 新增 schema、固定源码 SHA-256、evidence 行号和片段校验、说明文档和 CI job。
+
+当前状态：
+
+```text
+源码审查方式：AI source review
+人工复核：pending
+本地测试：5 项测试（含 12 组异常子测试）通过
+CI：https://github.com/kuangami2/code_ana_sys/actions/runs/35047947574
+```
+
+注意：机器校验通过只说明 schema 和源码证据完整，不代表人工 Gold 已完成。
+
+### 2. `codex/validation-evaluation-benchmarks`
+
+交付内容：
+
+- 统一评测脚本 `scripts/evaluate_validation.py`。
+- libuv baseline：`validation/results/libuv/baseline/`。
+- Redis baseline：`validation/results/redis/baseline/`。
+- 三类外部 JSON 导出：
+  `scripts/export_validation.py` 输出
+  `call-chains.json`、`resource-flow.json`、`sync-relations.json`。
+- Redis 7.2.4 固定 commit
+  `d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7` 的真实构建接入。
+- Redis 原生 Makefile + Bear 捕获 244 条编译记录，8 个明确选定的
+  translation unit 完成七阶段分析。
+
+当前状态：
+
+```text
+最终回归：https://github.com/kuangami2/code_ana_sys/actions/runs/35051289217
+Redis 真实构建分析：https://github.com/kuangami2/code_ana_sys/actions/runs/35050453666
+审查 PR（fork 内）：https://github.com/kuangami2/code_ana_sys/pull/1
+上游合并状态：未合入，受 fork 创建上游 PR 权限限制
+```
+
+## 三、本周定量结果
+
+### 1. libuv baseline
+
+来自
+`validation/results/libuv/baseline/report.md`：
+
+| 类型 | TP | FP | FN | Precision | Recall | F1 | 证据命中率 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 调用链 | 16 | 0 | 0 | 100% | 100% | 100% | 100% |
+| 资源流 | 0 | 0 | 17 | N/A | 0% | 0% | N/A |
+| 同步关系 | 0 | 0 | 32 | N/A | 0% | 0% | N/A |
+
+调用链的 100% 只表示“回归标注与预测图同源”的匹配结果，不能宣称独立准确率。
+资源流和同步关系 0% 是明确的能力缺口，不是评测脚本错误。
+
+### 2. Redis 7.2.4 baseline
+
+| 类型 | TP | FP | FN | Precision | Recall | F1 | 证据命中率 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 调用链 | 75 | 0 | 35 | 100% | 68.18% | 81.08% | 100% |
+| 资源流 | 0 | 0 | 0 | N/A | N/A | N/A | N/A |
+| 同步关系 | 0 | 0 | 22 | N/A | 0% | 0% | N/A |
+
+Redis 调用链 FN 的主要来源：
+
+1. 32 条系统库或外部符号调用没有对应的本地符号表示，
+   例如 `pthread_*`、`poll`、`close`、`memset`、`strerror`。
+2. 3 条宏展开边被验证规则拒绝，例如 `serverLog -> _serverLog`、
+   Linux 线程命名宏到 `pthread_setname_np`。
+
+Redis 真实分析规模：
+
+```text
+编译记录：244
+明确分析 translation units：8
+发布图：682 节点 / 1864 边
+direct_call：1773
+callback_edge：91
+内部 verification coverage：1638 / 1856 = 88.25%
+```
+
+### 3. 集成分支上的验证集
+
+`codex/agent-llm-framework` 当前：
+
+```text
+调用链：36 条（22 正、14 负）
+资源流：10 条（7 no_leak、1 leak、1 double_free、1 use_after_free）
+```
+
+两类验证集都有独立 schema 和本地/CI 校验脚本。
+
+## 四、风险和未完成项
+
+### P0：两个新分支尚未合入上游
+
+`630` 的成果已经在 fork 和 Kanban 中交付，但上游仓库没有接收分支或开放创建 PR 的权限。
+需要仓库维护者完成：
+
+```text
+接收 codex/validation-sync-libuv
+接收 codex/validation-evaluation-benchmarks
+合并后重跑 regression + sync-validation + Redis validation
+```
+
+### P0：人工复核未完成
+
+同步验证集和 Redis 标注目前是 AI 源码审查，状态为：
+
+```text
+human_review = pending
+```
+
+必须由第二位复核人逐条检查：
+
+- 同步条件的必要前提；
+- held_locks 的实际状态；
+- happens_before / concurrent / unknown 的边界；
+- Redis 宏和外部符号的证据。
+
+### P0：资源流和同步关系还没有原生分析输出
+
+当前 baseline 能评测，但分析器对两类结果输出为空：
+
+```text
+resource_flow recall = 0
+sync_relation recall = 0
+```
+
+下一步不能只增加标注，必须实现对应的源码提取和证据生成能力。
+
+### P1：Redis 调用链漏检需要修复
+
+优先修复外部符号表示和宏展开验证，不修数据标注，不把 Ground Truth 回灌预测。
+
+### P1：OpenAI 真实调用仍待 Key
+
+`scripts/verify_openai.py` 和 `workflow_dispatch` job 已准备好，
+当前缺少 `OPENAI_API_KEY` secret。
+
+## 五、任务分配
+
+| 优先级 | 任务 | 建议负责人 | 验收标准 |
+|---|---|---|---|
+| P0 | 合入两条验证分支并解决冲突 | sunyeteng / 仓库维护者 | 上游集成分支包含两分支，完整 CI 通过 |
+| P0 | 人工复核 libuv 同步 32 条样本 | 第二位复核人 | 逐条确认 review=confirmed，记录反例和未知项 |
+| P0 | 人工复核 Redis 120 条调用 + 22 条同步标注 | 第二位复核人 | 宏、外部符号、条件和锁语义逐条确认 |
+| P0 | 实现资源流原生提取 | sunyeteng | acquire/use/release/transfer/escape 带证据输出，libuv/Redis 有真实预测 |
+| P0 | 实现同步关系原生提取 | 630 | 输出 lock、shared access、held_locks、happens_before 和 unknown，不再 recall=0 |
+| P0 | 修复 Redis 外部符号和宏边漏检 | 630 | 35 条 FN 中外部符号和宏类至少恢复到可解释基线，评测不靠回灌 |
+| P1 | 调用链验证集从 36 条扩到 100 条 | sunyeteng | 至少 100 条人工确认边，正负样本和证据齐全 |
+| P1 | 资源流验证集从 10 条扩到 30 条 | sunyeteng | 至少 30 条资源生命周期样本，覆盖所有权和错误路径 |
+| P1 | OpenAI Key 端到端验证 | Key 提供人 / sunyeteng | `openai-e2e` job 真实调用成功并产出结构化答案 |
+
+## 六、下周执行顺序
+
+```text
+1. 仓库维护者接收并合并两条新分支
+2. 两个验证分支合并后统一重跑全量 CI
+3. 第二位复核人完成同步与 Redis 标注人工复核
+4. 630 实现同步原生提取，修复 Redis 外部符号和宏边
+5. sunyeteng 实现资源流原生提取，继续扩充两类验证集
+6. 配置 OPENAI_API_KEY，完成最后一次大模型端到端验证
+```
+
+## 七、链接与证据
+
+- 集成分支：
+  <https://github.com/yeteng101/code_ana_sys/tree/codex/agent-llm-framework>
+- 同步验证分支：
+  <https://github.com/kuangami2/code_ana_sys/tree/codex/validation-sync-libuv>
+- 统一评测和 baseline 分支：
+  <https://github.com/kuangami2/code_ana_sys/tree/codex/validation-evaluation-benchmarks>
+- 评测说明：
+  `validation/benchmarks/README.md`
+- libuv/Redis 对比：
+  `validation/results/comparison.md`
+- 同步验证说明：
+  `validation/sync-relations/README.md`
+- Redis 验证说明：
+  `validation/redis/README.md`
+
+---
+
 # 周会汇报（2026-09-10）
 
 > 本周主题：把代码逆向分析系统从“能跑流水线”推进到“能自然语言分析、能写入图数据库、能自动回归”的完整闭环。
