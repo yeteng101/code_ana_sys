@@ -1,5 +1,7 @@
 # 周会汇报（2026-09-10）
 
+> 最新周报（2026-09-11 ~ 2026-09-17）：[docs/weekly-2026-09-17.md](docs/weekly-2026-09-17.md)
+>
 > 本周主题：把代码逆向分析系统从“能跑流水线”推进到“能自然语言分析、能写入图数据库、能自动回归”的完整闭环。
 >
 > 外部接口文档：[docs/external-interfaces.md](docs/external-interfaces.md)
