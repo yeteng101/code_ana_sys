@@ -12,6 +12,7 @@ from .agent_runner import ask_question
 from .agent_server import AgentHandler
 from .clang_ast import read_json
 from .graph_store import store_graph_json, verify_graph_json
+from .native_export import run_native_export
 from .nl_repo import prepare_question_context
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
 
@@ -95,6 +96,19 @@ def command_server(args: argparse.Namespace) -> None:
 
 def command_tools(args: argparse.Namespace) -> None:
     print(json.dumps({"tools": AGENT_TOOLS}, ensure_ascii=False, indent=2))
+
+
+def command_native(args: argparse.Namespace) -> None:
+    print(
+        json.dumps(
+            run_native_export(
+                Path(args.workspace).resolve(),
+                Path(args.graph).resolve() if args.graph else None,
+            ),
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
 def command_graphdb(args: argparse.Namespace) -> None:
@@ -186,6 +200,14 @@ def main() -> None:
 
     tools = subparsers.add_parser("tools", help="列出大模型可调用工具")
     tools.set_defaults(func=command_tools)
+
+    native = subparsers.add_parser(
+        "native",
+        help="运行资源流和同步关系原生分析器",
+    )
+    native.add_argument("--workspace", default="demo/libuv")
+    native.add_argument("--graph", default="")
+    native.set_defaults(func=command_native)
 
     graphdb = subparsers.add_parser("graphdb", help="把调用图写入 Neo4j")
     graphdb.add_argument("--workspace", default="demo/libuv")

@@ -335,6 +335,23 @@ validation/resource-flow/dataset.json
 `acquire / use / transfer / release / escape` 事实，以及错误路径是否存在
 `release_not_found`。最终是否构成内存缺陷由第三组结合 PR diff 判断。
 
+原生分析器使用：
+
+```bash
+python3 -m clang_pipeline.cli native --workspace demo/libuv
+```
+
+这会生成：
+
+```text
+08-resource-flow/resource-flow.json
+09-sync-relations/sync-relations.json
+external/resource-flow.json
+external/sync-relations.json
+```
+
+详细实现和局限见 `docs/native-analyzers.md`。
+
 资源流第一版当前有 10 个样本：
 
 ```text

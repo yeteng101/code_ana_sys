@@ -94,6 +94,20 @@ class ClangPipelineTests(unittest.TestCase):
             self.assertTrue((workspace / "07-report" / "architecture.json").exists())
             self.assertTrue((workspace / "07-report" / "key-chains.json").exists())
             self.assertTrue((workspace / "07-report" / "analysis.md").exists())
+            self.assertTrue(
+                (workspace / "08-resource-flow" / "resource-flow.json").exists()
+            )
+            self.assertTrue(
+                (workspace / "09-sync-relations" / "sync-relations.json").exists()
+            )
+            self.assertTrue((workspace / "external" / "resource-flow.json").exists())
+            self.assertTrue(
+                (workspace / "external" / "sync-relations.json").exists()
+            )
+            native = outcome["native"]
+            self.assertEqual("succeeded", native["status"])
+            self.assertIn("resource_flow", native)
+            self.assertIn("sync_relations", native)
 
             architecture = json.loads(
                 (workspace / "07-report" / "architecture.json").read_text()
