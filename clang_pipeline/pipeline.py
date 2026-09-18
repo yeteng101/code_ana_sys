@@ -212,6 +212,17 @@ def run_pipeline(
             summary = {"stage": stage["name"], "status": "unknown"}
         results.append(summary)
 
+    native_summary: dict[str, Any]
+    try:
+        from .native_export import run_native_export
+
+        native_summary = run_native_export(workspace)
+    except Exception as exc:  # native extraction must not hide the base pipeline
+        native_summary = {
+            "status": "failed",
+            "error": str(exc),
+        }
+
     if publish_dir is not None:
         report_dir = workspace / "07-report"
         publish_dir.mkdir(parents=True, exist_ok=True)
@@ -228,6 +239,8 @@ def run_pipeline(
             )
         ]
         sources.append(workspace / "pipeline.json")
+        for name in ("resource-flow.json", "sync-relations.json"):
+            sources.append(workspace / "external" / name)
         for source in sources:
             if source.exists():
                 shutil.copyfile(source, publish_dir / source.name)
@@ -236,6 +249,7 @@ def run_pipeline(
         "run_id": run_id,
         "workspace": str(workspace),
         "results": results,
+        "native": native_summary,
     }
 
 
