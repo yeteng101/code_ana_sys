@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "dataset_id": "resource-flow-validation-v1",
-  "description": "资源流和泄漏标注第一版：libuv 真实资源生命周期 + 合成边界 fixture。",
+  "description": "资源流和泄漏标注第一版：libuv 真实资源生命周期 + 合成边界 fixture。 扩充20条待人工复核候选；自动生成样本不冒充人工确认。",
   "created_at": "2026-09-10",
   "resources": [
     {
@@ -1064,6 +1064,2315 @@
           }
         }
       ]
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_001",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire_candidate_001",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_001"
+          ]
+        },
+        {
+          "operation_id": "op_fs_transfer_candidate_001",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_001"
+          ]
+        },
+        {
+          "operation_id": "op_fs_release_candidate_001",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_001"
+          ]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return_candidate_001",
+          "condition": "normal_return",
+          "operations": [
+            "op_fs_acquire_candidate_001",
+            "op_fs_transfer_candidate_001",
+            "op_fs_release_candidate_001"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_001",
+            "ev_rf_fs_transfer_candidate_001",
+            "ev_rf_fs_release_candidate_001"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "pending"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire_candidate_001",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer_candidate_001",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release_candidate_001",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_002",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire_candidate_002",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_002"
+          ]
+        },
+        {
+          "operation_id": "op_pw_release_candidate_002",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_002"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns_candidate_002",
+          "condition": "all_visible_returns",
+          "operations": [
+            "op_pw_acquire_candidate_002",
+            "op_pw_release_candidate_002"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_002",
+            "ev_rf_pw_release_candidate_002"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "pending"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire_candidate_002",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release_candidate_002",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire_candidate_003",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_003"
+          ]
+        },
+        {
+          "operation_id": "op_async_transfer_candidate_003",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_003"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_wfd_candidate_003",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_003"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_io_candidate_003",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_003"
+          ]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup_candidate_003",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire_candidate_003",
+            "op_async_transfer_candidate_003",
+            "op_async_release_wfd_candidate_003",
+            "op_async_release_io_candidate_003"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_003",
+            "ev_rf_async_transfer_candidate_003",
+            "ev_rf_async_release_wfd_candidate_003",
+            "ev_rf_async_release_io_candidate_003"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "pending"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire_candidate_003",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer_candidate_003",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd_candidate_003",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io_candidate_003",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1_candidate_004",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire_candidate_004",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_004"
+          ]
+        },
+        {
+          "operation_id": "op_leak_release_candidate_004",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_release_candidate_004"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return_candidate_004",
+          "condition": "normal_return",
+          "operations": [
+            "op_leak_acquire_candidate_004",
+            "op_leak_release_candidate_004"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_004",
+            "ev_rf_leak_release_candidate_004"
+          ]
+        },
+        {
+          "path_id": "leak_error_return_candidate_004",
+          "condition": "error_return",
+          "operations": [
+            "op_leak_acquire_candidate_004"
+          ],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_004",
+            "ev_rf_leak_error_return_candidate_004"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "pending"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire_candidate_004",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return_candidate_004",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release_candidate_004",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_005",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire_candidate_005",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_005"
+          ]
+        },
+        {
+          "operation_id": "op_fs_transfer_candidate_005",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_005"
+          ]
+        },
+        {
+          "operation_id": "op_fs_release_candidate_005",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_005"
+          ]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return_candidate_005",
+          "condition": "normal_return",
+          "operations": [
+            "op_fs_acquire_candidate_005",
+            "op_fs_transfer_candidate_005",
+            "op_fs_release_candidate_005"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_005",
+            "ev_rf_fs_transfer_candidate_005",
+            "ev_rf_fs_release_candidate_005"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "pending"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire_candidate_005",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer_candidate_005",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release_candidate_005",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_006",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire_candidate_006",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_006"
+          ]
+        },
+        {
+          "operation_id": "op_pw_release_candidate_006",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_006"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns_candidate_006",
+          "condition": "all_visible_returns",
+          "operations": [
+            "op_pw_acquire_candidate_006",
+            "op_pw_release_candidate_006"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_006",
+            "ev_rf_pw_release_candidate_006"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "pending"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire_candidate_006",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release_candidate_006",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire_candidate_007",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_007"
+          ]
+        },
+        {
+          "operation_id": "op_async_transfer_candidate_007",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_007"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_wfd_candidate_007",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_007"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_io_candidate_007",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_007"
+          ]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup_candidate_007",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire_candidate_007",
+            "op_async_transfer_candidate_007",
+            "op_async_release_wfd_candidate_007",
+            "op_async_release_io_candidate_007"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_007",
+            "ev_rf_async_transfer_candidate_007",
+            "ev_rf_async_release_wfd_candidate_007",
+            "ev_rf_async_release_io_candidate_007"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "pending"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire_candidate_007",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer_candidate_007",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd_candidate_007",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io_candidate_007",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1_candidate_008",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire_candidate_008",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_008"
+          ]
+        },
+        {
+          "operation_id": "op_leak_release_candidate_008",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_release_candidate_008"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return_candidate_008",
+          "condition": "normal_return",
+          "operations": [
+            "op_leak_acquire_candidate_008",
+            "op_leak_release_candidate_008"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_008",
+            "ev_rf_leak_release_candidate_008"
+          ]
+        },
+        {
+          "path_id": "leak_error_return_candidate_008",
+          "condition": "error_return",
+          "operations": [
+            "op_leak_acquire_candidate_008"
+          ],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_008",
+            "ev_rf_leak_error_return_candidate_008"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "pending"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire_candidate_008",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return_candidate_008",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release_candidate_008",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_009",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire_candidate_009",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_009"
+          ]
+        },
+        {
+          "operation_id": "op_fs_transfer_candidate_009",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_009"
+          ]
+        },
+        {
+          "operation_id": "op_fs_release_candidate_009",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_009"
+          ]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return_candidate_009",
+          "condition": "normal_return",
+          "operations": [
+            "op_fs_acquire_candidate_009",
+            "op_fs_transfer_candidate_009",
+            "op_fs_release_candidate_009"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_009",
+            "ev_rf_fs_transfer_candidate_009",
+            "ev_rf_fs_release_candidate_009"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "pending"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire_candidate_009",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer_candidate_009",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release_candidate_009",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_010",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire_candidate_010",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_010"
+          ]
+        },
+        {
+          "operation_id": "op_pw_release_candidate_010",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_010"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns_candidate_010",
+          "condition": "all_visible_returns",
+          "operations": [
+            "op_pw_acquire_candidate_010",
+            "op_pw_release_candidate_010"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_010",
+            "ev_rf_pw_release_candidate_010"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "pending"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire_candidate_010",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release_candidate_010",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire_candidate_011",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_011"
+          ]
+        },
+        {
+          "operation_id": "op_async_transfer_candidate_011",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_011"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_wfd_candidate_011",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_011"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_io_candidate_011",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_011"
+          ]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup_candidate_011",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire_candidate_011",
+            "op_async_transfer_candidate_011",
+            "op_async_release_wfd_candidate_011",
+            "op_async_release_io_candidate_011"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_011",
+            "ev_rf_async_transfer_candidate_011",
+            "ev_rf_async_release_wfd_candidate_011",
+            "ev_rf_async_release_io_candidate_011"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "pending"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire_candidate_011",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer_candidate_011",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd_candidate_011",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io_candidate_011",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1_candidate_012",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire_candidate_012",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_012"
+          ]
+        },
+        {
+          "operation_id": "op_leak_release_candidate_012",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_release_candidate_012"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return_candidate_012",
+          "condition": "normal_return",
+          "operations": [
+            "op_leak_acquire_candidate_012",
+            "op_leak_release_candidate_012"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_012",
+            "ev_rf_leak_release_candidate_012"
+          ]
+        },
+        {
+          "path_id": "leak_error_return_candidate_012",
+          "condition": "error_return",
+          "operations": [
+            "op_leak_acquire_candidate_012"
+          ],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_012",
+            "ev_rf_leak_error_return_candidate_012"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "pending"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire_candidate_012",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return_candidate_012",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release_candidate_012",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_013",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire_candidate_013",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_013"
+          ]
+        },
+        {
+          "operation_id": "op_fs_transfer_candidate_013",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_013"
+          ]
+        },
+        {
+          "operation_id": "op_fs_release_candidate_013",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_013"
+          ]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return_candidate_013",
+          "condition": "normal_return",
+          "operations": [
+            "op_fs_acquire_candidate_013",
+            "op_fs_transfer_candidate_013",
+            "op_fs_release_candidate_013"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_013",
+            "ev_rf_fs_transfer_candidate_013",
+            "ev_rf_fs_release_candidate_013"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "pending"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire_candidate_013",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer_candidate_013",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release_candidate_013",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_014",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire_candidate_014",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_014"
+          ]
+        },
+        {
+          "operation_id": "op_pw_release_candidate_014",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_014"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns_candidate_014",
+          "condition": "all_visible_returns",
+          "operations": [
+            "op_pw_acquire_candidate_014",
+            "op_pw_release_candidate_014"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_014",
+            "ev_rf_pw_release_candidate_014"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "pending"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire_candidate_014",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release_candidate_014",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire_candidate_015",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_015"
+          ]
+        },
+        {
+          "operation_id": "op_async_transfer_candidate_015",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_015"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_wfd_candidate_015",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_015"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_io_candidate_015",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_015"
+          ]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup_candidate_015",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire_candidate_015",
+            "op_async_transfer_candidate_015",
+            "op_async_release_wfd_candidate_015",
+            "op_async_release_io_candidate_015"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_015",
+            "ev_rf_async_transfer_candidate_015",
+            "ev_rf_async_release_wfd_candidate_015",
+            "ev_rf_async_release_io_candidate_015"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "pending"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire_candidate_015",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer_candidate_015",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd_candidate_015",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io_candidate_015",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1_candidate_016",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire_candidate_016",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_016"
+          ]
+        },
+        {
+          "operation_id": "op_leak_release_candidate_016",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_release_candidate_016"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return_candidate_016",
+          "condition": "normal_return",
+          "operations": [
+            "op_leak_acquire_candidate_016",
+            "op_leak_release_candidate_016"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_016",
+            "ev_rf_leak_release_candidate_016"
+          ]
+        },
+        {
+          "path_id": "leak_error_return_candidate_016",
+          "condition": "error_return",
+          "operations": [
+            "op_leak_acquire_candidate_016"
+          ],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_016",
+            "ev_rf_leak_error_return_candidate_016"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "pending"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire_candidate_016",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return_candidate_016",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release_candidate_016",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_017",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "filesystem_file",
+      "operations": [
+        {
+          "operation_id": "op_fs_acquire_candidate_017",
+          "kind": "acquire",
+          "api": "open",
+          "function": "uv__fs_open",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_017"
+          ]
+        },
+        {
+          "operation_id": "op_fs_transfer_candidate_017",
+          "kind": "transfer",
+          "api": "uv_fs_open",
+          "function": "uv_fs_open",
+          "from": "uv__fs_open",
+          "to": "uv_fs_t.result",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_017"
+          ]
+        },
+        {
+          "operation_id": "op_fs_release_candidate_017",
+          "kind": "release",
+          "api": "uv__close_nocancel",
+          "function": "uv__fs_close",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_017"
+          ]
+        }
+      ],
+      "ownership_model": "transferred_to_request",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": true
+      },
+      "paths": [
+        {
+          "path_id": "fs_normal_return_candidate_017",
+          "condition": "normal_return",
+          "operations": [
+            "op_fs_acquire_candidate_017",
+            "op_fs_transfer_candidate_017",
+            "op_fs_release_candidate_017"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_017",
+            "ev_rf_fs_transfer_candidate_017",
+            "ev_rf_fs_release_candidate_017"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "fd 的生命周期由 uv_fs_t 请求承载，关闭路径由 uv_fs_close/uv__fs_close 提供",
+        "review": "pending"
+      },
+      "confidence": 0.84,
+      "evidence": [
+        {
+          "id": "ev_rf_fs_acquire_candidate_017",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 372,
+            "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+          }
+        },
+        {
+          "id": "ev_rf_fs_transfer_candidate_017",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 2028,
+            "snippet": "POST;"
+          }
+        },
+        {
+          "id": "ev_rf_fs_release_candidate_017",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/fs.c",
+            "line": 161,
+            "snippet": "rc = uv__close_nocancel(fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_018",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "heap",
+      "resource_type": "passwd_lookup_buffer",
+      "operations": [
+        {
+          "operation_id": "op_pw_acquire_candidate_018",
+          "kind": "acquire",
+          "api": "uv__malloc",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_018"
+          ]
+        },
+        {
+          "operation_id": "op_pw_release_candidate_018",
+          "kind": "release",
+          "api": "uv__free",
+          "function": "uv__getpwuid_r",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_018"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "passwd_normal_and_error_returns_candidate_018",
+          "condition": "all_visible_returns",
+          "operations": [
+            "op_pw_acquire_candidate_018",
+            "op_pw_release_candidate_018"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_018",
+            "ev_rf_pw_release_candidate_018"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "buffer 在函数内分配并在返回前释放；返回给调用方的 username 内存使用另一条所有权路径",
+        "review": "pending"
+      },
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "id": "ev_rf_pw_acquire_candidate_018",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1274,
+            "snippet": "buf = uv__malloc(bufsize);"
+          }
+        },
+        {
+          "id": "ev_rf_pw_release_candidate_018",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/core.c",
+            "line": 1322,
+            "snippet": "uv__free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "build_profile": "libuv-macos-clang",
+      "family": "file_descriptor",
+      "resource_type": "loop_async_wakeup_fd",
+      "operations": [
+        {
+          "operation_id": "op_async_acquire_candidate_019",
+          "kind": "acquire",
+          "api": "uv__make_pipe",
+          "function": "uv__async_start",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_019"
+          ]
+        },
+        {
+          "operation_id": "op_async_transfer_candidate_019",
+          "kind": "transfer",
+          "api": "loop->async_wfd = pipefd[1]",
+          "function": "uv__async_start",
+          "from": "uv__async_start",
+          "to": "loop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          },
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_019"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_wfd_candidate_019",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_019"
+          ]
+        },
+        {
+          "operation_id": "op_async_release_io_candidate_019",
+          "kind": "release",
+          "api": "uv__close",
+          "function": "uv__async_stop",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          },
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_019"
+          ]
+        }
+      ],
+      "ownership_model": "owned_by_loop",
+      "lifetime": {
+        "async_boundary": true,
+        "callback_boundary": true,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "async_loop_cleanup_candidate_019",
+          "condition": "loop_cleanup",
+          "operations": [
+            "op_async_acquire_candidate_019",
+            "op_async_transfer_candidate_019",
+            "op_async_release_wfd_candidate_019",
+            "op_async_release_io_candidate_019"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_019",
+            "ev_rf_async_transfer_candidate_019",
+            "ev_rf_async_release_wfd_candidate_019",
+            "ev_rf_async_release_io_candidate_019"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "no_leak",
+        "reason": "唤醒 fd 的生命周期由 loop 持有，uv__async_stop 在 loop 清理时关闭；具体分支受平台条件影响",
+        "review": "pending"
+      },
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "id": "ev_rf_async_acquire_candidate_019",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 306,
+            "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+          }
+        },
+        {
+          "id": "ev_rf_async_transfer_candidate_019",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 313,
+            "snippet": "loop->async_wfd = pipefd[1];"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_wfd_candidate_019",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 350,
+            "snippet": "uv__close(loop->async_wfd);"
+          }
+        },
+        {
+          "id": "ev_rf_async_release_io_candidate_019",
+          "kind": "resource_operation",
+          "location": {
+            "file": "third_party/libuv/src/unix/async.c",
+            "line": 355,
+            "snippet": "uv__close(loop->async_io_watcher.fd);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
+    },
+    {
+      "id": "rf_synth_leak_error_path_v1_candidate_020",
+      "repository": "local-validation-fixture",
+      "commit": "validation-v1",
+      "build_profile": "fixture",
+      "family": "heap",
+      "resource_type": "synthetic_buffer",
+      "operations": [
+        {
+          "operation_id": "op_leak_acquire_candidate_020",
+          "kind": "acquire",
+          "api": "malloc",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_020"
+          ]
+        },
+        {
+          "operation_id": "op_leak_release_candidate_020",
+          "kind": "release",
+          "api": "free",
+          "function": "parse_or_leak",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          },
+          "evidence_ids": [
+            "ev_rf_leak_release_candidate_020"
+          ]
+        }
+      ],
+      "ownership_model": "local_owner",
+      "lifetime": {
+        "async_boundary": false,
+        "callback_boundary": false,
+        "may_escape_target": false
+      },
+      "paths": [
+        {
+          "path_id": "leak_normal_return_candidate_020",
+          "condition": "normal_return",
+          "operations": [
+            "op_leak_acquire_candidate_020",
+            "op_leak_release_candidate_020"
+          ],
+          "complete": true,
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_020",
+            "ev_rf_leak_release_candidate_020"
+          ]
+        },
+        {
+          "path_id": "leak_error_return_candidate_020",
+          "condition": "error_return",
+          "operations": [
+            "op_leak_acquire_candidate_020"
+          ],
+          "complete": false,
+          "termination_reason": "release_not_found",
+          "evidence_ids": [
+            "ev_rf_leak_acquire_candidate_020",
+            "ev_rf_leak_error_return_candidate_020"
+          ]
+        }
+      ],
+      "ground_truth": {
+        "classification": "leak",
+        "reason": "fail=true 的错误返回路径只有 acquire，没有 release",
+        "review": "pending"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "id": "ev_rf_leak_acquire_candidate_020",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 4,
+            "snippet": "char *buf = malloc(256);"
+          }
+        },
+        {
+          "id": "ev_rf_leak_error_return_candidate_020",
+          "kind": "control_flow",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 8,
+            "snippet": "return -1;"
+          }
+        },
+        {
+          "id": "ev_rf_leak_release_candidate_020",
+          "kind": "resource_operation",
+          "location": {
+            "file": "validation/resource-flow/fixtures/leak_error_path.c",
+            "line": 9,
+            "snippet": "free(buf);"
+          }
+        }
+      ],
+      "tags": [
+        "generated_candidate",
+        "pending_review"
+      ],
+      "notes": "由现有生命周期 fixture 生成的待人工复核变体，不能视作独立人工 Gold。"
     }
-  ]
+  ],
+  "review": {
+    "human_review": "pending",
+    "generated_candidates": 20
+  }
 }

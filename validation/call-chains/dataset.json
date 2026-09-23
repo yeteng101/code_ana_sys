@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "dataset_id": "call-chain-validation-v1",
-  "description": "调用链正负样本第一版：demo 样例 + libuv v1.50.0 真实产物。",
+  "description": "调用链正负样本第一版：demo 样例 + libuv v1.50.0 真实产物。 扩充了64条待人工复核的缺失目标候选，自动标签不计入人工 Gold。",
   "created_at": "2026-09-10",
   "label_policy": {
     "positive": "source/target/kind 与图中真实边一致",
@@ -945,6 +945,1290 @@
         "direct_call"
       ],
       "notes": "两者是 uv_run 的不同阶段，不存在 uv__run_timers -> uv__update_time 的直接调用"
+    },
+    {
+      "id": "cc_negative_candidate_001",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_001",
+        "target": "fn:validation::missing_target_001",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_002",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_002",
+        "target": "fn:validation::missing_target_002",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_003",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_003",
+        "target": "fn:validation::missing_target_003",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_004",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_004",
+        "target": "fn:validation::missing_target_004",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_005",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_005",
+        "target": "fn:validation::missing_target_005",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_006",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_006",
+        "target": "fn:validation::missing_target_006",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_007",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_007",
+        "target": "fn:validation::missing_target_007",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_008",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_008",
+        "target": "fn:validation::missing_target_008",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_009",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_009",
+        "target": "fn:validation::missing_target_009",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_010",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_010",
+        "target": "fn:validation::missing_target_010",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_011",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_011",
+        "target": "fn:validation::missing_target_011",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_012",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_012",
+        "target": "fn:validation::missing_target_012",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_013",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_013",
+        "target": "fn:validation::missing_target_013",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_014",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_014",
+        "target": "fn:validation::missing_target_014",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_015",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_015",
+        "target": "fn:validation::missing_target_015",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_016",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_016",
+        "target": "fn:validation::missing_target_016",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_017",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_017",
+        "target": "fn:validation::missing_target_017",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_018",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_018",
+        "target": "fn:validation::missing_target_018",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_019",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_019",
+        "target": "fn:validation::missing_target_019",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_020",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_020",
+        "target": "fn:validation::missing_target_020",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_021",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_021",
+        "target": "fn:validation::missing_target_021",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_022",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_022",
+        "target": "fn:validation::missing_target_022",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_023",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_023",
+        "target": "fn:validation::missing_target_023",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_024",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_024",
+        "target": "fn:validation::missing_target_024",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_025",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_025",
+        "target": "fn:validation::missing_target_025",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_026",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_026",
+        "target": "fn:validation::missing_target_026",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_027",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_027",
+        "target": "fn:validation::missing_target_027",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_028",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_028",
+        "target": "fn:validation::missing_target_028",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_029",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_029",
+        "target": "fn:validation::missing_target_029",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_030",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_030",
+        "target": "fn:validation::missing_target_030",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_031",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_031",
+        "target": "fn:validation::missing_target_031",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_032",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_032",
+        "target": "fn:validation::missing_target_032",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_033",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_033",
+        "target": "fn:validation::missing_target_033",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_034",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_034",
+        "target": "fn:validation::missing_target_034",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_035",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_035",
+        "target": "fn:validation::missing_target_035",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_036",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_036",
+        "target": "fn:validation::missing_target_036",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_037",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_037",
+        "target": "fn:validation::missing_target_037",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_038",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_038",
+        "target": "fn:validation::missing_target_038",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_039",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_039",
+        "target": "fn:validation::missing_target_039",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_040",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_040",
+        "target": "fn:validation::missing_target_040",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_041",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_041",
+        "target": "fn:validation::missing_target_041",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_042",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_042",
+        "target": "fn:validation::missing_target_042",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_043",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_043",
+        "target": "fn:validation::missing_target_043",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_044",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_044",
+        "target": "fn:validation::missing_target_044",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_045",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_045",
+        "target": "fn:validation::missing_target_045",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_046",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_046",
+        "target": "fn:validation::missing_target_046",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_047",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_047",
+        "target": "fn:validation::missing_target_047",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_048",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_048",
+        "target": "fn:validation::missing_target_048",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_049",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_049",
+        "target": "fn:validation::missing_target_049",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_050",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_050",
+        "target": "fn:validation::missing_target_050",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_051",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_051",
+        "target": "fn:validation::missing_target_051",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_052",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_052",
+        "target": "fn:validation::missing_target_052",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_053",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_053",
+        "target": "fn:validation::missing_target_053",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_054",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_054",
+        "target": "fn:validation::missing_target_054",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_055",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_055",
+        "target": "fn:validation::missing_target_055",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_056",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_056",
+        "target": "fn:validation::missing_target_056",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_057",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_057",
+        "target": "fn:validation::missing_target_057",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_058",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_058",
+        "target": "fn:validation::missing_target_058",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_059",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_059",
+        "target": "fn:validation::missing_target_059",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_060",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_060",
+        "target": "fn:validation::missing_target_060",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_061",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_061",
+        "target": "fn:validation::missing_target_061",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_062",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_062",
+        "target": "fn:validation::missing_target_062",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_063",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_063",
+        "target": "fn:validation::missing_target_063",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
+    },
+    {
+      "id": "cc_negative_candidate_064",
+      "graph": "demo/libuv/graph.json",
+      "claim": {
+        "source": "fn:validation::missing_source_064",
+        "target": "fn:validation::missing_target_064",
+        "kind": "direct_call"
+      },
+      "label": "negative",
+      "expected_exists": false,
+      "resolution": "none",
+      "candidate_targets": [],
+      "evidence": [],
+      "tags": [
+        "generated_candidate",
+        "negative",
+        "pending_review"
+      ],
+      "notes": "自动生成的缺失目标负样本；待人工复核。"
     }
-  ]
+  ],
+  "review": {
+    "human_review": "pending",
+    "generated_candidates": 64
+  }
 }
