@@ -1,0 +1,1819 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "libuv-baseline-v1",
+  "scope": "annotated facts only; unlabelled predictions excluded from precision",
+  "scoring": "candidate facts including unconfirmed; confirmed-only metrics reported separately",
+  "review": {
+    "human_review": "pending",
+    "method": "existing annotations plus AI source review",
+    "limitation": "Legacy libuv call labels were selected against the same graph; regression scores are not independent accuracy estimates."
+  },
+  "categories": {
+    "call_chain": {
+      "input_status": "partial",
+      "gold_positive": 16,
+      "gold_negative": 11,
+      "tp": 16,
+      "fp": 0,
+      "fn": 0,
+      "tn": 11,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "type_accuracy": 1.0,
+      "evidence_hit_rate": 1.0,
+      "coverage": 1.0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 1232,
+      "prediction_count": 1248,
+      "duplicate_predictions": 233,
+      "confirmed_only": {
+        "precision": null,
+        "recall": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "f1": 0.0
+      },
+      "errors_by_type": {},
+      "cases": [
+        {
+          "case_id": "cc_pos_libuv_004",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:uv__io_poll",
+            "cb:uv__io_s::cb"
+          ],
+          "notes": "回调字段 w->cb 的目标集合需要结合赋值流继续收敛"
+        },
+        {
+          "case_id": "cc_pos_libuv_016",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__io_poll",
+            "fn:uv__queue_head"
+          ],
+          "notes": "uv__io_poll 读取 watcher queue 头部"
+        },
+        {
+          "case_id": "cc_pos_libuv_015",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__io_poll",
+            "fn:uv__queue_remove"
+          ],
+          "notes": "uv__io_poll 从 watcher queue 移除已注册项"
+        },
+        {
+          "case_id": "cc_neg_libuv_008",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__io_poll",
+            "fn:uv__run_check"
+          ],
+          "notes": "uv__run_check 是 uv_run 的阶段调用，不是 uv__io_poll 的直接调用"
+        },
+        {
+          "case_id": "cc_neg_libuv_009",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__io_poll",
+            "fn:uv__run_pending"
+          ],
+          "notes": "uv__run_pending 是 uv_run 的阶段调用，不是 uv__io_poll 的直接调用"
+        },
+        {
+          "case_id": "cc_pos_libuv_014",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__io_poll",
+            "fn:uv__update_time"
+          ],
+          "notes": "uv__io_poll 在进入 poll 前更新时间"
+        },
+        {
+          "case_id": "cc_neg_libuv_002",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__run_timers",
+            "fn:uv__io_poll"
+          ],
+          "notes": "uv__run_timers 不直接调用 uv__io_poll"
+        },
+        {
+          "case_id": "cc_neg_libuv_011",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__run_timers",
+            "fn:uv__update_time"
+          ],
+          "notes": "两者是 uv_run 的不同阶段，不存在 uv__run_timers -> uv__update_time 的直接调用"
+        },
+        {
+          "case_id": "cc_pos_libuv_003",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__run_timers",
+            "fn:uv_timer_again"
+          ],
+          "notes": "重复定时器的重新挂载"
+        },
+        {
+          "case_id": "cc_neg_libuv_010",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv__update_time",
+            "fn:uv_run"
+          ],
+          "notes": "方向错误：真实关系是 uv_run -> uv__update_time"
+        },
+        {
+          "case_id": "cc_pos_libuv_010",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__backend_timeout"
+          ],
+          "notes": "uv_run 计算 backend timeout"
+        },
+        {
+          "case_id": "cc_neg_libuv_003",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__io_poll"
+          ],
+          "notes": "source/target 存在，但正确 kind 是 direct_call，不是 callback_edge"
+        },
+        {
+          "case_id": "cc_pos_libuv_001",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__io_poll"
+          ],
+          "notes": "uv_run 的事件轮询入口"
+        },
+        {
+          "case_id": "cc_neg_libuv_005",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "indirect_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__io_poll"
+          ],
+          "notes": "uv_run 到 uv__io_poll 是直接调用，不是 indirect_call"
+        },
+        {
+          "case_id": "cc_neg_libuv_007",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__kqueue_delete"
+          ],
+          "notes": "uv_run 不直接调用后续 poll 内部的 kqueue 删除逻辑"
+        },
+        {
+          "case_id": "cc_pos_libuv_005",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__loop_alive"
+          ],
+          "notes": "uv_run 在循环开始前检查 loop 是否还活着"
+        },
+        {
+          "case_id": "cc_pos_libuv_013",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__queue_empty"
+          ],
+          "notes": "uv_run 判断 pending queue 是否为空"
+        },
+        {
+          "case_id": "cc_neg_libuv_001",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__queue_remove"
+          ],
+          "notes": "uv_run 只能经 uv__run_timers 间接到达 uv__queue_remove"
+        },
+        {
+          "case_id": "cc_pos_libuv_011",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_check"
+          ],
+          "notes": "uv_run 执行 check 阶段"
+        },
+        {
+          "case_id": "cc_pos_libuv_012",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_closing_handles"
+          ],
+          "notes": "uv_run 执行 closing handles 阶段"
+        },
+        {
+          "case_id": "cc_pos_libuv_008",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_idle"
+          ],
+          "notes": "uv_run 执行 idle 阶段"
+        },
+        {
+          "case_id": "cc_pos_libuv_007",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_pending"
+          ],
+          "notes": "uv_run 执行 pending 阶段"
+        },
+        {
+          "case_id": "cc_neg_libuv_006",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_prepare"
+          ],
+          "notes": "uv_run 到 uv__run_prepare 是直接调用，不是 callback_edge"
+        },
+        {
+          "case_id": "cc_pos_libuv_009",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_prepare"
+          ],
+          "notes": "uv_run 执行 prepare 阶段"
+        },
+        {
+          "case_id": "cc_neg_libuv_004",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "callback_edge",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_timers"
+          ],
+          "notes": "uv_run 到 uv__run_timers 是 direct_call；source/target 相同但 kind 错误，仍为 negative"
+        },
+        {
+          "case_id": "cc_pos_libuv_002",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__run_timers"
+          ],
+          "notes": "uv_run 的定时器阶段"
+        },
+        {
+          "case_id": "cc_pos_libuv_006",
+          "verdict": "tp",
+          "evidence_hit": true,
+          "kind": "direct_call",
+          "identity": [
+            "fn:uv_run",
+            "fn:uv__update_time"
+          ],
+          "notes": "uv_run 在循环开头更新时间"
+        }
+      ]
+    },
+    "resource_flow": {
+      "input_status": "partial",
+      "gold_positive": 62,
+      "gold_negative": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 62,
+      "tn": 0,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0,
+      "type_accuracy": null,
+      "evidence_hit_rate": null,
+      "coverage": 0.0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 257,
+      "prediction_count": 257,
+      "duplicate_predictions": 0,
+      "confirmed_only": {
+        "precision": null,
+        "recall": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "f1": 0.0
+      },
+      "errors_by_type": {
+        "acquire": 21,
+        "transfer": 14,
+        "release": 27
+      },
+      "cases": [
+        {
+          "case_id": "rf_libuv_async_fd_v1_op_async_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_op_async_transfer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_op_async_release_wfd",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_op_async_release_io",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_acquire_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_transfer_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_wfd_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_io_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_acquire_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_transfer_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_wfd_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_io_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_acquire_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_transfer_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_wfd_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_io_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_acquire_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_transfer_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_wfd_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_io_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_acquire_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_transfer_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_wfd_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_io_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_dlopen_handle_v1_op_dl_release",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_dlopen_handle_v1",
+            "uv_dlclose",
+            "third_party/libuv/src/unix/dl.c",
+            47
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_dlopen_handle_v1_op_dl_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_dlopen_handle_v1",
+            "uv_dlopen",
+            "third_party/libuv/src/unix/dl.c",
+            36
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_op_fs_release",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_op_fs_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_op_fs_transfer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_release_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_acquire_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_transfer_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_release_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_acquire_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_transfer_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_release_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_acquire_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_transfer_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_release_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_acquire_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_transfer_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_release_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_acquire_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_transfer_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getaddrinfo_v1_op_gai_transfer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_getaddrinfo_v1",
+            "uv__getaddrinfo_done",
+            "third_party/libuv/src/unix/getaddrinfo.c",
+            134
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getaddrinfo_v1_op_gai_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getaddrinfo_v1",
+            "uv__getaddrinfo_work",
+            "third_party/libuv/src/unix/getaddrinfo.c",
+            103
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getaddrinfo_v1_op_gai_release",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getaddrinfo_v1",
+            "uv_freeaddrinfo",
+            "third_party/libuv/src/unix/getaddrinfo.c",
+            222
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_op_pw_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_op_pw_release",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_acquire_candidate_002",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_002",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_release_candidate_002",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_002",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_acquire_candidate_006",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_006",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_release_candidate_006",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_006",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_acquire_candidate_010",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_010",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_release_candidate_010",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_010",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_acquire_candidate_014",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_014",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_release_candidate_014",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_014",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_acquire_candidate_018",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_018",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_release_candidate_018",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_018",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_scandir_entries_v1_op_scan_acquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_scandir_entries_v1",
+            "uv__fs_scandir",
+            "third_party/libuv/src/unix/fs.c",
+            585
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_scandir_entries_v1_op_scan_transfer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_scandir_entries_v1",
+            "uv__fs_scandir",
+            "third_party/libuv/src/unix/fs.c",
+            600
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_scandir_entries_v1_op_scan_release",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_scandir_entries_v1",
+            "uv__fs_scandir_cleanup",
+            "third_party/libuv/src/uv-common.c",
+            728
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        }
+      ]
+    },
+    "sync_relation": {
+      "input_status": "succeeded",
+      "gold_positive": 32,
+      "gold_negative": 6,
+      "tp": 0,
+      "fp": 0,
+      "fn": 32,
+      "tn": 6,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0,
+      "type_accuracy": null,
+      "evidence_hit_rate": null,
+      "coverage": 0.0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 32,
+      "prediction_count": 32,
+      "duplicate_predictions": 0,
+      "confirmed_only": {
+        "precision": null,
+        "recall": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "f1": 0.0
+      },
+      "errors_by_type": {
+        "unknown": 4,
+        "happens_before": 26,
+        "concurrent": 2
+      },
+      "cases": [
+        {
+          "case_id": "sync_004_signal_not_dispatch_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "post",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            159,
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "没有识别具体被唤醒线程或队列项"
+          ],
+          "notes": "signal 不保证唤醒特定 worker，也不能将任意 work 与该 signal 配对。"
+        },
+        {
+          "case_id": "sync_004_signal_not_dispatch",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "post",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            159,
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "没有识别具体被唤醒线程或队列项"
+          ],
+          "notes": "signal 不保证唤醒特定 worker，也不能将任意 work 与该 signal 配对。"
+        },
+        {
+          "case_id": "sync_001_queue_publication",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "post",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            160,
+            "third_party/libuv/src/threadpool.c",
+            81,
+            "同一队列项已由 post 发布且被 worker 取出"
+          ],
+          "notes": "post 解锁与随后 worker 对同一 mutex 的获取建立队列发布顺序。"
+        },
+        {
+          "case_id": "sync_024_spin_before_remove",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__async_close",
+            "uv__async_close",
+            "third_party/libuv/src/unix/async.c",
+            154,
+            "third_party/libuv/src/unix/async.c",
+            155,
+            "合法关闭路径"
+          ],
+          "notes": "spin 返回后才能移除 handle 队列节点。"
+        },
+        {
+          "case_id": "sync_025_pending_before_callback",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__async_io",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            202,
+            "third_party/libuv/src/unix/async.c",
+            208,
+            "pending 原值非零且 async_cb 非空"
+          ],
+          "notes": "清除 pending 后才调用 async_cb。"
+        },
+        {
+          "case_id": "sync_028_eventfd_wakeup",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            244,
+            "third_party/libuv/src/unix/async.c",
+            175,
+            "Linux 同一 eventfd，本次成功 write 的计数被该 read 消费"
+          ],
+          "notes": "内核事件通知的因果顺序；不单独作为任意用户内存的 C11 发布证明。"
+        },
+        {
+          "case_id": "sync_027_epoll_dispatch",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__io_poll",
+            "uv__io_poll",
+            "third_party/libuv/src/unix/linux.c",
+            1465,
+            "third_party/libuv/src/unix/linux.c",
+            1565,
+            "Linux epoll 返回该 watcher 的有效事件并走普通分发分支"
+          ],
+          "notes": "返回就绪事件之后才调用对应 watcher 回调。"
+        },
+        {
+          "case_id": "sync_017_join_before_destroy",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__threadpool_cleanup",
+            "uv__threadpool_cleanup",
+            "third_party/libuv/src/threadpool.c",
+            180,
+            "third_party/libuv/src/threadpool.c",
+            186,
+            "所有 worker 均成功 join，非 __MVS__ 的正常清理"
+          ],
+          "notes": "全部线程 join 后才销毁共享 mutex。"
+        },
+        {
+          "case_id": "sync_014_cancel_lock_order",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__work_cancel",
+            "uv__work_cancel",
+            "third_party/libuv/src/threadpool.c",
+            286,
+            "third_party/libuv/src/threadpool.c",
+            287,
+            "uv__work_cancel 进入临界区"
+          ],
+          "notes": "取消路径先获取全局 mutex，再获取 loop.wq_mutex。"
+        },
+        {
+          "case_id": "sync_015_cancel_unlock_order",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__work_cancel",
+            "uv__work_cancel",
+            "third_party/libuv/src/threadpool.c",
+            293,
+            "third_party/libuv/src/threadpool.c",
+            294,
+            "取消检查结束"
+          ],
+          "notes": "按获取顺序的逆序释放两把锁。"
+        },
+        {
+          "case_id": "sync_016_cancel_publication",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__work_cancel",
+            "uv__work_cancel",
+            "third_party/libuv/src/threadpool.c",
+            301,
+            "third_party/libuv/src/threadpool.c",
+            302,
+            "cancelled 为真"
+          ],
+          "notes": "取消成功时先发布完成队列项，再通知 loop。"
+        },
+        {
+          "case_id": "sync_013_done_outside_mutex",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv__work_done",
+            "uv__work_done",
+            "third_party/libuv/src/threadpool.c",
+            320,
+            "third_party/libuv/src/threadpool.c",
+            330,
+            "此次搬移中的请求"
+          ],
+          "notes": "done 回调在局部队列锁释放之后执行。"
+        },
+        {
+          "case_id": "sync_020_relaxed_not_publication_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            101,
+            "third_party/libuv/src/unix/async.c",
+            208,
+            "发送端仅走 relaxed 读取非零后提前返回的路径"
+          ],
+          "notes": "relaxed load 本身不能作为发送者任意写入到回调的发布证据。"
+        },
+        {
+          "case_id": "sync_020_relaxed_not_publication",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "uv_async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            101,
+            "third_party/libuv/src/unix/async.c",
+            208,
+            "发送端仅走 relaxed 读取非零后提前返回的路径"
+          ],
+          "notes": "relaxed load 本身不能作为发送者任意写入到回调的发布证据。"
+        },
+        {
+          "case_id": "sync_019_pending_publish",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            108,
+            "third_party/libuv/src/unix/async.c",
+            202,
+            "同一 handle，接收端 exchange 读到该次发送写入的 1"
+          ],
+          "notes": "默认 seq_cst 原子交换在读到发送值时建立 release/acquire 同步。"
+        },
+        {
+          "case_id": "sync_026_send_callback_not_bijection_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            108,
+            "third_party/libuv/src/unix/async.c",
+            208,
+            "并发多次发送，未记录 exchange 的读写来源"
+          ],
+          "notes": "多次发送可能合并，无法仅凭调用次数配对某次发送和某次回调。"
+        },
+        {
+          "case_id": "sync_026_send_callback_not_bijection",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "uv_async_send",
+            "uv__async_io",
+            "third_party/libuv/src/unix/async.c",
+            108,
+            "third_party/libuv/src/unix/async.c",
+            208,
+            "并发多次发送，未记录 exchange 的读写来源"
+          ],
+          "notes": "多次发送可能合并，无法仅凭调用次数配对某次发送和某次回调。"
+        },
+        {
+          "case_id": "sync_023_busy_drain",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv__async_spin",
+            "third_party/libuv/src/unix/async.c",
+            112,
+            "third_party/libuv/src/unix/async.c",
+            137,
+            "同一 handle，spin 读取到包含该发送结束的零值，遵守关闭生命周期约束"
+          ],
+          "notes": "busy 原子减计数与观察到归零的读取同步；不允许关闭后继续发送。"
+        },
+        {
+          "case_id": "sync_021_busy_before_send",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv_async_send",
+            "third_party/libuv/src/unix/async.c",
+            105,
+            "third_party/libuv/src/unix/async.c",
+            108,
+            "同一发送调用通过快速检查"
+          ],
+          "notes": "增加 busy 计数在 pending 交换之前。"
+        },
+        {
+          "case_id": "sync_022_notify_before_not_busy",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_async_send",
+            "uv_async_send",
+            "third_party/libuv/src/unix/async.c",
+            109,
+            "third_party/libuv/src/unix/async.c",
+            112,
+            "pending 原值为 0，执行底层通知"
+          ],
+          "notes": "通知返回后才减少 busy。"
+        },
+        {
+          "case_id": "sync_031_rw_readers_overlap",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "concurrent",
+          "identity": [
+            "uv_rwlock_rdlock",
+            "uv_rwlock_rdlock",
+            "third_party/libuv/src/unix/thread.c",
+            402,
+            "third_party/libuv/src/unix/thread.c",
+            402,
+            "同一锁上两个成功的读锁持有区间，无额外同步"
+          ],
+          "notes": "共享读锁允许重叠持有，不建立两个 reader 之间的方向性先后关系。"
+        },
+        {
+          "case_id": "sync_031_rw_readers_overlap_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_rwlock_rdlock",
+            "uv_rwlock_rdlock",
+            "third_party/libuv/src/unix/thread.c",
+            402,
+            "third_party/libuv/src/unix/thread.c",
+            402,
+            "同一锁上两个成功的读锁持有区间，无额外同步"
+          ],
+          "notes": "共享读锁允许重叠持有，不建立两个 reader 之间的方向性先后关系。"
+        },
+        {
+          "case_id": "sync_032_failed_trylock_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_rwlock_trywrlock",
+            "uv_rwlock_wrlock",
+            "third_party/libuv/src/unix/thread.c",
+            436,
+            "third_party/libuv/src/unix/thread.c",
+            428,
+            "trywrlock 返回 EBUSY/EAGAIN；另一线程的获取时序未记录"
+          ],
+          "notes": "失败的尝试不获得锁，也不能建立跨线程同步边。"
+        },
+        {
+          "case_id": "sync_032_failed_trylock",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "unknown",
+          "identity": [
+            "uv_rwlock_trywrlock",
+            "uv_rwlock_wrlock",
+            "third_party/libuv/src/unix/thread.c",
+            436,
+            "third_party/libuv/src/unix/thread.c",
+            428,
+            "trywrlock 返回 EBUSY/EAGAIN；另一线程的获取时序未记录"
+          ],
+          "notes": "失败的尝试不获得锁，也不能建立跨线程同步边。"
+        },
+        {
+          "case_id": "sync_029_rw_writer_to_reader",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_rwlock_wrunlock",
+            "uv_rwlock_rdlock",
+            "third_party/libuv/src/unix/thread.c",
+            448,
+            "third_party/libuv/src/unix/thread.c",
+            402,
+            "同一锁，读获取成功且在该写释放之后"
+          ],
+          "notes": "POSIX 写锁释放与后续读锁获取提供同步。"
+        },
+        {
+          "case_id": "sync_030_rw_writer_to_writer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "uv_rwlock_wrunlock",
+            "uv_rwlock_wrlock",
+            "third_party/libuv/src/unix/thread.c",
+            448,
+            "third_party/libuv/src/unix/thread.c",
+            428,
+            "同一锁，后续写获取成功"
+          ],
+          "notes": "写锁独占，释放后后继写者才可获取。"
+        },
+        {
+          "case_id": "sync_018_startup_handshake",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "init_threads",
+            "third_party/libuv/src/threadpool.c",
+            63,
+            "third_party/libuv/src/threadpool.c",
+            239,
+            "该 worker 的 post 对应被成功消费的 semaphore token"
+          ],
+          "notes": "启动信号量的 post/wait 形成初始化握手；不能推出用户工作已经完成。"
+        },
+        {
+          "case_id": "sync_012_completion_transfer",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "uv__work_done",
+            "third_party/libuv/src/threadpool.c",
+            130,
+            "third_party/libuv/src/threadpool.c",
+            319,
+            "同一请求被此次 uv__queue_move 取走"
+          ],
+          "notes": "生产者释放 wq_mutex，消费者持同一把锁搬移队列。"
+        },
+        {
+          "case_id": "sync_005_slow_counter_increment",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            106,
+            "third_party/libuv/src/threadpool.c",
+            120,
+            "同一次慢 I/O 调度"
+          ],
+          "notes": "计数递增发生在全局锁释放之前。"
+        },
+        {
+          "case_id": "sync_007_callback_outside_mutex",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            120,
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "同一 work 的正常执行路径"
+          ],
+          "notes": "先释放全局锁，再调用用户工作函数。"
+        },
+        {
+          "case_id": "sync_008_worker_callbacks_overlap",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "concurrent",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "线程池至少两个 worker，两个独立请求且用户代码未增加同步"
+          ],
+          "notes": "用户工作函数在全局锁外执行，两个实例允许并发；不是断言观测到了同时执行。"
+        },
+        {
+          "case_id": "sync_008_worker_callbacks_overlap_rejected_claim",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "线程池至少两个 worker，两个独立请求且用户代码未增加同步"
+          ],
+          "notes": "用户工作函数在全局锁外执行，两个实例允许并发；不是断言观测到了同时执行。"
+        },
+        {
+          "case_id": "sync_009_work_before_completion",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            123,
+            "third_party/libuv/src/threadpool.c",
+            128,
+            "同一 work 回调已返回"
+          ],
+          "notes": "工作回调完成后才将该请求放入完成队列。"
+        },
+        {
+          "case_id": "sync_010_completion_lock",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            125,
+            "third_party/libuv/src/threadpool.c",
+            126,
+            "同一请求"
+          ],
+          "notes": "标记工作完成前获取 loop 局部队列锁。"
+        },
+        {
+          "case_id": "sync_011_completion_notify",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            128,
+            "third_party/libuv/src/threadpool.c",
+            129,
+            "同一请求和 loop"
+          ],
+          "notes": "先加入完成队列再发异步通知。"
+        },
+        {
+          "case_id": "sync_006_slow_counter_decrement",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            134,
+            "third_party/libuv/src/threadpool.c",
+            137,
+            "is_slow_work 为真"
+          ],
+          "notes": "回调结束后重新获取 mutex 再递减慢 I/O 计数。"
+        },
+        {
+          "case_id": "sync_002_idle_before_wait",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            76,
+            "third_party/libuv/src/threadpool.c",
+            77,
+            "同一次等待迭代"
+          ],
+          "notes": "等待前在 mutex 内递增 idle_threads；wait 会释放并重新获取 mutex。"
+        },
+        {
+          "case_id": "sync_003_wait_reacquire",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "happens_before",
+          "identity": [
+            "worker",
+            "worker",
+            "third_party/libuv/src/threadpool.c",
+            77,
+            "third_party/libuv/src/threadpool.c",
+            78,
+            "uv_cond_wait 成功返回"
+          ],
+          "notes": "返回后持有 mutex，才递减 idle_threads。"
+        }
+      ]
+    }
+  }
+}

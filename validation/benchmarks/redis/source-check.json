@@ -1,0 +1,6 @@
+{
+  "dataset_id": "redis-7.2.4-baseline-v1",
+  "cases": 145,
+  "status": "verified",
+  "errors": []
+}

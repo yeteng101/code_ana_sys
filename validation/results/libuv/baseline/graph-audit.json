@@ -1,0 +1,18 @@
+{
+  "historical_verification": {
+    "requested_edges": 1459,
+    "confirmed_edges": 1158,
+    "coverage_rate": 0.7936943111720356,
+    "source": "README.md and workflow task 178894230514166165950034; original 06-verify JSON not published"
+  },
+  "published_graph_edges": 1481,
+  "published_graph_nodes": 633,
+  "edge_types": {
+    "callback_edge": 129,
+    "direct_call": 1352
+  },
+  "conditional_edges": 0,
+  "confidence_below_0_8": 129,
+  "bad_evidence": [],
+  "note": "Historical verification denominator (1459) differs from published graph (1481); 79.37% is not current precision/recall. Missing per-edge verification is not reconstructed from confidence."
+}

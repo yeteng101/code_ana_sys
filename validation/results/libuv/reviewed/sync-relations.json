@@ -1,0 +1,1854 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "result_type": "sync_relation",
+  "status": "partial",
+  "source": {
+    "repository": "libuv/libuv",
+    "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+    "build_profile": "libuv-macos-clang",
+    "analyzer": "libclang compact AST + clang++",
+    "generated_at": "2026-08-27T08:46:58Z",
+    "origin": "01-index/ast/*.ast.json"
+  },
+  "origin": "reviewed_annotations_not_analyzer_predictions",
+  "items": [
+    {
+      "id": "sync_001_queue_publication",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "post",
+        "thread": "submitter",
+        "shared_object": "wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_001_queue_publication_source"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 160,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "wq",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_001_queue_publication_target"
+        ],
+        "operation": "q = uv__queue_head(&wq);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 81,
+        "snippet": "q = uv__queue_head(&wq);"
+      },
+      "order": "happens_before",
+      "condition": "同一队列项已由 post 发布且被 worker 取出",
+      "execution_context": {
+        "source_thread": "submitter",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_001_queue_publication_source",
+        "sync_001_queue_publication_target",
+        "sync_001_queue_publication_support_66",
+        "sync_001_queue_publication_support_157"
+      ]
+    },
+    {
+      "id": "sync_002_idle_before_wait",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_002_idle_before_wait_source"
+        ],
+        "operation": "idle_threads += 1;",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 76,
+        "snippet": "idle_threads += 1;"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_002_idle_before_wait_target"
+        ],
+        "operation": "uv_cond_wait(&cond, &mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "snippet": "uv_cond_wait(&cond, &mutex);"
+      },
+      "order": "happens_before",
+      "condition": "同一次等待迭代",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_002_idle_before_wait_source",
+        "sync_002_idle_before_wait_target"
+      ]
+    },
+    {
+      "id": "sync_003_wait_reacquire",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_003_wait_reacquire_source"
+        ],
+        "operation": "uv_cond_wait(&cond, &mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "snippet": "uv_cond_wait(&cond, &mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "idle_threads",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_003_wait_reacquire_target"
+        ],
+        "operation": "idle_threads -= 1;",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 78,
+        "snippet": "idle_threads -= 1;"
+      },
+      "order": "happens_before",
+      "condition": "uv_cond_wait 成功返回",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_003_wait_reacquire_source",
+        "sync_003_wait_reacquire_target"
+      ]
+    },
+    {
+      "id": "sync_004_signal_not_dispatch",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "post",
+        "thread": "submitter",
+        "shared_object": "cond/wq",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_004_signal_not_dispatch_source"
+        ],
+        "operation": "uv_cond_signal(&cond);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 159,
+        "snippet": "uv_cond_signal(&cond);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "cond/wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_004_signal_not_dispatch_target"
+        ],
+        "operation": "w->work(w);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 123,
+        "snippet": "w->work(w);"
+      },
+      "order": "unknown",
+      "condition": "没有识别具体被唤醒线程或队列项",
+      "execution_context": {
+        "source_thread": "submitter",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_004_signal_not_dispatch_source",
+        "sync_004_signal_not_dispatch_target"
+      ]
+    },
+    {
+      "id": "sync_005_slow_counter_increment",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_005_slow_counter_increment_source"
+        ],
+        "operation": "slow_io_work_running++;",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 106,
+        "snippet": "slow_io_work_running++;"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_005_slow_counter_increment_target"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 120,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "order": "happens_before",
+      "condition": "同一次慢 I/O 调度",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_005_slow_counter_increment_source",
+        "sync_005_slow_counter_increment_target"
+      ]
+    },
+    {
+      "id": "sync_006_slow_counter_decrement",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_006_slow_counter_decrement_source"
+        ],
+        "operation": "uv_mutex_lock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 134,
+        "snippet": "uv_mutex_lock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "slow_io_work_running",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_006_slow_counter_decrement_target"
+        ],
+        "operation": "slow_io_work_running--;",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 137,
+        "snippet": "slow_io_work_running--;"
+      },
+      "order": "happens_before",
+      "condition": "is_slow_work 为真",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_006_slow_counter_decrement_source",
+        "sync_006_slow_counter_decrement_target"
+      ]
+    },
+    {
+      "id": "sync_007_callback_outside_mutex",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "work request",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_007_callback_outside_mutex_source"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 120,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "work request",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_007_callback_outside_mutex_target"
+        ],
+        "operation": "w->work(w);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 123,
+        "snippet": "w->work(w);"
+      },
+      "order": "happens_before",
+      "condition": "同一 work 的正常执行路径",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_007_callback_outside_mutex_source",
+        "sync_007_callback_outside_mutex_target"
+      ]
+    },
+    {
+      "id": "sync_008_worker_callbacks_overlap",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker-A",
+        "shared_object": "distinct work requests",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_008_worker_callbacks_overlap_source"
+        ],
+        "operation": "w->work(w);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 123,
+        "snippet": "w->work(w);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker-B",
+        "shared_object": "distinct work requests",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_008_worker_callbacks_overlap_target"
+        ],
+        "operation": "w->work(w);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 123,
+        "snippet": "w->work(w);"
+      },
+      "order": "concurrent",
+      "condition": "线程池至少两个 worker，两个独立请求且用户代码未增加同步",
+      "execution_context": {
+        "source_thread": "worker-A",
+        "target_thread": "worker-B"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_008_worker_callbacks_overlap_source",
+        "sync_008_worker_callbacks_overlap_target",
+        "sync_008_worker_callbacks_overlap_support_120"
+      ]
+    },
+    {
+      "id": "sync_009_work_before_completion",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_009_work_before_completion_source"
+        ],
+        "operation": "w->work(w);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 123,
+        "snippet": "w->work(w);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_009_work_before_completion_target"
+        ],
+        "operation": "uv__queue_insert_tail(&w->loop->wq, &w->wq);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 128,
+        "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+      },
+      "order": "happens_before",
+      "condition": "同一 work 回调已返回",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_009_work_before_completion_source",
+        "sync_009_work_before_completion_target"
+      ]
+    },
+    {
+      "id": "sync_010_completion_lock",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->work",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_010_completion_lock_source"
+        ],
+        "operation": "uv_mutex_lock(&w->loop->wq_mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 125,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "w->work",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_010_completion_lock_target"
+        ],
+        "operation": "w->work = NULL;  /* Signal uv_cancel() that the work req is done",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 126,
+        "snippet": "w->work = NULL;  /* Signal uv_cancel() that the work req is done"
+      },
+      "order": "happens_before",
+      "condition": "同一请求",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_010_completion_lock_source",
+        "sync_010_completion_lock_target"
+      ]
+    },
+    {
+      "id": "sync_011_completion_notify",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_011_completion_notify_source"
+        ],
+        "operation": "uv__queue_insert_tail(&w->loop->wq, &w->wq);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 128,
+        "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_011_completion_notify_target"
+        ],
+        "operation": "uv_async_send(&w->loop->wq_async);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 129,
+        "snippet": "uv_async_send(&w->loop->wq_async);"
+      },
+      "order": "happens_before",
+      "condition": "同一请求和 loop",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "worker"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_011_completion_notify_source",
+        "sync_011_completion_notify_target"
+      ]
+    },
+    {
+      "id": "sync_012_completion_transfer",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "loop.wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_012_completion_transfer_source"
+        ],
+        "operation": "uv_mutex_unlock(&w->loop->wq_mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 130,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_012_completion_transfer_target"
+        ],
+        "operation": "uv__queue_move(&loop->wq, &wq);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 319,
+        "snippet": "uv__queue_move(&loop->wq, &wq);"
+      },
+      "order": "happens_before",
+      "condition": "同一请求被此次 uv__queue_move 取走",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_012_completion_transfer_source",
+        "sync_012_completion_transfer_target",
+        "sync_012_completion_transfer_support_318"
+      ]
+    },
+    {
+      "id": "sync_013_done_outside_mutex",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "local wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_013_done_outside_mutex_source"
+        ],
+        "operation": "uv_mutex_unlock(&loop->wq_mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 320,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": "loop",
+        "shared_object": "local wq",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_013_done_outside_mutex_target"
+        ],
+        "operation": "w->done(w, err);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 330,
+        "snippet": "w->done(w, err);"
+      },
+      "order": "happens_before",
+      "condition": "此次搬移中的请求",
+      "execution_context": {
+        "source_thread": "loop",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_013_done_outside_mutex_source",
+        "sync_013_done_outside_mutex_target"
+      ]
+    },
+    {
+      "id": "sync_014_cancel_lock_order",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "mutex -> loop.wq_mutex",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_014_cancel_lock_order_source"
+        ],
+        "operation": "uv_mutex_lock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 286,
+        "snippet": "uv_mutex_lock(&mutex);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "mutex -> loop.wq_mutex",
+        "held_locks": [
+          "mutex",
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_014_cancel_lock_order_target"
+        ],
+        "operation": "uv_mutex_lock(&w->loop->wq_mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 287,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "order": "happens_before",
+      "condition": "uv__work_cancel 进入临界区",
+      "execution_context": {
+        "source_thread": "canceller",
+        "target_thread": "canceller"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_014_cancel_lock_order_source",
+        "sync_014_cancel_lock_order_target"
+      ]
+    },
+    {
+      "id": "sync_015_cancel_unlock_order",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq_mutex -> mutex",
+        "held_locks": [
+          "mutex"
+        ],
+        "evidence_ids": [
+          "sync_015_cancel_unlock_order_source"
+        ],
+        "operation": "uv_mutex_unlock(&w->loop->wq_mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 293,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq_mutex -> mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_015_cancel_unlock_order_target"
+        ],
+        "operation": "uv_mutex_unlock(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 294,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "order": "happens_before",
+      "condition": "取消检查结束",
+      "execution_context": {
+        "source_thread": "canceller",
+        "target_thread": "canceller"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_015_cancel_unlock_order_source",
+        "sync_015_cancel_unlock_order_target"
+      ]
+    },
+    {
+      "id": "sync_016_cancel_publication",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_016_cancel_publication_source"
+        ],
+        "operation": "uv__queue_insert_tail(&loop->wq, &w->wq);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 301,
+        "snippet": "uv__queue_insert_tail(&loop->wq, &w->wq);"
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": "canceller",
+        "shared_object": "loop.wq",
+        "held_locks": [
+          "loop.wq_mutex"
+        ],
+        "evidence_ids": [
+          "sync_016_cancel_publication_target"
+        ],
+        "operation": "uv_async_send(&loop->wq_async);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 302,
+        "snippet": "uv_async_send(&loop->wq_async);"
+      },
+      "order": "happens_before",
+      "condition": "cancelled 为真",
+      "execution_context": {
+        "source_thread": "canceller",
+        "target_thread": "canceller"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_016_cancel_publication_source",
+        "sync_016_cancel_publication_target"
+      ]
+    },
+    {
+      "id": "sync_017_join_before_destroy",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv__threadpool_cleanup",
+        "thread": "cleanup",
+        "shared_object": "threadpool mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_017_join_before_destroy_source"
+        ],
+        "operation": "if (uv_thread_join(threads + i))",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 180,
+        "snippet": "if (uv_thread_join(threads + i))"
+      },
+      "target": {
+        "function": "uv__threadpool_cleanup",
+        "thread": "cleanup",
+        "shared_object": "threadpool mutex",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_017_join_before_destroy_target"
+        ],
+        "operation": "uv_mutex_destroy(&mutex);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 186,
+        "snippet": "uv_mutex_destroy(&mutex);"
+      },
+      "order": "happens_before",
+      "condition": "所有 worker 均成功 join，非 __MVS__ 的正常清理",
+      "execution_context": {
+        "source_thread": "cleanup",
+        "target_thread": "cleanup"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_017_join_before_destroy_source",
+        "sync_017_join_before_destroy_target"
+      ]
+    },
+    {
+      "id": "sync_018_startup_handshake",
+      "relation_type": "event_wait",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "shared_object": "startup semaphore",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_018_startup_handshake_source"
+        ],
+        "operation": "uv_sem_post((uv_sem_t*) arg);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 63,
+        "snippet": "uv_sem_post((uv_sem_t*) arg);"
+      },
+      "target": {
+        "function": "init_threads",
+        "thread": "initializer",
+        "shared_object": "startup semaphore",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_018_startup_handshake_target"
+        ],
+        "operation": "uv_sem_wait(&sem);",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 239,
+        "snippet": "uv_sem_wait(&sem);"
+      },
+      "order": "happens_before",
+      "condition": "该 worker 的 post 对应被成功消费的 semaphore token",
+      "execution_context": {
+        "source_thread": "worker",
+        "target_thread": "initializer"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_018_startup_handshake_source",
+        "sync_018_startup_handshake_target"
+      ]
+    },
+    {
+      "id": "sync_019_pending_publish",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_019_pending_publish_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 108,
+        "snippet": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_019_pending_publish_target"
+        ],
+        "operation": "if (atomic_exchange(pending, 0) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 202,
+        "snippet": "if (atomic_exchange(pending, 0) == 0)"
+      },
+      "order": "happens_before",
+      "condition": "同一 handle，接收端 exchange 读到该次发送写入的 1",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_019_pending_publish_source",
+        "sync_019_pending_publish_target"
+      ]
+    },
+    {
+      "id": "sync_020_relaxed_not_publication",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_020_relaxed_not_publication_source"
+        ],
+        "operation": "if (atomic_load_explicit(pending, memory_order_relaxed) != 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 101,
+        "snippet": "if (atomic_load_explicit(pending, memory_order_relaxed) != 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_020_relaxed_not_publication_target"
+        ],
+        "operation": "h->async_cb(h);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 208,
+        "snippet": "h->async_cb(h);"
+      },
+      "order": "unknown",
+      "condition": "发送端仅走 relaxed 读取非零后提前返回的路径",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_020_relaxed_not_publication_source",
+        "sync_020_relaxed_not_publication_target"
+      ]
+    },
+    {
+      "id": "sync_021_busy_before_send",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy/pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_021_busy_before_send_source"
+        ],
+        "operation": "atomic_fetch_add(busy, 1);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 105,
+        "snippet": "atomic_fetch_add(busy, 1);"
+      },
+      "target": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy/pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_021_busy_before_send_target"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 108,
+        "snippet": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "order": "happens_before",
+      "condition": "同一发送调用通过快速检查",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "sender"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_021_busy_before_send_source",
+        "sync_021_busy_before_send_target"
+      ]
+    },
+    {
+      "id": "sync_022_notify_before_not_busy",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_022_notify_before_not_busy_source"
+        ],
+        "operation": "uv__async_send(handle->loop);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 109,
+        "snippet": "uv__async_send(handle->loop);"
+      },
+      "target": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_022_notify_before_not_busy_target"
+        ],
+        "operation": "atomic_fetch_add(busy, -1);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 112,
+        "snippet": "atomic_fetch_add(busy, -1);"
+      },
+      "order": "happens_before",
+      "condition": "pending 原值为 0，执行底层通知",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "sender"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_022_notify_before_not_busy_source",
+        "sync_022_notify_before_not_busy_target"
+      ]
+    },
+    {
+      "id": "sync_023_busy_drain",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_023_busy_drain_source"
+        ],
+        "operation": "atomic_fetch_add(busy, -1);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 112,
+        "snippet": "atomic_fetch_add(busy, -1);"
+      },
+      "target": {
+        "function": "uv__async_spin",
+        "thread": "loop",
+        "shared_object": "handle.busy",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_023_busy_drain_target"
+        ],
+        "operation": "if (atomic_load(busy) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 137,
+        "snippet": "if (atomic_load(busy) == 0)"
+      },
+      "order": "happens_before",
+      "condition": "同一 handle，spin 读取到包含该发送结束的零值，遵守关闭生命周期约束",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_023_busy_drain_source",
+        "sync_023_busy_drain_target"
+      ]
+    },
+    {
+      "id": "sync_024_spin_before_remove",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__async_close",
+        "thread": "loop",
+        "shared_object": "handle.queue",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_024_spin_before_remove_source"
+        ],
+        "operation": "uv__async_spin(handle);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 154,
+        "snippet": "uv__async_spin(handle);"
+      },
+      "target": {
+        "function": "uv__async_close",
+        "thread": "loop",
+        "shared_object": "handle.queue",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_024_spin_before_remove_target"
+        ],
+        "operation": "uv__queue_remove(&handle->queue);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 155,
+        "snippet": "uv__queue_remove(&handle->queue);"
+      },
+      "order": "happens_before",
+      "condition": "合法关闭路径",
+      "execution_context": {
+        "source_thread": "loop",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_024_spin_before_remove_source",
+        "sync_024_spin_before_remove_target"
+      ]
+    },
+    {
+      "id": "sync_025_pending_before_callback",
+      "relation_type": "atomic",
+      "source": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_025_pending_before_callback_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 0) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 202,
+        "snippet": "if (atomic_exchange(pending, 0) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_025_pending_before_callback_target"
+        ],
+        "operation": "h->async_cb(h);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 208,
+        "snippet": "h->async_cb(h);"
+      },
+      "order": "happens_before",
+      "condition": "pending 原值非零且 async_cb 非空",
+      "execution_context": {
+        "source_thread": "loop",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_025_pending_before_callback_source",
+        "sync_025_pending_before_callback_target"
+      ]
+    },
+    {
+      "id": "sync_026_send_callback_not_bijection",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv_async_send",
+        "thread": "sender",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_026_send_callback_not_bijection_source"
+        ],
+        "operation": "if (atomic_exchange(pending, 1) == 0)",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 108,
+        "snippet": "if (atomic_exchange(pending, 1) == 0)"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "handle.pending",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_026_send_callback_not_bijection_target"
+        ],
+        "operation": "h->async_cb(h);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 208,
+        "snippet": "h->async_cb(h);"
+      },
+      "order": "unknown",
+      "condition": "并发多次发送，未记录 exchange 的读写来源",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_026_send_callback_not_bijection_source",
+        "sync_026_send_callback_not_bijection_target"
+      ]
+    },
+    {
+      "id": "sync_027_epoll_dispatch",
+      "relation_type": "event_wait",
+      "source": {
+        "function": "uv__io_poll",
+        "thread": "loop",
+        "shared_object": "epoll events",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_027_epoll_dispatch_source"
+        ],
+        "operation": "nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);",
+        "file": "third_party/libuv/src/unix/linux.c",
+        "line": 1465,
+        "snippet": "nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);"
+      },
+      "target": {
+        "function": "uv__io_poll",
+        "thread": "loop",
+        "shared_object": "epoll events",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_027_epoll_dispatch_target"
+        ],
+        "operation": "w->cb(loop, w, pe->events);",
+        "file": "third_party/libuv/src/unix/linux.c",
+        "line": 1565,
+        "snippet": "w->cb(loop, w, pe->events);"
+      },
+      "order": "happens_before",
+      "condition": "Linux epoll 返回该 watcher 的有效事件并走普通分发分支",
+      "execution_context": {
+        "source_thread": "loop",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_027_epoll_dispatch_source",
+        "sync_027_epoll_dispatch_target"
+      ]
+    },
+    {
+      "id": "sync_028_eventfd_wakeup",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "uv__async_send",
+        "thread": "sender",
+        "shared_object": "loop async eventfd",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_028_eventfd_wakeup_source"
+        ],
+        "operation": "r = write(fd, buf, len);",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 244,
+        "snippet": "r = write(fd, buf, len);"
+      },
+      "target": {
+        "function": "uv__async_io",
+        "thread": "loop",
+        "shared_object": "loop async eventfd",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_028_eventfd_wakeup_target"
+        ],
+        "operation": "r = read(w->fd, buf, sizeof(buf));",
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 175,
+        "snippet": "r = read(w->fd, buf, sizeof(buf));"
+      },
+      "order": "happens_before",
+      "condition": "Linux 同一 eventfd，本次成功 write 的计数被该 read 消费",
+      "execution_context": {
+        "source_thread": "sender",
+        "target_thread": "loop"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_028_eventfd_wakeup_source",
+        "sync_028_eventfd_wakeup_target"
+      ]
+    },
+    {
+      "id": "sync_029_rw_writer_to_reader",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_wrunlock",
+        "thread": "writer",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_029_rw_writer_to_reader_source"
+        ],
+        "operation": "if (pthread_rwlock_unlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 448,
+        "snippet": "if (pthread_rwlock_unlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_029_rw_writer_to_reader_target"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 402,
+        "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "order": "happens_before",
+      "condition": "同一锁，读获取成功且在该写释放之后",
+      "execution_context": {
+        "source_thread": "writer",
+        "target_thread": "reader"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_029_rw_writer_to_reader_source",
+        "sync_029_rw_writer_to_reader_target"
+      ]
+    },
+    {
+      "id": "sync_030_rw_writer_to_writer",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_wrunlock",
+        "thread": "writer-A",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_030_rw_writer_to_writer_source"
+        ],
+        "operation": "if (pthread_rwlock_unlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 448,
+        "snippet": "if (pthread_rwlock_unlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_wrlock",
+        "thread": "writer-B",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:write"
+        ],
+        "evidence_ids": [
+          "sync_030_rw_writer_to_writer_target"
+        ],
+        "operation": "if (pthread_rwlock_wrlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 428,
+        "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+      },
+      "order": "happens_before",
+      "condition": "同一锁，后续写获取成功",
+      "execution_context": {
+        "source_thread": "writer-A",
+        "target_thread": "writer-B"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_030_rw_writer_to_writer_source",
+        "sync_030_rw_writer_to_writer_target"
+      ]
+    },
+    {
+      "id": "sync_031_rw_readers_overlap",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader-A",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_031_rw_readers_overlap_source"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 402,
+        "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "target": {
+        "function": "uv_rwlock_rdlock",
+        "thread": "reader-B",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:read"
+        ],
+        "evidence_ids": [
+          "sync_031_rw_readers_overlap_target"
+        ],
+        "operation": "if (pthread_rwlock_rdlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 402,
+        "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+      },
+      "order": "concurrent",
+      "condition": "同一锁上两个成功的读锁持有区间，无额外同步",
+      "execution_context": {
+        "source_thread": "reader-A",
+        "target_thread": "reader-B"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_031_rw_readers_overlap_source",
+        "sync_031_rw_readers_overlap_target",
+        "sync_031_rw_readers_overlap_support_428"
+      ]
+    },
+    {
+      "id": "sync_032_failed_trylock",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv_rwlock_trywrlock",
+        "thread": "try-writer",
+        "shared_object": "same rwlock",
+        "held_locks": [],
+        "evidence_ids": [
+          "sync_032_failed_trylock_source"
+        ],
+        "operation": "err = pthread_rwlock_trywrlock(rwlock);",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 436,
+        "snippet": "err = pthread_rwlock_trywrlock(rwlock);"
+      },
+      "target": {
+        "function": "uv_rwlock_wrlock",
+        "thread": "writer",
+        "shared_object": "same rwlock",
+        "held_locks": [
+          "rwlock:write"
+        ],
+        "evidence_ids": [
+          "sync_032_failed_trylock_target"
+        ],
+        "operation": "if (pthread_rwlock_wrlock(rwlock))",
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 428,
+        "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+      },
+      "order": "unknown",
+      "condition": "trywrlock 返回 EBUSY/EAGAIN；另一线程的获取时序未记录",
+      "execution_context": {
+        "source_thread": "try-writer",
+        "target_thread": "writer"
+      },
+      "confidence": 0.95,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "sync_032_failed_trylock_source",
+        "sync_032_failed_trylock_target",
+        "sync_032_failed_trylock_support_437",
+        "sync_032_failed_trylock_support_440"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "sync_001_queue_publication_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 160,
+      "snippet": "uv_mutex_unlock(&mutex);"
+    },
+    {
+      "id": "sync_001_queue_publication_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 81,
+      "snippet": "q = uv__queue_head(&wq);"
+    },
+    {
+      "id": "sync_001_queue_publication_support_66",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 66,
+      "snippet": "uv_mutex_lock(&mutex);"
+    },
+    {
+      "id": "sync_001_queue_publication_support_157",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 157,
+      "snippet": "uv__queue_insert_tail(&wq, q);"
+    },
+    {
+      "id": "sync_002_idle_before_wait_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 76,
+      "snippet": "idle_threads += 1;"
+    },
+    {
+      "id": "sync_002_idle_before_wait_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 77,
+      "snippet": "uv_cond_wait(&cond, &mutex);"
+    },
+    {
+      "id": "sync_003_wait_reacquire_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 77,
+      "snippet": "uv_cond_wait(&cond, &mutex);"
+    },
+    {
+      "id": "sync_003_wait_reacquire_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 78,
+      "snippet": "idle_threads -= 1;"
+    },
+    {
+      "id": "sync_004_signal_not_dispatch_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 159,
+      "snippet": "uv_cond_signal(&cond);"
+    },
+    {
+      "id": "sync_004_signal_not_dispatch_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 123,
+      "snippet": "w->work(w);"
+    },
+    {
+      "id": "sync_005_slow_counter_increment_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 106,
+      "snippet": "slow_io_work_running++;"
+    },
+    {
+      "id": "sync_005_slow_counter_increment_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 120,
+      "snippet": "uv_mutex_unlock(&mutex);"
+    },
+    {
+      "id": "sync_006_slow_counter_decrement_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 134,
+      "snippet": "uv_mutex_lock(&mutex);"
+    },
+    {
+      "id": "sync_006_slow_counter_decrement_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 137,
+      "snippet": "slow_io_work_running--;"
+    },
+    {
+      "id": "sync_007_callback_outside_mutex_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 120,
+      "snippet": "uv_mutex_unlock(&mutex);"
+    },
+    {
+      "id": "sync_007_callback_outside_mutex_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 123,
+      "snippet": "w->work(w);"
+    },
+    {
+      "id": "sync_008_worker_callbacks_overlap_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 123,
+      "snippet": "w->work(w);"
+    },
+    {
+      "id": "sync_008_worker_callbacks_overlap_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 123,
+      "snippet": "w->work(w);"
+    },
+    {
+      "id": "sync_008_worker_callbacks_overlap_support_120",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 120,
+      "snippet": "uv_mutex_unlock(&mutex);"
+    },
+    {
+      "id": "sync_009_work_before_completion_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 123,
+      "snippet": "w->work(w);"
+    },
+    {
+      "id": "sync_009_work_before_completion_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 128,
+      "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+    },
+    {
+      "id": "sync_010_completion_lock_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 125,
+      "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+    },
+    {
+      "id": "sync_010_completion_lock_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 126,
+      "snippet": "w->work = NULL;  /* Signal uv_cancel() that the work req is done"
+    },
+    {
+      "id": "sync_011_completion_notify_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 128,
+      "snippet": "uv__queue_insert_tail(&w->loop->wq, &w->wq);"
+    },
+    {
+      "id": "sync_011_completion_notify_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 129,
+      "snippet": "uv_async_send(&w->loop->wq_async);"
+    },
+    {
+      "id": "sync_012_completion_transfer_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 130,
+      "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+    },
+    {
+      "id": "sync_012_completion_transfer_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 319,
+      "snippet": "uv__queue_move(&loop->wq, &wq);"
+    },
+    {
+      "id": "sync_012_completion_transfer_support_318",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 318,
+      "snippet": "uv_mutex_lock(&loop->wq_mutex);"
+    },
+    {
+      "id": "sync_013_done_outside_mutex_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 320,
+      "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+    },
+    {
+      "id": "sync_013_done_outside_mutex_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 330,
+      "snippet": "w->done(w, err);"
+    },
+    {
+      "id": "sync_014_cancel_lock_order_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 286,
+      "snippet": "uv_mutex_lock(&mutex);"
+    },
+    {
+      "id": "sync_014_cancel_lock_order_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 287,
+      "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+    },
+    {
+      "id": "sync_015_cancel_unlock_order_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 293,
+      "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+    },
+    {
+      "id": "sync_015_cancel_unlock_order_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 294,
+      "snippet": "uv_mutex_unlock(&mutex);"
+    },
+    {
+      "id": "sync_016_cancel_publication_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 301,
+      "snippet": "uv__queue_insert_tail(&loop->wq, &w->wq);"
+    },
+    {
+      "id": "sync_016_cancel_publication_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 302,
+      "snippet": "uv_async_send(&loop->wq_async);"
+    },
+    {
+      "id": "sync_017_join_before_destroy_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 180,
+      "snippet": "if (uv_thread_join(threads + i))"
+    },
+    {
+      "id": "sync_017_join_before_destroy_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 186,
+      "snippet": "uv_mutex_destroy(&mutex);"
+    },
+    {
+      "id": "sync_018_startup_handshake_source",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 63,
+      "snippet": "uv_sem_post((uv_sem_t*) arg);"
+    },
+    {
+      "id": "sync_018_startup_handshake_target",
+      "file": "third_party/libuv/src/threadpool.c",
+      "line": 239,
+      "snippet": "uv_sem_wait(&sem);"
+    },
+    {
+      "id": "sync_019_pending_publish_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 108,
+      "snippet": "if (atomic_exchange(pending, 1) == 0)"
+    },
+    {
+      "id": "sync_019_pending_publish_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 202,
+      "snippet": "if (atomic_exchange(pending, 0) == 0)"
+    },
+    {
+      "id": "sync_020_relaxed_not_publication_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 101,
+      "snippet": "if (atomic_load_explicit(pending, memory_order_relaxed) != 0)"
+    },
+    {
+      "id": "sync_020_relaxed_not_publication_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 208,
+      "snippet": "h->async_cb(h);"
+    },
+    {
+      "id": "sync_021_busy_before_send_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 105,
+      "snippet": "atomic_fetch_add(busy, 1);"
+    },
+    {
+      "id": "sync_021_busy_before_send_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 108,
+      "snippet": "if (atomic_exchange(pending, 1) == 0)"
+    },
+    {
+      "id": "sync_022_notify_before_not_busy_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 109,
+      "snippet": "uv__async_send(handle->loop);"
+    },
+    {
+      "id": "sync_022_notify_before_not_busy_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 112,
+      "snippet": "atomic_fetch_add(busy, -1);"
+    },
+    {
+      "id": "sync_023_busy_drain_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 112,
+      "snippet": "atomic_fetch_add(busy, -1);"
+    },
+    {
+      "id": "sync_023_busy_drain_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 137,
+      "snippet": "if (atomic_load(busy) == 0)"
+    },
+    {
+      "id": "sync_024_spin_before_remove_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 154,
+      "snippet": "uv__async_spin(handle);"
+    },
+    {
+      "id": "sync_024_spin_before_remove_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 155,
+      "snippet": "uv__queue_remove(&handle->queue);"
+    },
+    {
+      "id": "sync_025_pending_before_callback_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 202,
+      "snippet": "if (atomic_exchange(pending, 0) == 0)"
+    },
+    {
+      "id": "sync_025_pending_before_callback_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 208,
+      "snippet": "h->async_cb(h);"
+    },
+    {
+      "id": "sync_026_send_callback_not_bijection_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 108,
+      "snippet": "if (atomic_exchange(pending, 1) == 0)"
+    },
+    {
+      "id": "sync_026_send_callback_not_bijection_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 208,
+      "snippet": "h->async_cb(h);"
+    },
+    {
+      "id": "sync_027_epoll_dispatch_source",
+      "file": "third_party/libuv/src/unix/linux.c",
+      "line": 1465,
+      "snippet": "nfds = epoll_pwait(epollfd, events, ARRAY_SIZE(events), timeout, sigmask);"
+    },
+    {
+      "id": "sync_027_epoll_dispatch_target",
+      "file": "third_party/libuv/src/unix/linux.c",
+      "line": 1565,
+      "snippet": "w->cb(loop, w, pe->events);"
+    },
+    {
+      "id": "sync_028_eventfd_wakeup_source",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 244,
+      "snippet": "r = write(fd, buf, len);"
+    },
+    {
+      "id": "sync_028_eventfd_wakeup_target",
+      "file": "third_party/libuv/src/unix/async.c",
+      "line": 175,
+      "snippet": "r = read(w->fd, buf, sizeof(buf));"
+    },
+    {
+      "id": "sync_029_rw_writer_to_reader_source",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 448,
+      "snippet": "if (pthread_rwlock_unlock(rwlock))"
+    },
+    {
+      "id": "sync_029_rw_writer_to_reader_target",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 402,
+      "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+    },
+    {
+      "id": "sync_030_rw_writer_to_writer_source",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 448,
+      "snippet": "if (pthread_rwlock_unlock(rwlock))"
+    },
+    {
+      "id": "sync_030_rw_writer_to_writer_target",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 428,
+      "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+    },
+    {
+      "id": "sync_031_rw_readers_overlap_source",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 402,
+      "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+    },
+    {
+      "id": "sync_031_rw_readers_overlap_target",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 402,
+      "snippet": "if (pthread_rwlock_rdlock(rwlock))"
+    },
+    {
+      "id": "sync_031_rw_readers_overlap_support_428",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 428,
+      "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+    },
+    {
+      "id": "sync_032_failed_trylock_source",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 436,
+      "snippet": "err = pthread_rwlock_trywrlock(rwlock);"
+    },
+    {
+      "id": "sync_032_failed_trylock_target",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 428,
+      "snippet": "if (pthread_rwlock_wrlock(rwlock))"
+    },
+    {
+      "id": "sync_032_failed_trylock_support_437",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 437,
+      "snippet": "if (err) {"
+    },
+    {
+      "id": "sync_032_failed_trylock_support_440",
+      "file": "third_party/libuv/src/unix/thread.c",
+      "line": 440,
+      "snippet": "return UV_EBUSY;"
+    }
+  ],
+  "warnings": [
+    "Source-reviewed conditions must accompany each relation; human review is pending."
+  ],
+  "review": {
+    "method": "source_review_by_ai",
+    "human_review": "pending"
+  }
+}

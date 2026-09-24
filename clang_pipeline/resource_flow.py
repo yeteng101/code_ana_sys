@@ -259,12 +259,13 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
             f"{len(warnings) - 50} additional unresolved resource paths omitted"
         ]
     status = "succeeded" if items and not warnings else ("partial" if items else "not_available")
+    generated_at = str((graph.get("meta") or {}).get("generated_at") or utc_now())
     return {
         "schema_version": "1.0",
         "run_id": str(graph.get("run_id", "")),
         "result_type": "resource_flow",
         "status": status,
-        "generated_at": utc_now(),
+        "generated_at": generated_at,
         "source": {
             **dict(graph.get("meta") or {}),
             "origin": "analyzer",

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "run_id": "redis-7.2.4-validation",
+  "result_type": "sync_relation",
+  "status": "not_available",
+  "generated_at": "2026-09-16T03:11:01Z",
+  "source": {
+    "repository": "redis/redis",
+    "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
+    "build_profile": "redis-linux-clang",
+    "analyzer": "libclang compact AST + clang++",
+    "generated_at": "2026-09-16T03:11:01Z",
+    "origin": "analyzer",
+    "provider": "native_sync_flow_v1"
+  },
+  "items": [],
+  "evidence": [],
+  "warnings": [
+    "no synchronization relation matched the native rules"
+  ]
+}

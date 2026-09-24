@@ -242,12 +242,16 @@ def _cursor_type_dict(cursor: CXCursor) -> dict[str, Any]:
 
 def _referenced_info(cursor: CXCursor) -> dict[str, Any]:
     kind = lib.clang_getCursorKind(cursor)
-    return {
+    result = {
         "id": _cursor_id(cursor),
         "kind": KIND_MAP.get(kind, "UnexposedDecl"),
         "name": _string(lib.clang_getCursorSpelling(cursor)),
         "type": _cursor_type_dict(cursor),
     }
+    location = _location_dict(lib.clang_getCursorLocation(cursor))
+    if location:
+        result["loc"] = location
+    return result
 
 
 def _node_dict(cursor: CXCursor) -> dict[str, Any]:

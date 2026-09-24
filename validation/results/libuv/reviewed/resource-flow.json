@@ -1,0 +1,1742 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_libuv_1.50.0",
+  "result_type": "resource_flow",
+  "status": "partial",
+  "source": {
+    "repository": "libuv/libuv",
+    "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+    "build_profile": "libuv-macos-clang",
+    "analyzer": "libclang compact AST + clang++",
+    "generated_at": "2026-08-27T08:46:58Z",
+    "origin": "01-index/ast/*.ast.json"
+  },
+  "origin": "reviewed_annotations_not_analyzer_predictions",
+  "items": [
+    {
+      "id": "rf_libuv_fs_fd_v1",
+      "resource": "rf_libuv_fs_fd_v1",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire",
+        "ev_rf_fs_transfer",
+        "ev_rf_fs_release"
+      ],
+      "review": "confirmed"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1",
+      "resource": "rf_libuv_getpwuid_buf_v1",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire",
+        "ev_rf_pw_release"
+      ],
+      "review": "confirmed"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1",
+      "resource": "rf_libuv_async_fd_v1",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire",
+        "ev_rf_async_transfer",
+        "ev_rf_async_release_wfd",
+        "ev_rf_async_release_io"
+      ],
+      "review": "confirmed_with_condition"
+    },
+    {
+      "id": "rf_libuv_getaddrinfo_v1",
+      "resource": "rf_libuv_getaddrinfo_v1",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getaddrinfo_work",
+          "file": "third_party/libuv/src/unix/getaddrinfo.c",
+          "line": 103,
+          "snippet": "err = getaddrinfo(req->hostname, req->service, req->hints, &req->addrinfo);",
+          "evidence_ids": [
+            "ev_rf_gai_acquire"
+          ],
+          "confidence": 0.86,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__getaddrinfo_done",
+          "file": "third_party/libuv/src/unix/getaddrinfo.c",
+          "line": 134,
+          "snippet": "req->cb(req, req->retcode, req->addrinfo);",
+          "evidence_ids": [
+            "ev_rf_gai_transfer"
+          ],
+          "confidence": 0.86,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv_freeaddrinfo",
+          "file": "third_party/libuv/src/unix/getaddrinfo.c",
+          "line": 222,
+          "snippet": "freeaddrinfo(ai);",
+          "evidence_ids": [
+            "ev_rf_gai_release"
+          ],
+          "confidence": 0.86,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_callback_caller",
+      "thread": null,
+      "confidence": 0.86,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_gai_acquire",
+        "ev_rf_gai_transfer",
+        "ev_rf_gai_release"
+      ],
+      "review": "confirmed"
+    },
+    {
+      "id": "rf_libuv_scandir_entries_v1",
+      "resource": "rf_libuv_scandir_entries_v1",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_scandir",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 585,
+          "snippet": "n = scandir(req->path, &dents, uv__fs_scandir_filter, uv__fs_scandir_sort);",
+          "evidence_ids": [
+            "ev_rf_scan_acquire"
+          ],
+          "confidence": 0.88,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__fs_scandir",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 600,
+          "snippet": "req->ptr = dents;",
+          "evidence_ids": [
+            "ev_rf_scan_transfer"
+          ],
+          "confidence": 0.88,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_scandir_cleanup",
+          "file": "third_party/libuv/src/uv-common.c",
+          "line": 728,
+          "snippet": "uv__fs_scandir_free(req->ptr);",
+          "evidence_ids": [
+            "ev_rf_scan_release"
+          ],
+          "confidence": 0.88,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_fs_request",
+      "thread": null,
+      "confidence": 0.88,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_scan_acquire",
+        "ev_rf_scan_transfer",
+        "ev_rf_scan_release"
+      ],
+      "review": "confirmed"
+    },
+    {
+      "id": "rf_libuv_dlopen_handle_v1",
+      "resource": "rf_libuv_dlopen_handle_v1",
+      "resource_type": "handle",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv_dlopen",
+          "file": "third_party/libuv/src/unix/dl.c",
+          "line": 36,
+          "snippet": "lib->handle = dlopen(filename, RTLD_LAZY);",
+          "evidence_ids": [
+            "ev_rf_dl_acquire"
+          ],
+          "confidence": 0.9,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv_dlclose",
+          "file": "third_party/libuv/src/unix/dl.c",
+          "line": 47,
+          "snippet": "dlclose(lib->handle);",
+          "evidence_ids": [
+            "ev_rf_dl_release"
+          ],
+          "confidence": 0.9,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "stored_in_uv_lib_t",
+      "thread": null,
+      "confidence": 0.9,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_dl_acquire",
+        "ev_rf_dl_release"
+      ],
+      "review": "confirmed"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_001",
+      "resource": "rf_libuv_fs_fd_v1_candidate_001",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_001"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_001"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_001"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire_candidate_001",
+        "ev_rf_fs_transfer_candidate_001",
+        "ev_rf_fs_release_candidate_001"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_002",
+      "resource": "rf_libuv_getpwuid_buf_v1_candidate_002",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_002"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_002"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire_candidate_002",
+        "ev_rf_pw_release_candidate_002"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "resource": "rf_libuv_async_fd_v1_candidate_003",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_003"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_003"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_003"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_003"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire_candidate_003",
+        "ev_rf_async_transfer_candidate_003",
+        "ev_rf_async_release_wfd_candidate_003",
+        "ev_rf_async_release_io_candidate_003"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_005",
+      "resource": "rf_libuv_fs_fd_v1_candidate_005",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_005"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_005"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_005"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire_candidate_005",
+        "ev_rf_fs_transfer_candidate_005",
+        "ev_rf_fs_release_candidate_005"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_006",
+      "resource": "rf_libuv_getpwuid_buf_v1_candidate_006",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_006"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_006"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire_candidate_006",
+        "ev_rf_pw_release_candidate_006"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "resource": "rf_libuv_async_fd_v1_candidate_007",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_007"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_007"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_007"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_007"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire_candidate_007",
+        "ev_rf_async_transfer_candidate_007",
+        "ev_rf_async_release_wfd_candidate_007",
+        "ev_rf_async_release_io_candidate_007"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_009",
+      "resource": "rf_libuv_fs_fd_v1_candidate_009",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_009"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_009"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_009"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire_candidate_009",
+        "ev_rf_fs_transfer_candidate_009",
+        "ev_rf_fs_release_candidate_009"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_010",
+      "resource": "rf_libuv_getpwuid_buf_v1_candidate_010",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_010"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_010"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire_candidate_010",
+        "ev_rf_pw_release_candidate_010"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "resource": "rf_libuv_async_fd_v1_candidate_011",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_011"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_011"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_011"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_011"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire_candidate_011",
+        "ev_rf_async_transfer_candidate_011",
+        "ev_rf_async_release_wfd_candidate_011",
+        "ev_rf_async_release_io_candidate_011"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_013",
+      "resource": "rf_libuv_fs_fd_v1_candidate_013",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_013"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_013"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_013"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire_candidate_013",
+        "ev_rf_fs_transfer_candidate_013",
+        "ev_rf_fs_release_candidate_013"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_014",
+      "resource": "rf_libuv_getpwuid_buf_v1_candidate_014",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_014"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_014"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire_candidate_014",
+        "ev_rf_pw_release_candidate_014"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "resource": "rf_libuv_async_fd_v1_candidate_015",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_015"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_015"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_015"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_015"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire_candidate_015",
+        "ev_rf_async_transfer_candidate_015",
+        "ev_rf_async_release_wfd_candidate_015",
+        "ev_rf_async_release_io_candidate_015"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_fs_fd_v1_candidate_017",
+      "resource": "rf_libuv_fs_fd_v1_candidate_017",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 372,
+          "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);",
+          "evidence_ids": [
+            "ev_rf_fs_acquire_candidate_017"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv_fs_open",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 2028,
+          "snippet": "POST;",
+          "evidence_ids": [
+            "ev_rf_fs_transfer_candidate_017"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__fs_close",
+          "file": "third_party/libuv/src/unix/fs.c",
+          "line": 161,
+          "snippet": "rc = uv__close_nocancel(fd);",
+          "evidence_ids": [
+            "ev_rf_fs_release_candidate_017"
+          ],
+          "confidence": 0.84,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "transferred_to_request",
+      "thread": null,
+      "confidence": 0.84,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_fs_acquire_candidate_017",
+        "ev_rf_fs_transfer_candidate_017",
+        "ev_rf_fs_release_candidate_017"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_018",
+      "resource": "rf_libuv_getpwuid_buf_v1_candidate_018",
+      "resource_type": "other",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1274,
+          "snippet": "buf = uv__malloc(bufsize);",
+          "evidence_ids": [
+            "ev_rf_pw_acquire_candidate_018"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__getpwuid_r",
+          "file": "third_party/libuv/src/unix/core.c",
+          "line": 1322,
+          "snippet": "uv__free(buf);",
+          "evidence_ids": [
+            "ev_rf_pw_release_candidate_018"
+          ],
+          "confidence": 0.82,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "local_owner",
+      "thread": null,
+      "confidence": 0.82,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_pw_acquire_candidate_018",
+        "ev_rf_pw_release_candidate_018"
+      ],
+      "review": "pending"
+    },
+    {
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "resource": "rf_libuv_async_fd_v1_candidate_019",
+      "resource_type": "file_descriptor",
+      "operations": [
+        {
+          "kind": "acquire",
+          "original_kind": "acquire",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 306,
+          "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);",
+          "evidence_ids": [
+            "ev_rf_async_acquire_candidate_019"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "transfer",
+          "original_kind": "transfer",
+          "function": "uv__async_start",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 313,
+          "snippet": "loop->async_wfd = pipefd[1];",
+          "evidence_ids": [
+            "ev_rf_async_transfer_candidate_019"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 350,
+          "snippet": "uv__close(loop->async_wfd);",
+          "evidence_ids": [
+            "ev_rf_async_release_wfd_candidate_019"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        },
+        {
+          "kind": "release",
+          "original_kind": "release",
+          "function": "uv__async_stop",
+          "file": "third_party/libuv/src/unix/async.c",
+          "line": 355,
+          "snippet": "uv__close(loop->async_io_watcher.fd);",
+          "evidence_ids": [
+            "ev_rf_async_release_io_candidate_019"
+          ],
+          "confidence": 0.76,
+          "status": "unconfirmed"
+        }
+      ],
+      "owner": "owned_by_loop",
+      "thread": null,
+      "confidence": 0.76,
+      "status": "unconfirmed",
+      "evidence_ids": [
+        "ev_rf_async_acquire_candidate_019",
+        "ev_rf_async_transfer_candidate_019",
+        "ev_rf_async_release_wfd_candidate_019",
+        "ev_rf_async_release_io_candidate_019"
+      ],
+      "review": "pending"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_rf_fs_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    },
+    {
+      "id": "ev_rf_gai_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/getaddrinfo.c",
+        "line": 103,
+        "snippet": "err = getaddrinfo(req->hostname, req->service, req->hints, &req->addrinfo);"
+      }
+    },
+    {
+      "id": "ev_rf_gai_transfer",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/getaddrinfo.c",
+        "line": 134,
+        "snippet": "req->cb(req, req->retcode, req->addrinfo);"
+      }
+    },
+    {
+      "id": "ev_rf_gai_release",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/getaddrinfo.c",
+        "line": 222,
+        "snippet": "freeaddrinfo(ai);"
+      }
+    },
+    {
+      "id": "ev_rf_scan_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 585,
+        "snippet": "n = scandir(req->path, &dents, uv__fs_scandir_filter, uv__fs_scandir_sort);"
+      }
+    },
+    {
+      "id": "ev_rf_scan_transfer",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 600,
+        "snippet": "req->ptr = dents;"
+      }
+    },
+    {
+      "id": "ev_rf_scan_release",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 728,
+        "snippet": "uv__fs_scandir_free(req->ptr);"
+      }
+    },
+    {
+      "id": "ev_rf_dl_acquire",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/dl.c",
+        "line": 36,
+        "snippet": "lib->handle = dlopen(filename, RTLD_LAZY);"
+      }
+    },
+    {
+      "id": "ev_rf_dl_release",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/dl.c",
+        "line": 47,
+        "snippet": "dlclose(lib->handle);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_acquire_candidate_001",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer_candidate_001",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release_candidate_001",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire_candidate_002",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release_candidate_002",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire_candidate_003",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer_candidate_003",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd_candidate_003",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io_candidate_003",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_acquire_candidate_005",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer_candidate_005",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release_candidate_005",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire_candidate_006",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release_candidate_006",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire_candidate_007",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer_candidate_007",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd_candidate_007",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io_candidate_007",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_acquire_candidate_009",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer_candidate_009",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release_candidate_009",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire_candidate_010",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release_candidate_010",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire_candidate_011",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer_candidate_011",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd_candidate_011",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io_candidate_011",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_acquire_candidate_013",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer_candidate_013",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release_candidate_013",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire_candidate_014",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release_candidate_014",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire_candidate_015",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer_candidate_015",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd_candidate_015",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io_candidate_015",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_acquire_candidate_017",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 372,
+        "snippet": "return open(req->path, req->flags | O_CLOEXEC, req->mode);"
+      }
+    },
+    {
+      "id": "ev_rf_fs_transfer_candidate_017",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 2028,
+        "snippet": "POST;"
+      }
+    },
+    {
+      "id": "ev_rf_fs_release_candidate_017",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 161,
+        "snippet": "rc = uv__close_nocancel(fd);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_acquire_candidate_018",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1274,
+        "snippet": "buf = uv__malloc(bufsize);"
+      }
+    },
+    {
+      "id": "ev_rf_pw_release_candidate_018",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 1322,
+        "snippet": "uv__free(buf);"
+      }
+    },
+    {
+      "id": "ev_rf_async_acquire_candidate_019",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 306,
+        "snippet": "err = uv__make_pipe(pipefd, UV_NONBLOCK_PIPE);"
+      }
+    },
+    {
+      "id": "ev_rf_async_transfer_candidate_019",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 313,
+        "snippet": "loop->async_wfd = pipefd[1];"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_wfd_candidate_019",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 350,
+        "snippet": "uv__close(loop->async_wfd);"
+      }
+    },
+    {
+      "id": "ev_rf_async_release_io_candidate_019",
+      "kind": "resource_operation",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 355,
+        "snippet": "uv__close(loop->async_io_watcher.fd);"
+      }
+    }
+  ],
+  "warnings": [
+    "Operation facts only; defect classifications are not exported. Review metadata is preserved."
+  ]
+}

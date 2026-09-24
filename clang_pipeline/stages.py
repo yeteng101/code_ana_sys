@@ -669,7 +669,10 @@ def _handle_call_expr(
         if referenced.get("kind") == "FunctionDecl":
             target_id = _resolve_function(by_name, referenced.get("name") or "", call_site["file"])
             if target_id is None or target_id not in nodes:
-                return
+                # Keep calls to libc/system or third-party functions in the
+                # graph.  Dropping them made the verifier report false
+                # negatives for otherwise source-backed call sites.
+                target_id = _ensure_external_function(nodes, referenced, call_site)
             _add_edge(
                 "direct_call",
                 source_id,
@@ -757,6 +760,30 @@ def _ensure_callback_node(
     return target_id
 
 
+def _ensure_external_function(
+    nodes: dict[str, dict[str, Any]],
+    referenced: dict[str, Any],
+    call_site: dict[str, Any],
+) -> str:
+    name = str(referenced.get("name") or "<anonymous>")
+    signature = str((referenced.get("type") or {}).get("qualType") or "")
+    target_id = "ext:" + stable_digest([name, signature])[:16]
+    nodes.setdefault(
+        target_id,
+        {
+            "id": target_id,
+            "kind": "external_function",
+            "name": name,
+            "file": str((referenced.get("loc") or {}).get("file") or ""),
+            "line": int((referenced.get("loc") or {}).get("line") or 0),
+            "signature": signature,
+            "external": True,
+            "first_seen": call_site,
+        },
+    )
+    return target_id
+
+
 def _macro_at_call(
     call: dict[str, Any],
     macro_map: dict[tuple[str, int], str],
@@ -764,7 +791,11 @@ def _macro_at_call(
     unit_file: str,
 ) -> str | None:
     begin = (call.get("range") or {}).get("begin") or {}
-    spelling = begin.get("spellingLoc")
+    # Clang reports the source token in spellingLoc and the invocation in
+    # expansionLoc.  Verification must attach the macro to the invocation
+    # line, otherwise macro-generated calls are silently treated as ordinary
+    # calls and fail source recheck.
+    spelling = begin.get("expansionLoc") or begin.get("spellingLoc")
     if not isinstance(spelling, dict) or not spelling.get("line"):
         return None
     file = relpath(root, spelling.get("file") or unit_file)
