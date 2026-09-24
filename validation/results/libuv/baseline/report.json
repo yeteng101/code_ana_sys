@@ -12,11 +12,11 @@
     "call_chain": {
       "input_status": "partial",
       "gold_positive": 16,
-      "gold_negative": 11,
+      "gold_negative": 75,
       "tp": 16,
       "fp": 0,
       "fn": 0,
-      "tn": 11,
+      "tn": 75,
       "precision": 1.0,
       "recall": 1.0,
       "f1": 1.0,
@@ -332,16 +332,720 @@
             "fn:uv__update_time"
           ],
           "notes": "uv_run 在循环开头更新时间"
+        },
+        {
+          "case_id": "cc_negative_candidate_001",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_001",
+            "fn:validation::missing_target_001"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_002",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_002",
+            "fn:validation::missing_target_002"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_003",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_003",
+            "fn:validation::missing_target_003"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_004",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_004",
+            "fn:validation::missing_target_004"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_005",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_005",
+            "fn:validation::missing_target_005"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_006",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_006",
+            "fn:validation::missing_target_006"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_007",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_007",
+            "fn:validation::missing_target_007"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_008",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_008",
+            "fn:validation::missing_target_008"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_009",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_009",
+            "fn:validation::missing_target_009"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_010",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_010",
+            "fn:validation::missing_target_010"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_011",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_011",
+            "fn:validation::missing_target_011"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_012",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_012",
+            "fn:validation::missing_target_012"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_013",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_013",
+            "fn:validation::missing_target_013"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_014",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_014",
+            "fn:validation::missing_target_014"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_015",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_015",
+            "fn:validation::missing_target_015"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_016",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_016",
+            "fn:validation::missing_target_016"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_017",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_017",
+            "fn:validation::missing_target_017"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_018",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_018",
+            "fn:validation::missing_target_018"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_019",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_019",
+            "fn:validation::missing_target_019"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_020",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_020",
+            "fn:validation::missing_target_020"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_021",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_021",
+            "fn:validation::missing_target_021"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_022",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_022",
+            "fn:validation::missing_target_022"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_023",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_023",
+            "fn:validation::missing_target_023"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_024",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_024",
+            "fn:validation::missing_target_024"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_025",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_025",
+            "fn:validation::missing_target_025"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_026",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_026",
+            "fn:validation::missing_target_026"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_027",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_027",
+            "fn:validation::missing_target_027"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_028",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_028",
+            "fn:validation::missing_target_028"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_029",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_029",
+            "fn:validation::missing_target_029"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_030",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_030",
+            "fn:validation::missing_target_030"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_031",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_031",
+            "fn:validation::missing_target_031"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_032",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_032",
+            "fn:validation::missing_target_032"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_033",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_033",
+            "fn:validation::missing_target_033"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_034",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_034",
+            "fn:validation::missing_target_034"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_035",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_035",
+            "fn:validation::missing_target_035"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_036",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_036",
+            "fn:validation::missing_target_036"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_037",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_037",
+            "fn:validation::missing_target_037"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_038",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_038",
+            "fn:validation::missing_target_038"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_039",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_039",
+            "fn:validation::missing_target_039"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_040",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_040",
+            "fn:validation::missing_target_040"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_041",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_041",
+            "fn:validation::missing_target_041"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_042",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_042",
+            "fn:validation::missing_target_042"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_043",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_043",
+            "fn:validation::missing_target_043"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_044",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_044",
+            "fn:validation::missing_target_044"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_045",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_045",
+            "fn:validation::missing_target_045"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_046",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_046",
+            "fn:validation::missing_target_046"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_047",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_047",
+            "fn:validation::missing_target_047"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_048",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_048",
+            "fn:validation::missing_target_048"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_049",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_049",
+            "fn:validation::missing_target_049"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_050",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_050",
+            "fn:validation::missing_target_050"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_051",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_051",
+            "fn:validation::missing_target_051"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_052",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_052",
+            "fn:validation::missing_target_052"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_053",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_053",
+            "fn:validation::missing_target_053"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_054",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_054",
+            "fn:validation::missing_target_054"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_055",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_055",
+            "fn:validation::missing_target_055"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_056",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_056",
+            "fn:validation::missing_target_056"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_057",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_057",
+            "fn:validation::missing_target_057"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_058",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_058",
+            "fn:validation::missing_target_058"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_059",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_059",
+            "fn:validation::missing_target_059"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_060",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_060",
+            "fn:validation::missing_target_060"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_061",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_061",
+            "fn:validation::missing_target_061"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_062",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_062",
+            "fn:validation::missing_target_062"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_063",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_063",
+            "fn:validation::missing_target_063"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
+        },
+        {
+          "case_id": "cc_negative_candidate_064",
+          "verdict": "tn",
+          "evidence_hit": false,
+          "kind": "direct_call",
+          "identity": [
+            "fn:validation::missing_source_064",
+            "fn:validation::missing_target_064"
+          ],
+          "notes": "自动生成的缺失目标负样本；待人工复核。"
         }
       ]
     },
     "resource_flow": {
-      "input_status": "not_available",
-      "gold_positive": 17,
+      "input_status": "partial",
+      "gold_positive": 62,
       "gold_negative": 0,
       "tp": 0,
       "fp": 0,
-      "fn": 17,
+      "fn": 62,
       "tn": 0,
       "precision": null,
       "recall": 0.0,
@@ -349,9 +1053,9 @@
       "type_accuracy": null,
       "evidence_hit_rate": null,
       "coverage": 0.0,
-      "unconfirmed_ratio": null,
-      "unlabelled_predictions": 0,
-      "prediction_count": 0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 257,
+      "prediction_count": 257,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -361,9 +1065,9 @@
         "f1": 0.0
       },
       "errors_by_type": {
-        "acquire": 6,
-        "transfer": 4,
-        "release": 7
+        "acquire": 21,
+        "transfer": 14,
+        "release": 27
       },
       "cases": [
         {
@@ -412,6 +1116,266 @@
           "kind": "release",
           "identity": [
             "rf_libuv_async_fd_v1",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_acquire_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_transfer_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_wfd_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_io_candidate_003",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_003",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_acquire_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_transfer_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_wfd_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_io_candidate_007",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_007",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_acquire_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_transfer_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_wfd_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_io_candidate_011",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_011",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_acquire_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_transfer_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_wfd_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_io_candidate_015",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_015",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            355
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_acquire_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            306
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_transfer_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_start",
+            "third_party/libuv/src/unix/async.c",
+            313
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_wfd_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
+            "uv__async_stop",
+            "third_party/libuv/src/unix/async.c",
+            350
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_io_candidate_019",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_async_fd_v1_candidate_019",
             "uv__async_stop",
             "third_party/libuv/src/unix/async.c",
             355
@@ -484,6 +1448,201 @@
           "notes": "Operation fact, not a final defect classification."
         },
         {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_release_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_acquire_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_transfer_candidate_001",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_001",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_release_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_acquire_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_transfer_candidate_005",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_005",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_release_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_acquire_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_transfer_candidate_009",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_009",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_release_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_acquire_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_transfer_candidate_013",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_013",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_release_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv__fs_close",
+            "third_party/libuv/src/unix/fs.c",
+            161
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_acquire_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv__fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            372
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_transfer_candidate_017",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "transfer",
+          "identity": [
+            "rf_libuv_fs_fd_v1_candidate_017",
+            "uv_fs_open",
+            "third_party/libuv/src/unix/fs.c",
+            2028
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
           "case_id": "rf_libuv_getaddrinfo_v1_op_gai_transfer",
           "verdict": "fn",
           "evidence_hit": false,
@@ -549,6 +1708,136 @@
           "notes": "Operation fact, not a final defect classification."
         },
         {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_acquire_candidate_002",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_002",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_release_candidate_002",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_002",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_acquire_candidate_006",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_006",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_release_candidate_006",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_006",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_acquire_candidate_010",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_010",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_release_candidate_010",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_010",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_acquire_candidate_014",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_014",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_release_candidate_014",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_014",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_acquire_candidate_018",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "acquire",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_018",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1274
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
+          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_release_candidate_018",
+          "verdict": "fn",
+          "evidence_hit": false,
+          "kind": "release",
+          "identity": [
+            "rf_libuv_getpwuid_buf_v1_candidate_018",
+            "uv__getpwuid_r",
+            "third_party/libuv/src/unix/core.c",
+            1322
+          ],
+          "notes": "Operation fact, not a final defect classification."
+        },
+        {
           "case_id": "rf_libuv_scandir_entries_v1_op_scan_acquire",
           "verdict": "fn",
           "evidence_hit": false,
@@ -590,7 +1879,7 @@
       ]
     },
     "sync_relation": {
-      "input_status": "not_available",
+      "input_status": "succeeded",
       "gold_positive": 32,
       "gold_negative": 6,
       "tp": 0,
@@ -603,9 +1892,9 @@
       "type_accuracy": null,
       "evidence_hit_rate": null,
       "coverage": 0.0,
-      "unconfirmed_ratio": null,
-      "unlabelled_predictions": 0,
-      "prediction_count": 0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 32,
+      "prediction_count": 32,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,

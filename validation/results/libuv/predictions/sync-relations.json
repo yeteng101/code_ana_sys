@@ -2,19 +2,2064 @@
   "schema_version": "1.0",
   "run_id": "run_libuv_1.50.0",
   "result_type": "sync_relation",
-  "status": "not_available",
+  "status": "succeeded",
+  "generated_at": "2026-08-27T08:46:58Z",
   "source": {
     "repository": "libuv/libuv",
     "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
     "build_profile": "libuv-macos-clang",
     "analyzer": "libclang compact AST + clang++",
     "generated_at": "2026-08-27T08:46:58Z",
-    "origin": "01-index/ast/*.ast.json"
+    "origin": "analyzer",
+    "provider": "native_sync_flow_v1"
   },
-  "origin": "analyzer",
-  "items": [],
-  "evidence": [],
-  "warnings": [
-    "Current seven-stage analyzer has no native extractor for this result type. Ground truth is not substituted."
-  ]
+  "items": [
+    {
+      "id": "sync_099772f421cc",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__loop_close",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 182,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_9d8621a083b6"
+        ]
+      },
+      "target": {
+        "function": "uv__loop_close",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 185,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_374464ee690c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__loop_close:loop->wq_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "loop",
+        "target_thread": "loop",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_9d8621a083b6",
+        "ev_374464ee690c"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_135c34f3f50e",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 116,
+        "snippet": "uv_cond_signal(&cond);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_dc76621ba905"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "snippet": "uv_cond_wait(&cond, &mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_cbc5db67d9b3"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource cond",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_dc76621ba905",
+        "ev_cbc5db67d9b3"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_19c19b7c802e",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_close",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 875,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_f697f0d480ca"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_close",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 879,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_53bfb4a21c78"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_close:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_f697f0d480ca",
+        "ev_53bfb4a21c78"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_212f00b73e76",
+      "status": "unconfirmed",
+      "relation_type": "event_notify",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 129,
+        "snippet": "uv_async_send(&w->loop->wq_async);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_196f2a5f3c08"
+        ]
+      },
+      "target": {
+        "function": "uv__io_s::cb",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 311,
+        "snippet": "uv__io_init(&loop->async_io_watcher, uv__async_io, pipefd[0]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_f8ddfd55deff"
+        ]
+      },
+      "order": "unknown",
+      "condition": "same event loop wakeup must be consumed",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.4,
+      "evidence_ids": [
+        "ev_196f2a5f3c08",
+        "ev_f8ddfd55deff"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_3a383666d090",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv_metrics_idle_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1043,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_960ecf83810d"
+        ]
+      },
+      "target": {
+        "function": "uv_metrics_idle_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1046,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d980178ead5f"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv_metrics_idle_time:loop_metrics->lock",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_960ecf83810d",
+        "ev_d980178ead5f"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_402502b60f67",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 300,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_748ab347c266"
+        ]
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 303,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_3e9fa5a521d7"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__work_cancel:loop->wq_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_748ab347c266",
+        "ev_3e9fa5a521d7"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_428b878c292b",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_push_event",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 199,
+        "snippet": "uv_mutex_lock(&handle->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_16ab7a80375d"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_push_event",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 208,
+        "snippet": "uv_mutex_unlock(&handle->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_dbfcab4bbeda"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_push_event:handle->cf_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_16ab7a80375d",
+        "ev_dbfcab4bbeda"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_4770fe246536",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv_barrier_wait",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 99,
+        "snippet": "uv_mutex_lock(&b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0821a6ac16cc"
+        ]
+      },
+      "target": {
+        "function": "uv_barrier_wait",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 118,
+        "snippet": "uv_mutex_unlock(&b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_f8a5f2b68799"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv_barrier_wait:b->mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_0821a6ac16cc",
+        "ev_f8a5f2b68799"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_4bf2c6541e43",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_event_cb",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 240,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_85a3a740507a"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_event_cb",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 323,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_1ed3b77b8bc6"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_event_cb:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_85a3a740507a",
+        "ev_1ed3b77b8bc6"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_4d923aa26d6e",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__cf_loop_signal",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 776,
+        "snippet": "uv_mutex_lock(&loop->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_2d8a74aae8b0"
+        ]
+      },
+      "target": {
+        "function": "uv__cf_loop_signal",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 784,
+        "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_06390490032e"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__cf_loop_signal:loop->cf_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "loop",
+        "target_thread": "loop",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_2d8a74aae8b0",
+        "ev_06390490032e"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_5c11ddadf46e",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 287,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_5619dff01858"
+        ]
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 293,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_1d044a6853e0"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__work_cancel:w->loop->wq_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_5619dff01858",
+        "ev_1d044a6853e0"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_6a5b0e64c3c8",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_done",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 318,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_61604e565231"
+        ]
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 320,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_ca49d7b8c64c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__work_done:loop->wq_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_61604e565231",
+        "ev_ca49d7b8c64c"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_7161a3eb5244",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 83,
+        "snippet": "uv_cond_signal(&cond);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_08ebbe24d60d"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "snippet": "uv_cond_wait(&cond, &mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_cbc5db67d9b3"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource cond",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_08ebbe24d60d",
+        "ev_cbc5db67d9b3"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_7ee084a3afd0",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv_set_process_title",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 108,
+        "snippet": "uv_mutex_lock(&process_title_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d236797ac25a"
+        ]
+      },
+      "target": {
+        "function": "uv_set_process_title",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 121,
+        "snippet": "uv_mutex_unlock(&process_title_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_7ba421a35714"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv_set_process_title:process_title_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_d236797ac25a",
+        "ev_7ba421a35714"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_974efc3170f9",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__cf_loop_cb",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 741,
+        "snippet": "uv_mutex_lock(&loop->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_92db1b96584c"
+        ]
+      },
+      "target": {
+        "function": "uv__cf_loop_cb",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 743,
+        "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_cae38e8a39ab"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__cf_loop_cb:loop->cf_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "loop",
+        "target_thread": "loop",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_92db1b96584c",
+        "ev_cae38e8a39ab"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_9bbb10aac3e5",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "uv_barrier_wait",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 107,
+        "snippet": "uv_cond_broadcast((uv_cond_t*) &b->cond);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_8ab5cf71b1e1"
+        ]
+      },
+      "target": {
+        "function": "uv_barrier_destroy",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 136,
+        "snippet": "uv_cond_wait((uv_cond_t*) &b->cond, &b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_21c1a60dfc72"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource uv_cond_t*",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_8ab5cf71b1e1",
+        "ev_21c1a60dfc72"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_9d8cc8f984db",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "uv_barrier_wait",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 116,
+        "snippet": "uv_cond_broadcast((uv_cond_t*) &b->cond);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_9a2a70fb12d5"
+        ]
+      },
+      "target": {
+        "function": "uv_barrier_destroy",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 136,
+        "snippet": "uv_cond_wait((uv_cond_t*) &b->cond, &b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_21c1a60dfc72"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource uv_cond_t*",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_9a2a70fb12d5",
+        "ev_21c1a60dfc72"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_a7df928bd14b",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv_get_process_title",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 136,
+        "snippet": "uv_mutex_lock(&process_title_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_30ff8b024343"
+        ]
+      },
+      "target": {
+        "function": "uv_get_process_title",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 139,
+        "snippet": "uv_mutex_unlock(&process_title_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0cad6778fed2"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv_get_process_title:process_title_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_30ff8b024343",
+        "ev_0cad6778fed2"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_be59929aa40d",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 419,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_919d9de04858"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 421,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_87e0b4b4f8e6"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_reschedule:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_919d9de04858",
+        "ev_87e0b4b4f8e6"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c1a47ca57f42",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__metrics_update_idle_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1005,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_13917c12f56a"
+        ]
+      },
+      "target": {
+        "function": "uv__metrics_update_idle_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1009,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_a74f997bc693"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__metrics_update_idle_time:loop_metrics->lock",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_13917c12f56a",
+        "ev_a74f997bc693"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c1a84159f8c2",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "post",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 159,
+        "snippet": "uv_cond_signal(&cond);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_2ae01ea483ec"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "snippet": "uv_cond_wait(&cond, &mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_cbc5db67d9b3"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource cond",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_2ae01ea483ec",
+        "ev_cbc5db67d9b3"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c46b75085547",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 434,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_48641e4f806c"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 439,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_73bbc97ad5bc"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_reschedule:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_48641e4f806c",
+        "ev_73bbc97ad5bc"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_d1f8c3498f74",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 125,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_043a1f8589cf"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 130,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e60690493e4f"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource worker:w->loop->wq_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_043a1f8589cf",
+        "ev_e60690493e4f"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_d72c27a26963",
+      "status": "unconfirmed",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv__fs_mkstemp",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 346,
+        "snippet": "uv_rwlock_rdlock(&req->loop->cloexec_lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_9c783d6aa9ce"
+        ]
+      },
+      "target": {
+        "function": "uv__fs_mkstemp",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 361,
+        "snippet": "uv_rwlock_rdunlock(&req->loop->cloexec_lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0d62d8f5e472"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fs_mkstemp:req->loop->cloexec_lock",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_9c783d6aa9ce",
+        "ev_0d62d8f5e472"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_d93eee13c49f",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_init",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 835,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_a08f4b3f95f8"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_init",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 839,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_f451aaf7215d"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_init:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_a08f4b3f95f8",
+        "ev_f451aaf7215d"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_ddfeb97dbae6",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 66,
+        "snippet": "uv_mutex_lock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_51f56cb20b31"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 84,
+        "snippet": "uv_mutex_unlock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_12fb7ada444f"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource worker:mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_51f56cb20b31",
+        "ev_12fb7ada444f"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_e04f97cdfca8",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 484,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_7cbe7f5d4fb7"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_reschedule",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 489,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_b7605aff065c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__fsevents_reschedule:state->fsevent_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_7cbe7f5d4fb7",
+        "ev_b7605aff065c"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_e382d70dd983",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv_barrier_destroy",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 132,
+        "snippet": "uv_mutex_lock(&b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_58fe38b49ad4"
+        ]
+      },
+      "target": {
+        "function": "uv_barrier_destroy",
+        "thread": null,
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 141,
+        "snippet": "uv_mutex_unlock(&b->mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_9d2740ba66c2"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv_barrier_destroy:b->mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_58fe38b49ad4",
+        "ev_9d2740ba66c2"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_ef1d66ae55bd",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__metrics_set_provider_entry_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1022,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_a62cc61b73fc"
+        ]
+      },
+      "target": {
+        "function": "uv__metrics_set_provider_entry_time",
+        "thread": null,
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1024,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_b3da1033776b"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__metrics_set_provider_entry_time:loop_metrics->lock",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_a62cc61b73fc",
+        "ev_b3da1033776b"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_f15577c0b7a3",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "post",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 144,
+        "snippet": "uv_mutex_lock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e88d9afa7f1e"
+        ]
+      },
+      "target": {
+        "function": "post",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 151,
+        "snippet": "uv_mutex_unlock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c0bffae61bd8"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource post:mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_e88d9afa7f1e",
+        "ev_c0bffae61bd8"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_fa44cdc3c867",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 286,
+        "snippet": "uv_mutex_lock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_ecc8fcb91523"
+        ]
+      },
+      "target": {
+        "function": "uv__work_cancel",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 294,
+        "snippet": "uv_mutex_unlock(&mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0ccc461ace9e"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__work_cancel:mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_ecc8fcb91523",
+        "ev_0ccc461ace9e"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_fe36fb41df26",
+      "status": "unconfirmed",
+      "relation_type": "rwlock",
+      "source": {
+        "function": "uv__spawn_and_init_child",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/process.c",
+        "line": 914,
+        "snippet": "uv_rwlock_wrlock(&loop->cloexec_lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_845f29d716c9"
+        ]
+      },
+      "target": {
+        "function": "uv__spawn_and_init_child",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/process.c",
+        "line": 919,
+        "snippet": "uv_rwlock_wrunlock(&loop->cloexec_lock);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_677f6776adf7"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource uv__spawn_and_init_child:loop->cloexec_lock",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_845f29d716c9",
+        "ev_677f6776adf7"
+      ],
+      "origin": "analyzer"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_043a1f8589cf",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 125,
+        "column": 5,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_06390490032e",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 784,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_0821a6ac16cc",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 99,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&b->mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_08ebbe24d60d",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 83,
+        "column": 7,
+        "snippet": "uv_cond_signal(&cond);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_0cad6778fed2",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 139,
+        "column": 5,
+        "snippet": "uv_mutex_unlock(&process_title_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_0ccc461ace9e",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 294,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_0d62d8f5e472",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 361,
+        "column": 5,
+        "snippet": "uv_rwlock_rdunlock(&req->loop->cloexec_lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_12fb7ada444f",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 84,
+        "column": 7,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_13917c12f56a",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1005,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_16ab7a80375d",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 199,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&handle->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_196f2a5f3c08",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 129,
+        "column": 5,
+        "snippet": "uv_async_send(&w->loop->wq_async);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_1d044a6853e0",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 293,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_1ed3b77b8bc6",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 323,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_21c1a60dfc72",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 136,
+        "column": 5,
+        "snippet": "uv_cond_wait((uv_cond_t*) &b->cond, &b->mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_2ae01ea483ec",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 159,
+        "column": 5,
+        "snippet": "uv_cond_signal(&cond);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_2d8a74aae8b0",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 776,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_30ff8b024343",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 136,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&process_title_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_374464ee690c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 185,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_3e9fa5a521d7",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 303,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_48641e4f806c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 434,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_51f56cb20b31",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 66,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_53bfb4a21c78",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 879,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_5619dff01858",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 287,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_58fe38b49ad4",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 132,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&b->mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_61604e565231",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 318,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_677f6776adf7",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/process.c",
+        "line": 919,
+        "column": 3,
+        "snippet": "uv_rwlock_wrunlock(&loop->cloexec_lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_73bbc97ad5bc",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 439,
+        "column": 7,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_748ab347c266",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 300,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_7ba421a35714",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 121,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&process_title_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_7cbe7f5d4fb7",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 484,
+        "column": 5,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_845f29d716c9",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/process.c",
+        "line": 914,
+        "column": 3,
+        "snippet": "uv_rwlock_wrlock(&loop->cloexec_lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_85a3a740507a",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 240,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_87e0b4b4f8e6",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 421,
+        "column": 5,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_8ab5cf71b1e1",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 107,
+        "column": 5,
+        "snippet": "uv_cond_broadcast((uv_cond_t*) &b->cond);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_919d9de04858",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 419,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_92db1b96584c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 741,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_960ecf83810d",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1043,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_9a2a70fb12d5",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 116,
+        "column": 5,
+        "snippet": "uv_cond_broadcast((uv_cond_t*) &b->cond);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_9c783d6aa9ce",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fs.c",
+        "line": 346,
+        "column": 5,
+        "snippet": "uv_rwlock_rdlock(&req->loop->cloexec_lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_9d2740ba66c2",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 141,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&b->mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_9d8621a083b6",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 182,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_a08f4b3f95f8",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 835,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_a62cc61b73fc",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1022,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_a74f997bc693",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1009,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_b3da1033776b",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1024,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_b7605aff065c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 489,
+        "column": 5,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_c0bffae61bd8",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 151,
+        "column": 7,
+        "snippet": "uv_mutex_unlock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_ca49d7b8c64c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 320,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_cae38e8a39ab",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 743,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_cbc5db67d9b3",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 77,
+        "column": 7,
+        "snippet": "uv_cond_wait(&cond, &mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_d236797ac25a",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/proctitle.c",
+        "line": 108,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&process_title_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_d980178ead5f",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/uv-common.c",
+        "line": 1046,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&loop_metrics->lock);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_dbfcab4bbeda",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 208,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&handle->cf_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_dc76621ba905",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 116,
+        "column": 11,
+        "snippet": "uv_cond_signal(&cond);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_e60690493e4f",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 130,
+        "column": 5,
+        "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_e88d9afa7f1e",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 144,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_ecc8fcb91523",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 286,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_f451aaf7215d",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 839,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_f697f0d480ca",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 875,
+        "column": 3,
+        "snippet": "uv_mutex_lock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_f8a5f2b68799",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/thread-common.c",
+        "line": 118,
+        "column": 3,
+        "snippet": "uv_mutex_unlock(&b->mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_f8ddfd55deff",
+      "kind": "assignment",
+      "location": {
+        "file": "third_party/libuv/src/unix/async.c",
+        "line": 311,
+        "column": 3,
+        "snippet": "uv__io_init(&loop->async_io_watcher, uv__async_io, pipefd[0]);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    }
+  ],
+  "warnings": []
 }

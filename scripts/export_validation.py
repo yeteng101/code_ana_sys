@@ -6,6 +6,8 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from clang_pipeline.resource_flow import analyze_resource_flow
+from clang_pipeline.sync_flow import analyze_sync_relations
 from validation.benchmark import FILES, read, validate_external, write
 
 
@@ -15,7 +17,7 @@ def envelope(category, run_id, source, origin):
             "source": source, "origin": origin, "items": [], "evidence": [], "warnings": []}
 
 
-def export_graph(graph, verification=None):
+def export_graph(graph, verification=None, native=False):
     docs = {k: envelope(k, graph["run_id"], graph.get("meta", {}), "analyzer") for k in FILES}
     doc = docs["call_chain"]
     evidence = {e["id"]: e for e in graph["evidence"]}
@@ -35,8 +37,15 @@ def export_graph(graph, verification=None):
         doc["items"].append(item)
     doc["evidence"] = graph["evidence"]
     doc["warnings"].append("Absent per-edge verification remains unconfirmed; confidence is not a verification verdict.")
-    for k in ("resource_flow", "sync_relation"):
-        docs[k]["warnings"].append("Current seven-stage analyzer has no native extractor for this result type. Ground truth is not substituted.")
+    if native:
+        docs["resource_flow"] = analyze_resource_flow(graph)
+        docs["sync_relation"] = analyze_sync_relations(graph)
+    else:
+        for k in ("resource_flow", "sync_relation"):
+            docs[k]["warnings"].append(
+                "Current seven-stage analyzer has no native extractor for this result type. "
+                "Ground truth is not substituted."
+            )
     return docs
 
 
@@ -99,8 +108,17 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--reviewed-resources", type=Path)
     p.add_argument("--reviewed-sync", type=Path)
+    p.add_argument(
+        "--native",
+        action="store_true",
+        help="Use the native resource-flow and sync-relation analyzers instead of not_available placeholders.",
+    )
     a = p.parse_args()
-    docs = export_graph(read(a.graph), read(a.verification) if a.verification else None)
+    docs = export_graph(
+        read(a.graph),
+        read(a.verification) if a.verification else None,
+        native=a.native,
+    )
     if a.reviewed_resources:
         reviewed_resources(read(a.reviewed_resources), docs["resource_flow"])
     if a.reviewed_sync:

@@ -1360,7 +1360,7 @@
       ]
     },
     "resource_flow": {
-      "input_status": "not_available",
+      "input_status": "partial",
       "gold_positive": 0,
       "gold_negative": 0,
       "tp": 0,
@@ -1373,10 +1373,10 @@
       "type_accuracy": null,
       "evidence_hit_rate": null,
       "coverage": null,
-      "unconfirmed_ratio": null,
-      "unlabelled_predictions": 0,
-      "prediction_count": 0,
-      "duplicate_predictions": 0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 246,
+      "prediction_count": 246,
+      "duplicate_predictions": 17,
       "confirmed_only": {
         "precision": null,
         "recall": null,

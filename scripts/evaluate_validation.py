@@ -18,7 +18,8 @@ def main():
         docs = {k: read(args.predictions / (v + ".json")) for k, v in FILES.items()}
         result = evaluate(read(args.ground_truth), docs)
         write(args.output / "report.json", result)
-        (args.output / "report.md").write_text(markdown(result), encoding="utf-8", newline="\n")
+        with (args.output / "report.md").open("w", encoding="utf-8", newline="\n") as stream:
+            stream.write(markdown(result))
     except (ValueError, OSError, KeyError, ValidationError) as exc:
         parser.exit(2, f"Invalid input: {exc}\n")
     print(args.output / "report.md")

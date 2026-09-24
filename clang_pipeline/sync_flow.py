@@ -310,12 +310,13 @@ def analyze_sync_relations(graph: dict[str, Any]) -> dict[str, Any]:
     if not items:
         warnings.append("no synchronization relation matched the native rules")
     status = "succeeded" if items else "not_available"
+    generated_at = str((graph.get("meta") or {}).get("generated_at") or utc_now())
     return {
         "schema_version": "1.0",
         "run_id": str(graph.get("run_id", "")),
         "result_type": "sync_relation",
         "status": status,
-        "generated_at": utc_now(),
+        "generated_at": generated_at,
         "source": {
             **dict(graph.get("meta") or {}),
             "origin": "analyzer",

@@ -111,7 +111,8 @@ def main() -> int:
     print(text, end="")
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
-        args.report.write_text(text, encoding="utf-8", newline="\n")
+        with args.report.open("w", encoding="utf-8", newline="\n") as stream:
+            stream.write(text)
     return 1 if errors else 0
 
 

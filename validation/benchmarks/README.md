@@ -53,17 +53,20 @@ refuted 不作为正向预测。unknown 是应明确表达的不确定关系，�
 ## 外部 JSON
 
 ```sh
-python scripts/export_validation.py --graph demo/libuv/graph.json --output validation/results/libuv/predictions
+python scripts/export_validation.py --graph demo/libuv/graph.json --native --output validation/results/libuv/predictions
 python scripts/export_validation.py --graph demo/libuv/graph.json --reviewed-resources validation/resource-flow/dataset.json --reviewed-sync validation/sync-relations/dataset.json --output validation/results/libuv/reviewed
-python scripts/export_validation.py --graph demo/redis/graph.json --verification demo/redis/verification.json --output validation/results/redis/predictions
+python scripts/export_validation.py --graph demo/redis/graph.json --verification demo/redis/verification.json --native --output validation/results/redis/predictions
 ```
 
 每次固定输出 `call-chains.json`、`resource-flow.json`、`sync-relations.json`，
 通过已有三类 schema，同时检查每个 finding、edge、operation 的 status、confidence、
 非空 evidence_ids 及引用完整性。逐边 status 来自 verification.checks；缺失时 unconfirmed。
 
-`predictions/` 严格保留分析器现状：资源流/同步原生分析尚未实现，输出
-not_available + 空 items + 说明，不能用 Ground Truth 补齐。
+`predictions/` 严格保留分析器现状：资源流和同步关系已接入 v1 原生分析器，
+通过 `--native` 输出真实 predictions；不能再用 Ground Truth 补齐。
+当前 libuv 原生输出为资源流 256 项、同步关系 32 项，但旧 baseline 的 identity/condition
+仍可能无法匹配，导致报告中出现 `unlabelled_predictions` 和 Recall=0。这个差异应在
+后续 identity 对齐和人工复核中处理，不能把 reviewed 标注直接算作预测。
 `reviewed/` 用于人工查看已标注的资源操作、同步关系，明确标记
 `origin=reviewed_annotations_not_analyzer_predictions`，**不得拿来发布 baseline 分数**。
 不导出 ground_truth.classification 的 leak/race 等最终缺陷结论。

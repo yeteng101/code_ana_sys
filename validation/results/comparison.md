@@ -10,7 +10,7 @@
 | TP 证据命中率 | 100% | 100% |
 | 同步关系标注 | 32 | 22 |
 | 同步 recall | 0% | 0% |
-| 资源操作标注 | 17 | 未标注 |
+| 资源操作标注 | 62 | 未标注 |
 | 资源操作 recall | 0% | N/A |
 
 这些是**标注范围内**的结果。libuv 原调用标签与预测图同源，Redis 是本轮独立源码
@@ -45,5 +45,21 @@ https://github.com/kuangami2/code_ana_sys/actions/runs/35050453666
 
 22 条同步 FN 来自分析器没有原生同步结果输出。没有把调用关系转换成 happens-before，
 也没有将人工/AI标注集当作预测。Redis 没有新增资源流真值，资源指标保持 N/A。
+
+## 原生分析器复核（2026-09-18）
+
+本轮将 `codex/agent-llm-framework` 的 `resource_flow.py` 和 `sync_flow.py`
+接入 `export_validation.py --native` 后重新导出并评测：
+
+| 项目 | 原生预测数量 | baseline 结果变化 |
+|---|---:|---|
+| libuv resource_flow | 256 条 item / 348 条 evidence | 仍为 0 TP / 62 FN，257 条 unlabelled predictions |
+| libuv sync_relation | 32 条 relation / 61 条 evidence | 仍为 0 TP / 32 FN，32 条 unlabelled predictions |
+| Redis resource_flow | 原生提取已运行，但无真值 | N/A |
+| Redis sync_relation | 原生提取已运行，但 identity/condition 未匹配 | 仍为 0 TP / 22 FN |
+
+这说明“分析器已经能输出 JSON”和“分析器输出能直接匹配当前人工 identity”是两件事。
+当前阻塞点是资源 resource ID、同步 condition/顺序的 identity 对齐，而不是导出文件缺失。
+后续应优先统一 analyzer 的资源/关系命名约定，再由人工复核确认 Ground Truth。
 
 完整结果在两个 `baseline/report.json` 和 `report.md`；新增标准答案人工复核 pending。
