@@ -1,3 +1,14 @@
+# 周会内容（2026-09-24）
+
+> 详细材料：[docs/weekly-2026-09-24.md](docs/weekly-2026-09-24.md)
+>
+> 本周围绕两条 validation 分支和原生分析器收口：同步关系验证集 32 条、统一评测器和
+> libuv/Redis baseline、三类外部 JSON；同时新增 `resource_flow.py` 和 `sync_flow.py`
+> 两个原生分析器。libuv 原生输出目前为资源流 256 项（partial）、同步关系 32 项。
+>
+> 当前风险：两条 validation 分支尚未合入上游；人工复核 pending；资源流和跨线程
+> 同步关系仍是启发式，不能直接当作 leak/race/deadlock 的最终结论。
+
 # 周会汇报（2026-09-10）
 
 > 最新周报（2026-09-11 ~ 2026-09-17）：[docs/weekly-2026-09-17.md](docs/weekly-2026-09-17.md)
