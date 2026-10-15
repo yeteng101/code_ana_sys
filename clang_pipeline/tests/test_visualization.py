@@ -66,6 +66,7 @@ class VisualizationTests(unittest.TestCase):
             self.assertIn("alpha", text)
             self.assertIn("beta", text)
             self.assertIn("Module Graph", text)
+            self.assertIn("Full Call Graph", text)
             self.assertIn("Calls", text)
             self.assertNotIn("uv_run", text)
             payload_start = text.index('<script id="viz-data"')
@@ -76,6 +77,8 @@ class VisualizationTests(unittest.TestCase):
             payload = json.loads(payload_text)
             self.assertEqual(payload["metrics"]["nodes"], 2)
             self.assertEqual(payload["metrics"]["edges"], 1)
+            self.assertEqual(len(payload["full_graph"]["nodes"]), 2)
+            self.assertEqual(len(payload["full_graph"]["edges"]), 1)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -197,6 +198,95 @@ def _module_graph(
     return module_nodes, module_edges
 
 
+def _stable_number(value: str) -> int:
+    digest = 0
+    for char in value:
+        digest = ((digest * 131) + ord(char)) & 0xFFFFFFFF
+    return digest
+
+
+def _full_graph(
+    nodes: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+    by_node: dict[str, str],
+    names: dict[str, str],
+) -> dict[str, Any]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for node in nodes:
+        grouped[by_node.get(str(node.get("id", "")), "core")].append(node)
+
+    component_ids = sorted(
+        grouped,
+        key=lambda item: (-len(grouped[item]), item),
+    )
+    center_by_component: dict[str, tuple[float, float]] = {}
+    if len(component_ids) <= 10:
+        for index, component_id in enumerate(component_ids):
+            angle = -3.141592653589793 / 2 + (
+                index / max(1, len(component_ids))
+            ) * 2 * 3.141592653589793
+            center_by_component[component_id] = (
+                1000 + 700.0 * math.cos(angle),
+                560 + 360.0 * math.sin(angle),
+            )
+    else:
+        columns = int((len(component_ids) - 1) ** 0.5) + 1
+        for index, component_id in enumerate(component_ids):
+            row, column = divmod(index, columns)
+            center_by_component[component_id] = (
+                220.0 + column * 420.0,
+                220.0 + row * 340.0,
+            )
+
+    node_records = []
+    for component_id in component_ids:
+        center_x, center_y = center_by_component[component_id]
+        group = grouped[component_id]
+        group_radius = min(
+            260.0,
+            46.0 + (len(group) ** 0.5) * 14.0,
+        )
+        for index, node in enumerate(sorted(group, key=lambda item: str(item.get("id", "")))):
+            angle = (index * 2.399963229728653) % (2 * 3.141592653589793)
+            radius = group_radius * ((index % 17) / 17 + 0.35)
+            jitter = _stable_number(str(node.get("id", ""))) % 31 - 15
+            node_records.append(
+                {
+                    "id": str(node.get("id", "")),
+                    "name": str(node.get("name") or node.get("id", "")),
+                    "kind": str(node.get("kind") or "unknown"),
+                    "component": component_id,
+                    "x": center_x + radius * math.cos(angle) + jitter,
+                    "y": center_y + radius * math.sin(angle) + jitter,
+                }
+            )
+
+    node_by_id = {item["id"]: item for item in node_records}
+    edge_records = []
+    for edge in edges:
+        if edge.get("source") in node_by_id and edge.get("target") in node_by_id:
+            edge_records.append(
+                {
+                    "source": str(edge.get("source", "")),
+                    "target": str(edge.get("target", "")),
+                    "kind": str(edge.get("kind", "direct_call")),
+                }
+            )
+
+    return {
+        "nodes": node_records,
+        "edges": edge_records,
+        "components": [
+            {
+                "id": component_id,
+                "name": names.get(component_id, component_id),
+                "count": len(grouped[component_id]),
+            }
+            for component_id in component_ids
+        ],
+    }
+
+
 def _prepare_data(
     graph: dict[str, Any],
     resource_flow: dict[str, Any],
@@ -211,6 +301,12 @@ def _prepare_data(
     edges = graph.get("edges", [])
     by_node, component_names = _build_component_index(nodes, architecture)
     module_nodes, module_edges = _module_graph(
+        nodes,
+        edges,
+        by_node,
+        component_names,
+    )
+    full_graph = _full_graph(
         nodes,
         edges,
         by_node,
@@ -257,6 +353,7 @@ def _prepare_data(
         ),
         "modules": module_nodes,
         "module_edges": module_edges,
+        "full_graph": full_graph,
         "calls": _prepare_calls(graph, by_node),
         "key_chains": key_chains.get("paths", [])[:12],
         "resource_flow": {
@@ -290,6 +387,7 @@ def write_visualization(
     *,
     resource_flow: dict[str, Any] | None = None,
     sync_relations: dict[str, Any] | None = None,
+    output: str | Path | None = None,
 ) -> Path:
     workspace_path = Path(workspace).resolve()
     graph = graph or _optional_json(_artifact(workspace_path, "07-report/graph.json", "graph.json"))
@@ -358,7 +456,7 @@ def write_visualization(
         analysis_text,
     )
     report_dir = workspace_path / "07-report"
-    target = (
+    target = Path(output).resolve() if output else (
         report_dir / VISUALIZATION_FILENAME
         if report_dir.exists()
         else workspace_path / VISUALIZATION_FILENAME
@@ -511,6 +609,70 @@ TEMPLATE = r"""<!doctype html>
       color: var(--muted);
       font-size: 13px;
     }
+    .graph-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+    .graph-toolbar label {
+      flex: 1;
+    }
+    .graph-zoom {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .graph-canvas-shell {
+      position: relative;
+      height: 650px;
+      min-height: 480px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    #full-graph-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+    #full-graph-canvas.dragging {
+      cursor: grabbing;
+    }
+    .graph-detail {
+      min-height: 24px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+    .graph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 10px 0 0 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .graph-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
     .module-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -647,12 +809,32 @@ TEMPLATE = r"""<!doctype html>
   <main>
     <section class="stats" id="viz-stats"></section>
     <nav class="tabs" aria-label="Views">
-      <button class="tab active" type="button" data-tab="overview">Overview</button>
+      <button class="tab active" type="button" data-tab="graph">Graph</button>
+      <button class="tab" type="button" data-tab="overview">Overview</button>
       <button class="tab" type="button" data-tab="modules">Modules</button>
       <button class="tab" type="button" data-tab="calls">Calls</button>
       <button class="tab" type="button" data-tab="findings">Findings</button>
     </nav>
-    <section class="panel active" id="panel-overview">
+    <section class="panel active" id="panel-graph">
+      <h2 class="section-title">Full Call Graph</h2>
+      <div class="graph-toolbar">
+        <label>Node
+          <input id="graph-search" type="search" autocomplete="off">
+        </label>
+        <button class="graph-zoom" id="graph-zoom-in" type="button" aria-label="Zoom in">+</button>
+        <button class="graph-zoom" id="graph-zoom-out" type="button" aria-label="Zoom out">−</button>
+      </div>
+      <div class="graph-canvas-shell">
+        <canvas id="full-graph-canvas" aria-label="Full call graph"></canvas>
+      </div>
+      <div class="graph-legend" aria-hidden="true">
+        <span><i class="legend-dot" style="background:var(--accent)"></i>Function</span>
+        <span><i class="legend-dot" style="background:var(--green)"></i>Callback</span>
+        <span><i class="legend-dot" style="background:var(--red)"></i>External</span>
+      </div>
+      <div class="graph-detail" id="graph-detail"></div>
+    </section>
+    <section class="panel" id="panel-overview">
       <h2 class="section-title">Module Graph</h2>
       <div class="graph-shell" id="module-graph"></div>
       <div class="overview-detail" id="overview-detail"></div>
@@ -714,6 +896,213 @@ TEMPLATE = r"""<!doctype html>
           byId(`panel-${tab.dataset.tab}`).classList.add("active");
         });
       });
+
+      function renderFullGraph() {
+        const canvas = byId("full-graph-canvas");
+        const ctx = canvas.getContext("2d");
+        const shell = canvas.parentElement;
+        const nodes = data.full_graph.nodes || [];
+        const edges = data.full_graph.edges || [];
+        const nodeById = Object.fromEntries(nodes.map((node) => [node.id, node]));
+        const edgeTargets = new Map();
+        const edgeSources = new Map();
+        for (const edge of edges) {
+          edgeTargets.set(edge.target, (edgeTargets.get(edge.target) || 0) + 1);
+          edgeSources.set(edge.source, (edgeSources.get(edge.source) || 0) + 1);
+        }
+
+        let view = { tx: 0, ty: 0, scale: 1 };
+        let hoveredId = "";
+        let selectedId = "";
+        let pointerDown = false;
+        let lastPointer = null;
+        let moved = false;
+
+        function nodeColor(kind) {
+          if (kind === "callback") return getComputedStyle(document.documentElement).getPropertyValue("--green").trim();
+          if (kind === "external_function") return getComputedStyle(document.documentElement).getPropertyValue("--red").trim();
+          return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+        }
+
+        function fitGraph() {
+          if (!nodes.length) return;
+          const xs = nodes.map((node) => node.x);
+          const ys = nodes.map((node) => node.y);
+          const minX = Math.min(...xs);
+          const maxX = Math.max(...xs);
+          const minY = Math.min(...ys);
+          const maxY = Math.max(...ys);
+          const width = shell.clientWidth || 900;
+          const height = shell.clientHeight || 620;
+          const padding = 70;
+          view.scale = Math.min(
+            (width - padding * 2) / Math.max(1, maxX - minX),
+            (height - padding * 2) / Math.max(1, maxY - minY)
+          );
+          view.scale = Math.max(0.08, Math.min(1.5, view.scale));
+          view.tx = width / 2 - ((minX + maxX) / 2) * view.scale;
+          view.ty = height / 2 - ((minY + maxY) / 2) * view.scale;
+        }
+
+        function draw() {
+          if (!canvas.parentElement) return;
+          const dpr = window.devicePixelRatio || 1;
+          const width = shell.clientWidth || 900;
+          const height = shell.clientHeight || 620;
+          canvas.width = Math.max(1, Math.floor(width * dpr));
+          canvas.height = Math.max(1, Math.floor(height * dpr));
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.clearRect(0, 0, width, height);
+
+          const text = getComputedStyle(document.documentElement).getPropertyValue("--text").trim();
+          const muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim();
+          const border = getComputedStyle(document.documentElement).getPropertyValue("--border").trim();
+          ctx.save();
+          ctx.translate(view.tx, view.ty);
+          ctx.scale(view.scale, view.scale);
+
+          ctx.lineWidth = 0.85 / view.scale;
+          ctx.strokeStyle = muted;
+          ctx.globalAlpha = 0.24;
+          ctx.beginPath();
+          for (const edge of edges) {
+            const a = nodeById[edge.source];
+            const b = nodeById[edge.target];
+            if (!a || !b) continue;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+          }
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+
+          for (const node of nodes) {
+            const radius = (node.id === selectedId ? 6 : node.id === hoveredId ? 5 : 3.8) / view.scale;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = nodeColor(node.kind);
+            ctx.fill();
+            if (node.id === selectedId || node.id === hoveredId || view.scale > 0.9) {
+              ctx.font = `${Math.max(10, 12 / view.scale)}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+              ctx.fillStyle = text;
+              ctx.textAlign = "center";
+              ctx.fillText(node.name, node.x, node.y - radius - 3);
+            }
+          }
+          ctx.restore();
+
+          for (const component of data.full_graph.components || []) {
+            const node = nodes.find((item) => item.component === component.id);
+            if (!node) continue;
+            const sx = node.x * view.scale + view.tx;
+            const sy = node.y * view.scale + view.ty;
+            ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+            ctx.fillStyle = border;
+            ctx.textAlign = "left";
+            ctx.fillText(`${component.name} (${component.count})`, sx + 12, sy - 12);
+          }
+        }
+
+        function screenToWorld(x, y) {
+          return {
+            x: (x - view.tx) / view.scale,
+            y: (y - view.ty) / view.scale
+          };
+        }
+
+        function hitNode(x, y) {
+          const world = screenToWorld(x, y);
+          let nearest = null;
+          let best = Infinity;
+          for (const node of nodes) {
+            const dx = node.x - world.x;
+            const dy = node.y - world.y;
+            const distance = dx * dx + dy * dy;
+            if (distance < best) {
+              best = distance;
+              nearest = node;
+            }
+          }
+          return nearest && Math.sqrt(best) <= 10 / view.scale ? nearest : null;
+        }
+
+        function centerNode(node) {
+          const width = shell.clientWidth || 900;
+          const height = shell.clientHeight || 620;
+          view.tx = width / 2 - node.x * view.scale;
+          view.ty = height / 2 - node.y * view.scale;
+          selectedId = node.id;
+          const incoming = edgeSources.get(node.id) || 0;
+          const outgoing = edgeTargets.get(node.id) || 0;
+          byId("graph-detail").textContent =
+            `${node.name} · ${node.kind} · ${node.component} · incoming ${incoming} · outgoing ${outgoing}`;
+          draw();
+        }
+
+        function zoomAt(x, y, factor) {
+          const before = screenToWorld(x, y);
+          view.scale = Math.max(0.06, Math.min(2.2, view.scale * factor));
+          const after = screenToWorld(x, y);
+          view.tx += (after.x - before.x) * view.scale;
+          view.ty += (after.y - before.y) * view.scale;
+          draw();
+        }
+
+        canvas.addEventListener("wheel", (event) => {
+          event.preventDefault();
+          const rect = canvas.getBoundingClientRect();
+          zoomAt(event.clientX - rect.left, event.clientY - rect.top, Math.exp(-event.deltaY * 0.0012));
+        }, { passive: false });
+
+        canvas.addEventListener("pointerdown", (event) => {
+          pointerDown = true;
+          moved = false;
+          lastPointer = { x: event.clientX, y: event.clientY };
+          canvas.classList.add("dragging");
+          canvas.setPointerCapture(event.pointerId);
+        });
+        canvas.addEventListener("pointermove", (event) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          if (pointerDown && lastPointer) {
+            view.tx += event.clientX - lastPointer.x;
+            view.ty += event.clientY - lastPointer.y;
+            lastPointer = { x: event.clientX, y: event.clientY };
+            moved = true;
+          } else {
+            const node = hitNode(x, y);
+            hoveredId = node ? node.id : "";
+          }
+          draw();
+        });
+        canvas.addEventListener("pointerup", (event) => {
+          pointerDown = false;
+          canvas.classList.remove("dragging");
+          const rect = canvas.getBoundingClientRect();
+          if (!moved) {
+            const node = hitNode(event.clientX - rect.left, event.clientY - rect.top);
+            if (node) centerNode(node);
+          }
+        });
+        byId("graph-zoom-in").addEventListener("click", () => {
+          zoomAt(shell.clientWidth / 2, shell.clientHeight / 2, 1.25);
+        });
+        byId("graph-zoom-out").addEventListener("click", () => {
+          zoomAt(shell.clientWidth / 2, shell.clientHeight / 2, 0.8);
+        });
+        byId("graph-search").addEventListener("input", (event) => {
+          const term = event.target.value.trim().toLowerCase();
+          const node = nodes.find((item) =>
+            item.name.toLowerCase().includes(term) || item.id.toLowerCase().includes(term)
+          );
+          if (node) centerNode(node);
+        });
+        new ResizeObserver(() => draw()).observe(shell);
+        fitGraph();
+        draw();
+      }
 
       function renderModules() {
         const max = Math.max(1, ...data.modules.map((item) => item.value));
@@ -838,6 +1227,7 @@ TEMPLATE = r"""<!doctype html>
       }
 
       byId("call-filter").addEventListener("input", (event) => renderCalls(event.target.value));
+      renderFullGraph();
       renderModules();
       renderModuleGraph();
       renderCalls();
