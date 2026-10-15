@@ -1,15 +1,19 @@
-# 周会内容（2026-09-24）
+# 周会内容（2026-10-15）
 
-> 详细材料：[docs/weekly-2026-09-24.md](docs/weekly-2026-09-24.md)
+> 详细材料：[docs/weekly-2026-10-15.md](docs/weekly-2026-10-15.md)
 >
-> 本周围绕两条 validation 分支和原生分析器收口：同步关系验证集 32 条、统一评测器和
-> libuv/Redis baseline、三类外部 JSON；同时新增 `resource_flow.py` 和 `sync_flow.py`
-> 两个原生分析器。资源流分析器现已使用精确 API 匹配和稳定资源 ID，libuv confirmed
-> Gold 上为 11 TP / 6 FN（recall 64.71%）；libuv 当前输出资源流 237 项、同步关系 36 项。
-> Redis 重新生成图后 external 调用已恢复，调用链 recall 为 93.64%，同步关系有 8 条原生预测。
+> 本周把代码逆向分析结果从固定示例图升级为仓库无关、自动生成、嵌入 Agent 流程的
+> 交互式可视化报告。流水线阶段 07 生成 `visualization.html`，原生分析完成后补充
+> resource-flow 和 sync-relations，Agent 工具 `get_visualization` 可返回该文件路径。
 >
-> 当前风险：两条 validation 分支尚未合入上游；人工复核 pending；资源流和跨线程
-> 同步关系仍是启发式，不能直接当作 leak/race/deadlock 的最终结论。
+> 当前指标：libuv 资源流 11 TP / 6 FN（recall 64.71%）；Redis 调用链 103 TP / 7 FN
+> （recall 93.64%）；Redis 同步关系原生预测 8 条。libuv / Redis 图已重新生成，
+> 分别包含 216 / 55 个 external function 节点。
+>
+> 当前风险：资源流 transfer 和跨函数所有权未完成；同步关系 condition/线程身份未对齐；
+> external builtin 和宏边验证规则仍不完整；人工复核 pending。
+
+---
 
 # 周报（2026-09-11 ~ 2026-09-17）
 
