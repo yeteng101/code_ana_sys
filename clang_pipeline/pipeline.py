@@ -150,6 +150,7 @@ def build_pipeline_config(
                     "07-report/architecture.json",
                     "07-report/key-chains.json",
                     "07-report/analysis.md",
+                    "07-report/visualization.html",
                 ],
             ),
         ],
@@ -236,6 +237,7 @@ def run_pipeline(
                 "architecture.json",
                 "key-chains.json",
                 "analysis.md",
+                "visualization.html",
             )
         ]
         sources.append(workspace / "pipeline.json")
@@ -243,7 +245,12 @@ def run_pipeline(
             sources.append(workspace / "external" / name)
         for source in sources:
             if source.exists():
-                shutil.copyfile(source, publish_dir / source.name)
+                if source.parent.name == "external":
+                    destination = publish_dir / "external" / source.name
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                else:
+                    destination = publish_dir / source.name
+                shutil.copyfile(source, destination)
 
     return {
         "run_id": run_id,

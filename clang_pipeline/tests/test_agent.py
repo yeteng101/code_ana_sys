@@ -29,6 +29,8 @@ class AgentToolTests(unittest.TestCase):
         self.assertIn("uv_run", chains)
         architecture = execute_tool(self.ctx, "get_architecture", {})
         self.assertIn("unix", architecture)
+        visualization = execute_tool(self.ctx, "get_visualization", {})
+        self.assertIn("visualization.html", visualization)
 
     def test_evidence_and_source(self) -> None:
         evidence = execute_tool(
@@ -57,12 +59,14 @@ class AgentToolTests(unittest.TestCase):
         )
         self.assertIn("artifact_paths", payload)
         self.assertTrue(payload["artifact_paths"]["graph"])
+        self.assertTrue(payload["artifact_paths"]["visualization"])
         path = write_agent_context(self.ctx, "uv_run 调用了谁？", focus=["uv_run"])
         self.assertTrue(path.exists())
 
     def test_mcp_tool_protocol(self) -> None:
         tools = _mcp_tools()
         self.assertIn("get_call_graph", [item["name"] for item in tools])
+        self.assertIn("get_visualization", [item["name"] for item in tools])
         listed = _respond({"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         self.assertEqual(1, listed["id"])
         called = _respond(

@@ -4,7 +4,9 @@
 >
 > 本周围绕两条 validation 分支和原生分析器收口：同步关系验证集 32 条、统一评测器和
 > libuv/Redis baseline、三类外部 JSON；同时新增 `resource_flow.py` 和 `sync_flow.py`
-> 两个原生分析器。libuv 原生输出目前为资源流 256 项（partial）、同步关系 32 项。
+> 两个原生分析器。资源流分析器现已使用精确 API 匹配和稳定资源 ID，libuv confirmed
+> Gold 上为 11 TP / 6 FN（recall 64.71%）；libuv 当前输出资源流 237 项、同步关系 36 项。
+> Redis 重新生成图后 external 调用已恢复，调用链 recall 为 93.64%，同步关系有 8 条原生预测。
 >
 > 当前风险：两条 validation 分支尚未合入上游；人工复核 pending；资源流和跨线程
 > 同步关系仍是启发式，不能直接当作 leak/race/deadlock 的最终结论。
@@ -836,6 +838,7 @@ curl -sS \
 | `07-report/architecture.json` | 模块架构 |
 | `07-report/key-chains.json` | 关键调用链 |
 | `07-report/analysis.md` | 自然语言分析 |
+| `07-report/visualization.html` | 仓库无关的交互式可视化仪表盘 |
 
 所有结论都带证据：
 

@@ -35,6 +35,7 @@ python3 -m clang_pipeline.cli native \
 <workspace>/09-sync-relations/sync-relations.json
 <workspace>/external/resource-flow.json
 <workspace>/external/sync-relations.json
+<workspace>/07-report/visualization.html
 ```
 
 ## 资源流分析器
@@ -42,10 +43,13 @@ python3 -m clang_pipeline.cli native \
 第一版是规则和调用图驱动的可解释实现：
 
 - 从 graph edge 的 `call_site` 提取 API、函数、文件、行号和 snippet；
-- 把 `malloc/free`、`open/close`、`uv__make_pipe/uv__close`、
-  `dlopen/dlclose`、`scandir/cleanup`、`getaddrinfo/freeaddrinfo`
-  映射为 acquire/release；
-- 按 resource key、函数和资源族配对操作；
+- 使用精确 API 注册表匹配 acquire/release，不再通过 `free/open/close`
+  等子串误匹配名字相似的高层函数；
+- libuv 的六个已确认资源族使用稳定资源 ID，例如
+  `rf_libuv_getpwuid_buf_v1`、`rf_libuv_async_fd_v1`；
+- 原始调用表达式单独保存在 `resource_expression`，`resource` 只用于评分；
+- 为 Redis 增加 `zmalloc/zrealloc/zfree`、`sdsnew/sdsfree` 等基础分配器配对；
+- 按稳定资源 ID、资源表达式和资源族配对操作；
 - 每个事实都必须带 graph 中原有的 evidence id；
 - 没有配对到的操作输出 `complete=false` 和
   `release_not_found` / `acquire_not_found`，不直接写 `memory_leak=true`。
@@ -58,6 +62,9 @@ python3 -m clang_pipeline.cli native \
 跨函数的资源对象依赖规则和表达式 key
 不把不完整路径直接判为最终泄漏
 ```
+
+调用图已重新生成，libuv 的 `open/getaddrinfo/scandir/dlopen` 外部调用已进入
+graph，资源流在 17 条 confirmed Gold 上达到 11 TP / 6 FN。
 
 ## 同步关系分析器
 
@@ -86,6 +93,9 @@ event wait / notify
 unknown 不会被伪装成 concurrent 或 happens_before
 ```
 
+Redis 图重新生成后有 8 条原生同步预测；仍待统一跨函数/跨线程 condition 与端点
+identity，才能和人工 Gold 精确对齐。
+
 ## 和外部 JSON 的关系
 
 `cli native` 会产生两类 JSON：
@@ -109,3 +119,19 @@ analyzer
 ```
 
 人工标注仍然只能放在 reviewed 目录，不能替代原生预测。
+
+## 通用可视化仪表盘
+
+`cli native` 同时生成一个不依赖 libuv/Redis 名称的
+`07-report/visualization.html`。它从任意 `graph.json`、architecture、
+key-chains、resource-flow 和 sync-relations 生成四个视图：
+
+```text
+Overview：模块调用图
+Modules：模块规模
+Calls：调用边搜索与筛选
+Findings：资源流、同步关系和关键链摘要
+```
+
+页面内不请求外部服务，可以直接打开。Agent 上下文会把该文件作为
+`visualization` artifact，工具 `get_visualization` 可返回其路径。

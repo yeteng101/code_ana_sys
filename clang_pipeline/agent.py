@@ -56,6 +56,12 @@ class AgentContext:
     def load_architecture(self) -> dict[str, Any]:
         return self.load_json("07-report/architecture.json", "architecture.json")
 
+    def visualization_path(self) -> Path | None:
+        return self._find_artifact(
+            "07-report/visualization.html",
+            "visualization.html",
+        )
+
     def load_macros(self) -> dict[str, Any] | None:
         path = self._find_artifact("02-macro/macros.json", "macros.json")
         if path is None:
@@ -182,6 +188,14 @@ AGENT_TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "get_visualization",
+            "description": "获取当前分析结果的可视化 HTML 文件路径。",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "read_analysis_report",
             "description": "读取已有的自然语言分析报告。",
             "parameters": {"type": "object", "properties": {}},
@@ -216,6 +230,14 @@ def _tool_get_key_chains(ctx: AgentContext, args: dict[str, Any]) -> Any:
 
 def _tool_get_architecture(ctx: AgentContext, args: dict[str, Any]) -> Any:
     return ctx.load_architecture()
+
+
+def _tool_get_visualization(ctx: AgentContext, args: dict[str, Any]) -> Any:
+    path = ctx.visualization_path()
+    return {
+        "path": str(path) if path else "",
+        "run_id": ctx.run_id,
+    }
 
 
 def _tool_get_evidence(ctx: AgentContext, args: dict[str, Any]) -> Any:
@@ -277,6 +299,7 @@ TOOL_IMPLEMENTATIONS: dict[str, Callable[[AgentContext, dict[str, Any]], Any]] =
     "get_call_graph": _tool_get_call_graph,
     "get_key_chains": _tool_get_key_chains,
     "get_architecture": _tool_get_architecture,
+    "get_visualization": _tool_get_visualization,
     "get_evidence": _tool_get_evidence,
     "get_source_snippet": _tool_get_source_snippet,
     "get_macro_analysis": _tool_get_macro_analysis,

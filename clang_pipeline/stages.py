@@ -20,6 +20,7 @@ from .clang_ast import (
     write_json,
 )
 from .libclang_extract import extract_compact_ast
+from .visualization import write_visualization
 
 
 def _load_request(workspace: Path) -> dict[str, Any]:
@@ -1440,6 +1441,7 @@ def stage07_report(workspace: Path) -> dict[str, Any]:
         ),
         encoding="utf-8",
     )
+    visualization_path = write_visualization(workspace, final_graph)
     return {
         "status": "succeeded",
         "artifacts": [
@@ -1450,6 +1452,7 @@ def stage07_report(workspace: Path) -> dict[str, Any]:
             "architecture.json",
             "key-chains.json",
             "analysis.md",
+            str(visualization_path.relative_to(report_dir)),
         ],
     }
 
@@ -1480,10 +1483,17 @@ def _component_id_for_file(file: str) -> str:
     return path.stem or "core"
 
 
+def _component_id_for_node(node: dict[str, Any]) -> str:
+    if node.get("kind") == "external_function":
+        return "external"
+    return _component_id_for_file(node.get("file", ""))
+
+
 def _component_label(component_id: str) -> str:
     return {
         "event_loop": "event_loop (事件循环)",
         "app": "app (应用回调)",
+        "external": "external (系统与第三方调用)",
     }.get(component_id, component_id)
 
 
@@ -1510,7 +1520,7 @@ def _architecture(graph: dict[str, Any]) -> dict[str, Any]:
     components: dict[str, dict[str, Any]] = {}
     node_by_id = {node["id"]: node for node in graph["nodes"]}
     for node in graph["nodes"]:
-        component_id = _component_id_for_file(node.get("file", ""))
+        component_id = _component_id_for_node(node)
         component = components.setdefault(
             component_id,
             {
@@ -1521,15 +1531,18 @@ def _architecture(graph: dict[str, Any]) -> dict[str, Any]:
                 "responsibilities": set(),
             },
         )
-        if node.get("file"):
+        if node.get("file") and component_id != "external":
             component["files"].add(node["file"])
-        component["symbols"].append(
-            {
-                "id": node["id"],
-                "name": node["name"],
-                "kind": node["kind"],
-            }
-        )
+        if component_id == "external":
+            component["symbol_count"] = component.get("symbol_count", 0) + 1
+        else:
+            component["symbols"].append(
+                {
+                    "id": node["id"],
+                    "name": node["name"],
+                    "kind": node["kind"],
+                }
+            )
         component["responsibilities"].add(_responsibility_for_name(node["name"]))
 
     dependency_set: set[tuple[str, str]] = set()
@@ -1538,8 +1551,8 @@ def _architecture(graph: dict[str, Any]) -> dict[str, Any]:
         target = node_by_id.get(edge["target"])
         if not source or not target:
             continue
-        source_component = _component_id_for_file(source.get("file", ""))
-        target_component = _component_id_for_file(target.get("file", ""))
+        source_component = _component_id_for_node(source)
+        target_component = _component_id_for_node(target)
         if source_component != target_component:
             dependency_set.add((source_component, target_component))
 
@@ -1895,7 +1908,7 @@ def _mermaid(graph: dict[str, Any]) -> str:
     node_ids: dict[str, str] = {}
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for node in graph["nodes"]:
-        groups[_component_id_for_file(node.get("file", ""))].append(node)
+        groups[_component_id_for_node(node)].append(node)
 
     index = 0
     for component_id in sorted(groups):
@@ -1996,13 +2009,14 @@ def _report_markdown(
     )
     for chain in async_result["chains"]:
         callback_names = ", ".join(item["name"] for item in chain["callbacks"])
+        callback_text = callback_names or "none"
         lines.extend(
             [
                 f"- `{chain['event_source']['file']}:{chain['event_source']['line']}` "
                 f"`{chain['event_source']['kind']}` -> "
                 f"`{chain['registration']['file']}:{chain['registration']['line']}` "
                 f"-> `{chain['trigger']['file']}:{chain['trigger']['line']}` "
-                f"-> callbacks: {callback_names}",
+                f"-> callbacks: {callback_text}",
                 f"  - Confidence: {chain['confidence']:.2f}, loop back: {chain['loop_back']}",
             ]
         )
@@ -2019,11 +2033,12 @@ def _report_markdown(
             f"`{item['name']}` ({item['file']}:{item['line']})"
             for item in candidate.get("candidate_targets", [])
         )
+        target_text = targets or "none"
         lines.extend(
             [
                 f"- `{candidate['field']}` @ `{candidate['call_site']['file']}:"
                 f"{candidate['call_site']['line']}`",
-                f"  - Candidates: {targets}",
+                f"  - Candidates: {target_text}",
                 f"  - Confidence: {candidate['confidence']:.2f}",
             ]
         )

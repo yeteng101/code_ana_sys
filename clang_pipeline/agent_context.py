@@ -56,6 +56,11 @@ def build_agent_context(
             "analysis": _artifact_path(
                 ctx.workspace, "07-report/analysis.md", "analysis.md"
             ),
+            "visualization": _artifact_path(
+                ctx.workspace,
+                "07-report/visualization.html",
+                "visualization.html",
+            ),
         },
     }
 

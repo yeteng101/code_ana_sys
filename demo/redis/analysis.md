@@ -1,7 +1,7 @@
 # 自然语言分析
 
 ## 模块架构
-仓库由 core、src 组成。入口负责初始化运行时、注册回调并驱动主循环；事件循环组件负责等待就绪事件、遍历句柄并分发回调。
+仓库由 core、external (系统与第三方调用)、src 组成。入口负责初始化运行时、注册回调并驱动主循环；事件循环组件负责等待就绪事件、遍历句柄并分发回调。
 
 ## 关键调用链
 入口 `aeProcessEvents` 的关键路径是：`aeProcessEvents -> aeFileEvent::wfileProc`。
@@ -16,4 +16,4 @@ fd_ready 事件在 third_party/redis/src/connection.h:243 触发回调，但候�
 本次分析覆盖：ACL_DENIED_AUTH (third_party/redis/src/server.h:2891)、ACL_DENIED_CHANNEL (third_party/redis/src/server.h:2892)、ACL_DENIED_CMD (third_party/redis/src/server.h:2889)、ACL_DENIED_KEY (third_party/redis/src/server.h:2890)、ACL_LOG_CTX_LUA (third_party/redis/src/server.h:2896)。宏展开记录已挂到对应调用边的 `macro_stack` 证据上。
 
 ## 结论
-验证覆盖率为 88%，报告状态为 not ready；所有结论均引用源码文件、行号和原始代码片段。
+验证覆盖率为 81%，报告状态为 not ready；所有结论均引用源码文件、行号和原始代码片段。

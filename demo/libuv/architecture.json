@@ -180,6 +180,18 @@
       ]
     },
     {
+      "id": "external",
+      "name": "external (系统与第三方调用)",
+      "files": [],
+      "symbols": [],
+      "responsibilities": [
+        "事件等待",
+        "初始化",
+        "核心逻辑"
+      ],
+      "symbol_count": 216
+    },
+    {
       "id": "include",
       "name": "include",
       "files": [
@@ -428,6 +440,11 @@
         {
           "id": "fn:post",
           "name": "post",
+          "kind": "function"
+        },
+        {
+          "id": "fn:reset_once",
+          "name": "reset_once",
           "kind": "function"
         },
         {
@@ -751,6 +768,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_fs_event_getpath",
+          "name": "uv_fs_event_getpath",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_fs_poll_getpath",
           "name": "uv_fs_poll_getpath",
           "kind": "function"
@@ -841,6 +863,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_metrics_info",
+          "name": "uv_metrics_info",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_now",
           "name": "uv_now",
           "kind": "function"
@@ -898,6 +925,11 @@
         {
           "id": "fn:uv_strerror",
           "name": "uv_strerror",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_strerror_r",
+          "name": "uv_strerror_r",
           "kind": "function"
         },
         {
@@ -1368,6 +1400,16 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv__fs_scandir_filter",
+          "name": "uv__fs_scandir_filter",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv__fs_scandir_sort",
+          "name": "uv__fs_scandir_sort",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv__fs_sendfile",
           "name": "uv__fs_sendfile",
           "kind": "function"
@@ -1533,6 +1575,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv__hrtime_init_once",
+          "name": "uv__hrtime_init_once",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv__idle_close",
           "name": "uv__idle_close",
           "kind": "function"
@@ -1645,6 +1692,11 @@
         {
           "id": "fn:uv__min_stack_size",
           "name": "uv__min_stack_size",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv__mkostemp_initonce",
+          "name": "uv__mkostemp_initonce",
           "kind": "function"
         },
         {
@@ -1795,6 +1847,11 @@
         {
           "id": "fn:uv__random_getentropy",
           "name": "uv__random_getentropy",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv__random_getentropy_init",
+          "name": "uv__random_getentropy_init",
           "kind": "function"
         },
         {
@@ -2423,8 +2480,18 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_available_parallelism",
+          "name": "uv_available_parallelism",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_backend_timeout",
           "name": "uv_backend_timeout",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_chdir",
+          "name": "uv_chdir",
           "kind": "function"
         },
         {
@@ -2440,6 +2507,11 @@
         {
           "id": "fn:uv_check_stop",
           "name": "uv_check_stop",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_clock_gettime",
+          "name": "uv_clock_gettime",
           "kind": "function"
         },
         {
@@ -2468,6 +2540,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_cond_timedwait",
+          "name": "uv_cond_timedwait",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_cond_wait",
           "name": "uv_cond_wait",
           "kind": "function"
@@ -2475,6 +2552,11 @@
         {
           "id": "fn:uv_cpu_info",
           "name": "uv_cpu_info",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_cwd",
+          "name": "uv_cwd",
           "kind": "function"
         },
         {
@@ -2498,6 +2580,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_exepath",
+          "name": "uv_exepath",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_fileno",
           "name": "uv_fileno",
           "kind": "function"
@@ -2505,6 +2592,11 @@
         {
           "id": "fn:uv_free_interface_addresses",
           "name": "uv_free_interface_addresses",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_freeaddrinfo",
+          "name": "uv_freeaddrinfo",
           "kind": "function"
         },
         {
@@ -2723,6 +2815,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_get_total_memory",
+          "name": "uv_get_total_memory",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_getaddrinfo",
           "name": "uv_getaddrinfo",
           "kind": "function"
@@ -2735,6 +2832,16 @@
         {
           "id": "fn:uv_getrusage",
           "name": "uv_getrusage",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_getrusage_thread",
+          "name": "uv_getrusage_thread",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_gettimeofday",
+          "name": "uv_gettimeofday",
           "kind": "function"
         },
         {
@@ -2783,6 +2890,26 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_key_create",
+          "name": "uv_key_create",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_key_delete",
+          "name": "uv_key_delete",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_key_get",
+          "name": "uv_key_get",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_key_set",
+          "name": "uv_key_set",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_kill",
           "name": "uv_kill",
           "kind": "function"
@@ -2790,6 +2917,11 @@
         {
           "id": "fn:uv_listen",
           "name": "uv_listen",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_loadavg",
+          "name": "uv_loadavg",
           "kind": "function"
         },
         {
@@ -2818,8 +2950,18 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_mutex_init_recursive",
+          "name": "uv_mutex_init_recursive",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_mutex_lock",
           "name": "uv_mutex_lock",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_mutex_trylock",
+          "name": "uv_mutex_trylock",
           "kind": "function"
         },
         {
@@ -2858,13 +3000,53 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_os_gethostname",
+          "name": "uv_os_gethostname",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_getpid",
+          "name": "uv_os_getpid",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_getppid",
+          "name": "uv_os_getppid",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_getpriority",
+          "name": "uv_os_getpriority",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_os_homedir",
           "name": "uv_os_homedir",
           "kind": "function"
         },
         {
+          "id": "fn:uv_os_setenv",
+          "name": "uv_os_setenv",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_setpriority",
+          "name": "uv_os_setpriority",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_tmpdir",
+          "name": "uv_os_tmpdir",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_os_uname",
           "name": "uv_os_uname",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_os_unsetenv",
+          "name": "uv_os_unsetenv",
           "kind": "function"
         },
         {
@@ -2968,6 +3150,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_resident_set_memory",
+          "name": "uv_resident_set_memory",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_run",
           "name": "uv_run",
           "kind": "function"
@@ -2990,6 +3177,16 @@
         {
           "id": "fn:uv_rwlock_rdunlock",
           "name": "uv_rwlock_rdunlock",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_rwlock_tryrdlock",
+          "name": "uv_rwlock_tryrdlock",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_rwlock_trywrlock",
+          "name": "uv_rwlock_trywrlock",
           "kind": "function"
         },
         {
@@ -3063,6 +3260,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_sleep",
+          "name": "uv_sleep",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_socketpair",
           "name": "uv_socketpair",
           "kind": "function"
@@ -3128,8 +3330,23 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_thread_detach",
+          "name": "uv_thread_detach",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_thread_equal",
+          "name": "uv_thread_equal",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_thread_getname",
           "name": "uv_thread_getname",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_thread_getpriority",
+          "name": "uv_thread_getpriority",
           "kind": "function"
         },
         {
@@ -3138,8 +3355,18 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_thread_self",
+          "name": "uv_thread_self",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_thread_setname",
           "name": "uv_thread_setname",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_thread_setpriority",
+          "name": "uv_thread_setpriority",
           "kind": "function"
         },
         {
@@ -3188,6 +3415,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:uv_udp_set_broadcast",
+          "name": "uv_udp_set_broadcast",
+          "kind": "function"
+        },
+        {
           "id": "fn:uv_udp_set_membership",
           "name": "uv_udp_set_membership",
           "kind": "function"
@@ -3225,6 +3457,11 @@
         {
           "id": "fn:uv_update_time",
           "name": "uv_update_time",
+          "kind": "function"
+        },
+        {
+          "id": "fn:uv_uptime",
+          "name": "uv_uptime",
           "kind": "function"
         },
         {
@@ -3283,6 +3520,10 @@
     },
     {
       "source": "src",
+      "target": "external"
+    },
+    {
+      "source": "src",
       "target": "include"
     },
     {
@@ -3296,6 +3537,10 @@
     {
       "source": "unix",
       "target": "core"
+    },
+    {
+      "source": "unix",
+      "target": "external"
     },
     {
       "source": "unix",

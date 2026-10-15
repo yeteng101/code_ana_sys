@@ -41,6 +41,8 @@ def prepare():
     for resource in read(ROOT / "validation/resource-flow/dataset.json")["resources"]:
         if resource.get("repository") != "libuv/libuv":
             continue
+        if resource.get("ground_truth", {}).get("review") == "pending":
+            continue
         for op in resource["operations"]:
             loc = op["location"]
             libuv["cases"].append({"id": resource["id"] + "_" + op["operation_id"], "category": "resource_flow",

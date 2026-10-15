@@ -2,20 +2,528 @@
   "schema_version": "1.0",
   "run_id": "redis-7.2.4-validation",
   "result_type": "sync_relation",
-  "status": "not_available",
-  "generated_at": "2026-09-16T03:11:01Z",
+  "status": "succeeded",
+  "generated_at": "2026-10-15T13:17:15Z",
   "source": {
     "repository": "redis/redis",
     "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
     "build_profile": "redis-linux-clang",
     "analyzer": "libclang compact AST + clang++",
-    "generated_at": "2026-09-16T03:11:01Z",
+    "generated_at": "2026-10-15T13:17:15Z",
     "origin": "analyzer",
     "provider": "native_sync_flow_v1"
   },
-  "items": [],
-  "evidence": [],
-  "warnings": [
-    "no synchronization relation matched the native rules"
-  ]
+  "items": [
+    {
+      "id": "sync_0bbabd10ef88",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "bioDrainWorker",
+        "thread": "worker",
+        "file": "third_party/redis/src/bio.c",
+        "line": 317,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_ca34a55ee8dc"
+        ]
+      },
+      "target": {
+        "function": "bioDrainWorker",
+        "thread": "worker",
+        "file": "third_party/redis/src/bio.c",
+        "line": 321,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_2a5413c60346"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource bioDrainWorker:bio_mutex[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_ca34a55ee8dc",
+        "ev_2a5413c60346"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_2d0ba328d287",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "bioSubmitJob",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 158,
+        "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_a79968c51548"
+        ]
+      },
+      "target": {
+        "function": "bioDrainWorker",
+        "thread": "worker",
+        "file": "third_party/redis/src/bio.c",
+        "line": 319,
+        "snippet": "pthread_cond_wait(&bio_newjob_cond[worker], &bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0b93d27eb289"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource bio_newjob_cond[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_a79968c51548",
+        "ev_0b93d27eb289"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_53416644eaf6",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "IOThreadMain",
+        "thread": "main",
+        "file": "third_party/redis/src/networking.c",
+        "line": 4192,
+        "snippet": "pthread_mutex_lock(&io_threads_mutex[id]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_6492d83567d7"
+        ]
+      },
+      "target": {
+        "function": "IOThreadMain",
+        "thread": "main",
+        "file": "third_party/redis/src/networking.c",
+        "line": 4193,
+        "snippet": "pthread_mutex_unlock(&io_threads_mutex[id]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_5e66003a4194"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource IOThreadMain:io_threads_mutex[id]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "main",
+        "target_thread": "main",
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_6492d83567d7",
+        "ev_5e66003a4194"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_552f7687f0b8",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "bioSubmitJob",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 155,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_671102684f50"
+        ]
+      },
+      "target": {
+        "function": "bioSubmitJob",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 159,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c4d802be8d82"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource bioSubmitJob:bio_mutex[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_671102684f50",
+        "ev_c4d802be8d82"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_9e4488a3d5f7",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "bioProcessBackgroundJobs",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 219,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_598a25a6efa7"
+        ]
+      },
+      "target": {
+        "function": "bioProcessBackgroundJobs",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 241,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0e36f7949dd9"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource bioProcessBackgroundJobs:bio_mutex[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_598a25a6efa7",
+        "ev_0e36f7949dd9"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_a90d4f41cbfc",
+      "status": "unconfirmed",
+      "relation_type": "condition_variable",
+      "source": {
+        "function": "bioProcessBackgroundJobs",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 298,
+        "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_44cedd85d727"
+        ]
+      },
+      "target": {
+        "function": "bioDrainWorker",
+        "thread": "worker",
+        "file": "third_party/redis/src/bio.c",
+        "line": 319,
+        "snippet": "pthread_cond_wait(&bio_newjob_cond[worker], &bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_0b93d27eb289"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "visible notification for shared resource bio_newjob_cond[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.6,
+      "evidence_ids": [
+        "ev_44cedd85d727",
+        "ev_0b93d27eb289"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_b570a97c4574",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "bioPendingJobsOfType",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 306,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_2fde88b8d0fc"
+        ]
+      },
+      "target": {
+        "function": "bioPendingJobsOfType",
+        "thread": null,
+        "file": "third_party/redis/src/bio.c",
+        "line": 308,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_5e10140edb57"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource bioPendingJobsOfType:bio_mutex[worker]",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_2fde88b8d0fc",
+        "ev_5e10140edb57"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c7ae8f89752a",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "freeClientAsync",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 1721,
+        "snippet": "pthread_mutex_lock(&async_free_queue_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_cb72e52fafe1"
+        ]
+      },
+      "target": {
+        "function": "freeClientAsync",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 1723,
+        "snippet": "pthread_mutex_unlock(&async_free_queue_mutex);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_47332439c3ce"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "same function/resource freeClientAsync:async_free_queue_mutex",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.85,
+      "evidence_ids": [
+        "ev_cb72e52fafe1",
+        "ev_47332439c3ce"
+      ],
+      "origin": "analyzer"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_0b93d27eb289",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 319,
+        "column": 9,
+        "snippet": "pthread_cond_wait(&bio_newjob_cond[worker], &bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_0e36f7949dd9",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 241,
+        "column": 9,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_2a5413c60346",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 321,
+        "column": 5,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_2fde88b8d0fc",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 306,
+        "column": 5,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_44cedd85d727",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 298,
+        "column": 9,
+        "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_47332439c3ce",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 1723,
+        "column": 5,
+        "snippet": "pthread_mutex_unlock(&async_free_queue_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_598a25a6efa7",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 219,
+        "column": 5,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_5e10140edb57",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 308,
+        "column": 5,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_5e66003a4194",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 4193,
+        "column": 13,
+        "snippet": "pthread_mutex_unlock(&io_threads_mutex[id]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_6492d83567d7",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 4192,
+        "column": 13,
+        "snippet": "pthread_mutex_lock(&io_threads_mutex[id]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_671102684f50",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 155,
+        "column": 5,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_a79968c51548",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 158,
+        "column": 5,
+        "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_c4d802be8d82",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 159,
+        "column": 5,
+        "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_ca34a55ee8dc",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/bio.c",
+        "line": 317,
+        "column": 5,
+        "snippet": "pthread_mutex_lock(&bio_mutex[worker]);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_cb72e52fafe1",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 1721,
+        "column": 5,
+        "snippet": "pthread_mutex_lock(&async_free_queue_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    }
+  ],
+  "warnings": []
 }

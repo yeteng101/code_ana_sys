@@ -38,6 +38,18 @@
       ]
     },
     {
+      "id": "external",
+      "name": "external (系统与第三方调用)",
+      "files": [],
+      "symbols": [],
+      "responsibilities": [
+        "事件等待",
+        "初始化",
+        "核心逻辑"
+      ],
+      "symbol_count": 55
+    },
+    {
       "id": "src",
       "name": "src",
       "files": [
@@ -45,10 +57,11 @@
         "third_party/redis/src/adlist.h",
         "third_party/redis/src/ae.c",
         "third_party/redis/src/ae.h",
-        "third_party/redis/src/ae_epoll.c",
+        "third_party/redis/src/ae_kqueue.c",
         "third_party/redis/src/anet.h",
         "third_party/redis/src/bio.c",
         "third_party/redis/src/cluster.h",
+        "third_party/redis/src/config.h",
         "third_party/redis/src/connection.h",
         "third_party/redis/src/db.c",
         "third_party/redis/src/dict.c",
@@ -240,8 +253,8 @@
           "kind": "callback"
         },
         {
-          "id": "cb:bio_job::struct (unnamed at /home/runner/work/code_ana_sys/code_ana_sys/third_party/redis/src/bio.c:105:5)::free_fn",
-          "name": "bio_job::struct (unnamed at /home/runner/work/code_ana_sys/code_ana_sys/third_party/redis/src/bio.c:105:5)::free_fn",
+          "id": "cb:bio_job::struct (unnamed at /Users/andye/Documents/ChatGPT/8.18huawei/third_party/redis/src/bio.c:105:5)::free_fn",
+          "name": "bio_job::struct (unnamed at /Users/andye/Documents/ChatGPT/8.18huawei/third_party/redis/src/bio.c:105:5)::free_fn",
           "kind": "callback"
         },
         {
@@ -452,6 +465,11 @@
         {
           "id": "fn:addAuthErrReply",
           "name": "addAuthErrReply",
+          "kind": "function"
+        },
+        {
+          "id": "fn:addEventMask",
+          "name": "addEventMask",
           "kind": "function"
         },
         {
@@ -750,6 +768,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:aeWait",
+          "name": "aeWait",
+          "kind": "function"
+        },
+        {
           "id": "fn:afterErrorReply",
           "name": "afterErrorReply",
           "kind": "function"
@@ -805,6 +828,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:bioDrainWorker",
+          "name": "bioDrainWorker",
+          "kind": "function"
+        },
+        {
           "id": "fn:bioInit",
           "name": "bioInit",
           "kind": "function"
@@ -812,6 +840,11 @@
         {
           "id": "fn:bioKillThreads",
           "name": "bioKillThreads",
+          "kind": "function"
+        },
+        {
+          "id": "fn:bioPendingJobsOfType",
+          "name": "bioPendingJobsOfType",
           "kind": "function"
         },
         {
@@ -1535,6 +1568,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:dictSetHashFunctionSeed",
+          "name": "dictSetHashFunctionSeed",
+          "kind": "function"
+        },
+        {
           "id": "fn:dictSetKey",
           "name": "dictSetKey",
           "kind": "function"
@@ -1912,6 +1950,11 @@
         {
           "id": "fn:getDecodedObject",
           "name": "getDecodedObject",
+          "kind": "function"
+        },
+        {
+          "id": "fn:getEventMask",
+          "name": "getEventMask",
           "kind": "function"
         },
         {
@@ -2600,6 +2643,11 @@
           "kind": "function"
         },
         {
+          "id": "fn:pthread_setname_np",
+          "name": "pthread_setname_np",
+          "kind": "function"
+        },
+        {
           "id": "fn:pubsubMemOverhead",
           "name": "pubsubMemOverhead",
           "kind": "function"
@@ -2792,6 +2840,11 @@
         {
           "id": "fn:resetCommand",
           "name": "resetCommand",
+          "kind": "function"
+        },
+        {
+          "id": "fn:resetEventMask",
+          "name": "resetEventMask",
           "kind": "function"
         },
         {
@@ -3473,6 +3526,10 @@
     {
       "source": "src",
       "target": "core"
+    },
+    {
+      "source": "src",
+      "target": "external"
     }
   ]
 }

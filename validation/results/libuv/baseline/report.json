@@ -24,9 +24,9 @@
       "evidence_hit_rate": 1.0,
       "coverage": 1.0,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 1232,
-      "prediction_count": 1248,
-      "duplicate_predictions": 233,
+      "unlabelled_predictions": 2178,
+      "prediction_count": 2194,
+      "duplicate_predictions": 651,
       "confirmed_only": {
         "precision": null,
         "recall": 0.0,
@@ -337,21 +337,21 @@
     },
     "resource_flow": {
       "input_status": "partial",
-      "gold_positive": 62,
+      "gold_positive": 17,
       "gold_negative": 0,
-      "tp": 0,
+      "tp": 11,
       "fp": 0,
-      "fn": 62,
+      "fn": 6,
       "tn": 0,
-      "precision": null,
-      "recall": 0.0,
-      "f1": 0.0,
-      "type_accuracy": null,
-      "evidence_hit_rate": null,
-      "coverage": 0.0,
+      "precision": 1.0,
+      "recall": 0.6470588235294118,
+      "f1": 0.7857142857142857,
+      "type_accuracy": 1.0,
+      "evidence_hit_rate": 1.0,
+      "coverage": 0.6470588235294118,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 257,
-      "prediction_count": 257,
+      "unlabelled_predictions": 227,
+      "prediction_count": 238,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -361,9 +361,9 @@
         "f1": 0.0
       },
       "errors_by_type": {
-        "acquire": 21,
-        "transfer": 14,
-        "release": 27
+        "acquire": 1,
+        "transfer": 4,
+        "release": 1
       },
       "cases": [
         {
@@ -394,8 +394,8 @@
         },
         {
           "case_id": "rf_libuv_async_fd_v1_op_async_release_wfd",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_async_fd_v1",
@@ -407,8 +407,8 @@
         },
         {
           "case_id": "rf_libuv_async_fd_v1_op_async_release_io",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_async_fd_v1",
@@ -419,269 +419,9 @@
           "notes": "Operation fact, not a final defect classification."
         },
         {
-          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_acquire_candidate_003",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_003",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            306
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_transfer_candidate_003",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_003",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            313
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_wfd_candidate_003",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_003",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            350
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_003_op_async_release_io_candidate_003",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_003",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            355
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_acquire_candidate_007",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_007",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            306
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_transfer_candidate_007",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_007",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            313
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_wfd_candidate_007",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_007",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            350
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_007_op_async_release_io_candidate_007",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_007",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            355
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_acquire_candidate_011",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_011",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            306
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_transfer_candidate_011",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_011",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            313
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_wfd_candidate_011",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_011",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            350
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_011_op_async_release_io_candidate_011",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_011",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            355
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_acquire_candidate_015",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_015",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            306
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_transfer_candidate_015",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_015",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            313
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_wfd_candidate_015",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_015",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            350
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_015_op_async_release_io_candidate_015",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_015",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            355
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_acquire_candidate_019",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_019",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            306
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_transfer_candidate_019",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_019",
-            "uv__async_start",
-            "third_party/libuv/src/unix/async.c",
-            313
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_wfd_candidate_019",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_019",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            350
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_async_fd_v1_candidate_019_op_async_release_io_candidate_019",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_async_fd_v1_candidate_019",
-            "uv__async_stop",
-            "third_party/libuv/src/unix/async.c",
-            355
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
           "case_id": "rf_libuv_dlopen_handle_v1_op_dl_release",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_dlopen_handle_v1",
@@ -693,8 +433,8 @@
         },
         {
           "case_id": "rf_libuv_dlopen_handle_v1_op_dl_acquire",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "acquire",
           "identity": [
             "rf_libuv_dlopen_handle_v1",
@@ -706,8 +446,8 @@
         },
         {
           "case_id": "rf_libuv_fs_fd_v1_op_fs_release",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_fs_fd_v1",
@@ -719,8 +459,8 @@
         },
         {
           "case_id": "rf_libuv_fs_fd_v1_op_fs_acquire",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "acquire",
           "identity": [
             "rf_libuv_fs_fd_v1",
@@ -744,201 +484,6 @@
           "notes": "Operation fact, not a final defect classification."
         },
         {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_release_candidate_001",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_001",
-            "uv__fs_close",
-            "third_party/libuv/src/unix/fs.c",
-            161
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_acquire_candidate_001",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_001",
-            "uv__fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            372
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_001_op_fs_transfer_candidate_001",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_001",
-            "uv_fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            2028
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_release_candidate_005",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_005",
-            "uv__fs_close",
-            "third_party/libuv/src/unix/fs.c",
-            161
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_acquire_candidate_005",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_005",
-            "uv__fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            372
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_005_op_fs_transfer_candidate_005",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_005",
-            "uv_fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            2028
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_release_candidate_009",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_009",
-            "uv__fs_close",
-            "third_party/libuv/src/unix/fs.c",
-            161
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_acquire_candidate_009",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_009",
-            "uv__fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            372
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_009_op_fs_transfer_candidate_009",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_009",
-            "uv_fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            2028
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_release_candidate_013",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_013",
-            "uv__fs_close",
-            "third_party/libuv/src/unix/fs.c",
-            161
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_acquire_candidate_013",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_013",
-            "uv__fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            372
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_013_op_fs_transfer_candidate_013",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_013",
-            "uv_fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            2028
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_release_candidate_017",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_017",
-            "uv__fs_close",
-            "third_party/libuv/src/unix/fs.c",
-            161
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_acquire_candidate_017",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_017",
-            "uv__fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            372
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_fs_fd_v1_candidate_017_op_fs_transfer_candidate_017",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "transfer",
-          "identity": [
-            "rf_libuv_fs_fd_v1_candidate_017",
-            "uv_fs_open",
-            "third_party/libuv/src/unix/fs.c",
-            2028
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
           "case_id": "rf_libuv_getaddrinfo_v1_op_gai_transfer",
           "verdict": "fn",
           "evidence_hit": false,
@@ -953,8 +498,8 @@
         },
         {
           "case_id": "rf_libuv_getaddrinfo_v1_op_gai_acquire",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "acquire",
           "identity": [
             "rf_libuv_getaddrinfo_v1",
@@ -966,8 +511,8 @@
         },
         {
           "case_id": "rf_libuv_getaddrinfo_v1_op_gai_release",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_getaddrinfo_v1",
@@ -979,8 +524,8 @@
         },
         {
           "case_id": "rf_libuv_getpwuid_buf_v1_op_pw_acquire",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "acquire",
           "identity": [
             "rf_libuv_getpwuid_buf_v1",
@@ -992,8 +537,8 @@
         },
         {
           "case_id": "rf_libuv_getpwuid_buf_v1_op_pw_release",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "release",
           "identity": [
             "rf_libuv_getpwuid_buf_v1",
@@ -1004,139 +549,9 @@
           "notes": "Operation fact, not a final defect classification."
         },
         {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_acquire_candidate_002",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_002",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1274
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_002_op_pw_release_candidate_002",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_002",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1322
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_acquire_candidate_006",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_006",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1274
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_006_op_pw_release_candidate_006",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_006",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1322
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_acquire_candidate_010",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_010",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1274
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_010_op_pw_release_candidate_010",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_010",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1322
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_acquire_candidate_014",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_014",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1274
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_014_op_pw_release_candidate_014",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_014",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1322
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_acquire_candidate_018",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "acquire",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_018",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1274
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
-          "case_id": "rf_libuv_getpwuid_buf_v1_candidate_018_op_pw_release_candidate_018",
-          "verdict": "fn",
-          "evidence_hit": false,
-          "kind": "release",
-          "identity": [
-            "rf_libuv_getpwuid_buf_v1_candidate_018",
-            "uv__getpwuid_r",
-            "third_party/libuv/src/unix/core.c",
-            1322
-          ],
-          "notes": "Operation fact, not a final defect classification."
-        },
-        {
           "case_id": "rf_libuv_scandir_entries_v1_op_scan_acquire",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "acquire",
           "identity": [
             "rf_libuv_scandir_entries_v1",
@@ -1189,8 +604,8 @@
       "evidence_hit_rate": null,
       "coverage": 0.0,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 32,
-      "prediction_count": 32,
+      "unlabelled_predictions": 36,
+      "prediction_count": 36,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,

@@ -17,6 +17,13 @@ def envelope(category, run_id, source, origin):
             "source": source, "origin": origin, "items": [], "evidence": [], "warnings": []}
 
 
+def _call_chain_node(node):
+    exported = copy.deepcopy(node)
+    if node.get("kind") == "external_function" and node.get("name"):
+        exported.setdefault("symbol", f"fn:{node['name']}")
+    return exported
+
+
 def export_graph(graph, verification=None, native=False):
     docs = {k: envelope(k, graph["run_id"], graph.get("meta", {}), "analyzer") for k in FILES}
     doc = docs["call_chain"]
@@ -32,7 +39,8 @@ def export_graph(graph, verification=None, native=False):
             raise ValueError(f"edge {e['id']} lacks resolvable evidence")
         e["status"] = verdicts.get(e["id"], "unconfirmed")
         item = {"id": e["id"], "entry": e["source"], "direction": "caller_to_callee",
-                "nodes": [nodes[x] for x in dict.fromkeys([e["source"], e["target"]])], "edges": [e],
+                "nodes": [_call_chain_node(nodes[x]) for x in dict.fromkeys([e["source"], e["target"]])],
+                "edges": [e],
                 "confidence": e["confidence"], "evidence_ids": e["evidence_ids"], "status": e["status"]}
         doc["items"].append(item)
     doc["evidence"] = graph["evidence"]

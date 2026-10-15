@@ -12,29 +12,29 @@
       "input_status": "partial",
       "gold_positive": 110,
       "gold_negative": 10,
-      "tp": 75,
+      "tp": 103,
       "fp": 0,
-      "fn": 35,
+      "fn": 7,
       "tn": 10,
       "precision": 1.0,
-      "recall": 0.6818181818181818,
-      "f1": 0.8108108108108109,
+      "recall": 0.9363636363636364,
+      "f1": 0.9671361502347418,
       "type_accuracy": 1.0,
       "evidence_hit_rate": 1.0,
-      "coverage": 0.6818181818181818,
-      "unconfirmed_ratio": 0.05921539600296077,
-      "unlabelled_predictions": 1276,
-      "prediction_count": 1351,
-      "duplicate_predictions": 373,
+      "coverage": 0.9363636363636364,
+      "unconfirmed_ratio": 0.05536332179930796,
+      "unlabelled_predictions": 1342,
+      "prediction_count": 1445,
+      "duplicate_predictions": 463,
       "confirmed_only": {
         "precision": 1.0,
-        "recall": 0.6818181818181818,
-        "tp": 75,
+        "recall": 0.9363636363636364,
+        "tp": 103,
         "fp": 0,
-        "f1": 0.8108108108108109
+        "f1": 0.9671361502347418
       },
       "errors_by_type": {
-        "direct_call": 35
+        "direct_call": 7
       },
       "cases": [
         {
@@ -226,8 +226,8 @@
         },
         {
           "case_id": "redis_call_037",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:aeWait",
@@ -325,8 +325,8 @@
         },
         {
           "case_id": "redis_call_081",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioDrainWorker",
@@ -336,8 +336,8 @@
         },
         {
           "case_id": "redis_call_080",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioDrainWorker",
@@ -347,8 +347,8 @@
         },
         {
           "case_id": "redis_call_082",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioDrainWorker",
@@ -369,8 +369,8 @@
         },
         {
           "case_id": "redis_call_049",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -391,8 +391,8 @@
         },
         {
           "case_id": "redis_call_044",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -402,8 +402,8 @@
         },
         {
           "case_id": "redis_call_043",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -413,8 +413,8 @@
         },
         {
           "case_id": "redis_call_045",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -424,8 +424,8 @@
         },
         {
           "case_id": "redis_call_041",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -435,8 +435,8 @@
         },
         {
           "case_id": "redis_call_046",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -446,8 +446,8 @@
         },
         {
           "case_id": "redis_call_040",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -457,8 +457,8 @@
         },
         {
           "case_id": "redis_call_048",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioInit",
@@ -479,8 +479,8 @@
         },
         {
           "case_id": "redis_call_084",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioKillThreads",
@@ -490,8 +490,8 @@
         },
         {
           "case_id": "redis_call_085",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioKillThreads",
@@ -501,8 +501,8 @@
         },
         {
           "case_id": "redis_call_083",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioKillThreads",
@@ -512,8 +512,8 @@
         },
         {
           "case_id": "redis_call_087",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioKillThreads",
@@ -523,8 +523,8 @@
         },
         {
           "case_id": "redis_call_078",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioPendingJobsOfType",
@@ -534,8 +534,8 @@
         },
         {
           "case_id": "redis_call_079",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioPendingJobsOfType",
@@ -556,8 +556,8 @@
         },
         {
           "case_id": "redis_call_074",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -589,8 +589,8 @@
         },
         {
           "case_id": "redis_call_077",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -600,8 +600,8 @@
         },
         {
           "case_id": "redis_call_071",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -611,8 +611,8 @@
         },
         {
           "case_id": "redis_call_065",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -622,8 +622,8 @@
         },
         {
           "case_id": "redis_call_072",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -644,8 +644,8 @@
         },
         {
           "case_id": "redis_call_068",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -699,8 +699,8 @@
         },
         {
           "case_id": "redis_call_070",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioProcessBackgroundJobs",
@@ -732,8 +732,8 @@
         },
         {
           "case_id": "redis_call_052",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioSubmitJob",
@@ -743,8 +743,8 @@
         },
         {
           "case_id": "redis_call_050",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioSubmitJob",
@@ -754,8 +754,8 @@
         },
         {
           "case_id": "redis_call_053",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "direct_call",
           "identity": [
             "fn:bioSubmitJob",
@@ -1374,9 +1374,9 @@
       "evidence_hit_rate": null,
       "coverage": null,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 246,
-      "prediction_count": 246,
-      "duplicate_predictions": 17,
+      "unlabelled_predictions": 132,
+      "prediction_count": 132,
+      "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
         "recall": null,
@@ -1388,7 +1388,7 @@
       "cases": []
     },
     "sync_relation": {
-      "input_status": "not_available",
+      "input_status": "succeeded",
       "gold_positive": 22,
       "gold_negative": 3,
       "tp": 0,
@@ -1401,9 +1401,9 @@
       "type_accuracy": null,
       "evidence_hit_rate": null,
       "coverage": 0.0,
-      "unconfirmed_ratio": null,
-      "unlabelled_predictions": 0,
-      "prediction_count": 0,
+      "unconfirmed_ratio": 1.0,
+      "unlabelled_predictions": 8,
+      "prediction_count": 8,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,

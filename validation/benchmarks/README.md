@@ -64,9 +64,10 @@ python scripts/export_validation.py --graph demo/redis/graph.json --verification
 
 `predictions/` 严格保留分析器现状：资源流和同步关系已接入 v1 原生分析器，
 通过 `--native` 输出真实 predictions；不能再用 Ground Truth 补齐。
-当前 libuv 原生输出为资源流 256 项、同步关系 32 项，但旧 baseline 的 identity/condition
-仍可能无法匹配，导致报告中出现 `unlabelled_predictions` 和 Recall=0。这个差异应在
-后续 identity 对齐和人工复核中处理，不能把 reviewed 标注直接算作预测。
+当前 libuv 原生输出为资源流 237 项、同步关系 36 项。资源流已使用精确 API 匹配和
+稳定资源 ID，在 17 条 confirmed 操作上得到 11 TP / 6 FN；剩余 FN 主要来自
+transfer 和平台条件位置差异。pending 资源候选不计入 Gold。Redis 重新生成图后有
+8 条同步预测，但 identity/condition 仍待对齐，不能把 reviewed 标注直接算作预测。
 `reviewed/` 用于人工查看已标注的资源操作、同步关系，明确标记
 `origin=reviewed_annotations_not_analyzer_predictions`，**不得拿来发布 baseline 分数**。
 不导出 ground_truth.classification 的 leak/race 等最终缺陷结论。

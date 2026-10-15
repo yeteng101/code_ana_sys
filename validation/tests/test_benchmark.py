@@ -118,6 +118,29 @@ class BenchmarkTests(unittest.TestCase):
                 m = evaluate(truth, self.docs)["categories"][category]
                 self.assertEqual((m["tp"], m["fp"], m["fn"], m["evidence_hit_rate"]), (1, 0, 0, 1))
 
+    def test_external_call_nodes_use_stable_symbols_for_scoring(self):
+        graph = copy.deepcopy(self.graph)
+        external_id = "ext:external_memset"
+        graph["nodes"].append({
+            "id": external_id,
+            "kind": "external_function",
+            "name": "memset",
+        })
+        graph["edges"].append({
+            "id": "external-edge",
+            "source": "fn:a",
+            "target": external_id,
+            "kind": "direct_call",
+            "confidence": 1.0,
+            "evidence_ids": ["ev"],
+        })
+        docs = export_graph(graph)
+        identities = {
+            tuple(fact["identity"]) + (fact["kind"],)
+            for fact in flatten(docs["call_chain"], "call_chain")
+        }
+        self.assertIn(("fn:a", "fn:memset", "direct_call"), identities)
+
 
 if __name__ == "__main__":
     unittest.main()

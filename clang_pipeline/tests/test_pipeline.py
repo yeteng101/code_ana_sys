@@ -11,6 +11,7 @@ from clang_pipeline.pipeline import run_pipeline
 
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE = ROOT / "demo" / "sample"
+EXTERNAL_FIXTURE = ROOT / "clang_pipeline" / "tests" / "fixtures"
 
 
 @unittest.skipUnless(shutil.which("clang++"), "clang++ is required")
@@ -94,6 +95,11 @@ class ClangPipelineTests(unittest.TestCase):
             self.assertTrue((workspace / "07-report" / "architecture.json").exists())
             self.assertTrue((workspace / "07-report" / "key-chains.json").exists())
             self.assertTrue((workspace / "07-report" / "analysis.md").exists())
+            visualization = (
+                workspace / "07-report" / "visualization.html"
+            ).read_text(encoding="utf-8")
+            self.assertIn("event_loop", visualization)
+            self.assertIn("app", visualization)
             self.assertTrue(
                 (workspace / "08-resource-flow" / "resource-flow.json").exists()
             )
@@ -108,6 +114,7 @@ class ClangPipelineTests(unittest.TestCase):
             self.assertEqual("succeeded", native["status"])
             self.assertIn("resource_flow", native)
             self.assertIn("sync_relations", native)
+            self.assertIn("visualization", native)
 
             architecture = json.loads(
                 (workspace / "07-report" / "architecture.json").read_text()
@@ -120,6 +127,93 @@ class ClangPipelineTests(unittest.TestCase):
             self.assertIn("CALL_WATCHER", analysis)
             self.assertIn("on_readable", analysis)
             self.assertIn("异步回调链", analysis)
+
+    def test_external_function_calls_are_preserved(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "workspace"
+            run_pipeline(
+                source_root=EXTERNAL_FIXTURE,
+                workspace=workspace,
+                run_id="run_test_external_flow",
+                build_profile="external-flow",
+                publish_dir=None,
+            )
+
+            graph = json.loads(
+                (workspace / "07-report" / "graph.json").read_text()
+            )
+            node_names = {
+                node["id"]: node.get("name", node["id"])
+                for node in graph["nodes"]
+            }
+            target_names = {
+                node_names[edge["target"]]
+                for edge in graph["edges"]
+                if edge.get("target")
+            }
+            self.assertTrue(
+                {
+                    "open",
+                    "close",
+                    "getaddrinfo",
+                    "freeaddrinfo",
+                    "pthread_mutex_lock",
+                    "pthread_cond_wait",
+                    "pthread_mutex_unlock",
+                }
+                <= target_names
+            )
+            self.assertGreaterEqual(
+                sum(
+                    node.get("kind") == "external_function"
+                    for node in graph["nodes"]
+                ),
+                7,
+            )
+
+            resource_flow = json.loads(
+                (
+                    workspace
+                    / "08-resource-flow"
+                    / "resource-flow.json"
+                ).read_text()
+            )
+            resource_facts = {
+                (
+                    operation.get("api"),
+                    operation.get("function"),
+                    operation.get("kind"),
+                )
+                for item in resource_flow["items"]
+                for operation in item["operations"]
+            }
+            self.assertTrue(
+                {
+                    ("open", "open_and_close", "acquire"),
+                    ("close", "open_and_close", "release"),
+                    ("getaddrinfo", "resolve_host", "acquire"),
+                    ("freeaddrinfo", "resolve_host", "release"),
+                }
+                <= resource_facts
+            )
+
+            sync_relations = json.loads(
+                (
+                    workspace
+                    / "09-sync-relations"
+                    / "sync-relations.json"
+                ).read_text()
+            )
+            self.assertTrue(sync_relations["items"])
+            self.assertIn(
+                "mutex_lock",
+                {item["relation_type"] for item in sync_relations["items"]},
+            )
+            visualization = (
+                workspace / "07-report" / "visualization.html"
+            ).read_text(encoding="utf-8")
+            self.assertIn("pthread_mutex_lock", visualization)
+            self.assertIn("open", visualization)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@
     "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
     "build_profile": "libuv-macos-clang",
     "analyzer": "libclang compact AST + clang++",
-    "generated_at": "2026-08-27T08:46:58Z",
+    "generated_at": "2026-10-15T13:11:51Z",
     "origin": "01-index/ast/*.ast.json"
   },
   "origin": "reviewed_annotations_not_analyzer_predictions",
