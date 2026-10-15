@@ -15,6 +15,44 @@
 
 ---
 
+## 仓库 URL 业务闭环
+
+```bash
+python3 -m clang_pipeline.cli repo \
+  --repo-url https://github.com/example/project.git \
+  --output artifacts/project-analysis
+```
+
+该命令会自动完成：
+
+```text
+Git URL
+  -> 检出仓库并解析 commit
+  -> 探测 compile_commands / CMake / 通用编译命令
+  -> 七阶段 Clang 流水线
+  -> 资源流与同步关系原生分析
+  -> 调用图、资源流、同步关系 JSON 导出
+  -> visualization.html 生成
+  -> manifest.json + zip 结果包
+```
+
+结果包结构：
+
+```text
+output/
+├── manifest.json
+├── graph.json
+├── architecture.json
+├── key-chains.json
+├── run-result.json
+├── report.md
+├── visualization.html
+└── external/
+    ├── call-chains.json
+    ├── resource-flow.json
+    └── sync-relations.json
+```
+
 # 周报（2026-09-11 ~ 2026-09-17）
 
 ## 一、本周结论

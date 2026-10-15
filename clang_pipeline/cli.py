@@ -15,6 +15,7 @@ from .graph_store import store_graph_json, verify_graph_json
 from .native_export import run_native_export
 from .nl_repo import prepare_question_context
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
+from .repo_agent import run_repo_analysis
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -142,6 +143,20 @@ def command_graphdb(args: argparse.Namespace) -> None:
         raise SystemExit(1)
 
 
+def command_repo(args: argparse.Namespace) -> None:
+    result = run_repo_analysis(
+        args.repo_url,
+        output_dir=args.output,
+        branch=args.branch,
+        commit=args.commit,
+        work_root=args.work_root,
+        entry_symbols=args.entry or None,
+        build_profile=args.profile,
+        archive=not args.no_archive,
+    )
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="code-reverse-agent",
@@ -222,6 +237,24 @@ def main() -> None:
         help="写入后回查节点、边、证据数量和 uv_run 出边",
     )
     graphdb.set_defaults(func=command_graphdb)
+
+    repo = subparsers.add_parser(
+        "repo",
+        help="输入仓库 URL，输出调用图、资源流、同步关系和可视化闭环产物",
+    )
+    repo.add_argument("--repo-url", required=True)
+    repo.add_argument("--output", required=True)
+    repo.add_argument("--branch", default="")
+    repo.add_argument("--commit", default="")
+    repo.add_argument("--work-root", default="")
+    repo.add_argument("--profile", default="")
+    repo.add_argument("--entry", action="append", default=[])
+    repo.add_argument(
+        "--no-archive",
+        action="store_true",
+        help="不生成 zip 压缩包",
+    )
+    repo.set_defaults(func=command_repo)
 
     args = parser.parse_args()
     args.func(args)

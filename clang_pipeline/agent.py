@@ -95,20 +95,25 @@ AGENT_TOOLS: list[dict[str, Any]] = [
         "type": "function",
         "function": {
             "name": "analyze_repo",
-            "description": "运行完整 7 阶段 Clang 流水线并生成 JSON 产物。",
+            "description": "输入仓库 URL，自动分析并输出调用图、资源流、同步关系 JSON 和可视化。",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "source": {"type": "string", "description": "源码目录"},
-                    "workspace": {"type": "string", "description": "产物工作目录"},
-                    "run_id": {"type": "string"},
+                    "repository_url": {"type": "string", "description": "Git 或本地仓库 URL"},
+                    "branch": {"type": "string", "description": "可选分支"},
+                    "commit": {"type": "string", "description": "可选固定 commit"},
+                    "output_dir": {"type": "string", "description": "结果输出目录"},
+                    "entry_symbols": {"type": "array", "items": {"type": "string"}},
+                    "source": {"type": "string", "description": "兼容旧接口：本地源码目录"},
+                    "workspace": {"type": "string", "description": "旧接口产物工作目录"},
+                    "run_id": {"type": "string", "description": "旧接口 run_id"},
                     "compile_commands": {
                         "type": "string",
                         "description": "可选，compile_commands.json 路径",
                     },
                     "build_profile": {"type": "string", "default": "default"},
                 },
-                "required": ["source", "workspace", "run_id"],
+                "required": ["repository_url", "output_dir"],
             },
         },
     },
@@ -282,6 +287,18 @@ def _tool_read_analysis_report(ctx: AgentContext, args: dict[str, Any]) -> Any:
 
 
 def _tool_analyze_repo(ctx: AgentContext, args: dict[str, Any]) -> Any:
+    if args.get("repository_url"):
+        from .repo_agent import run_repo_analysis
+
+        return run_repo_analysis(
+            str(args["repository_url"]),
+            output_dir=str(args["output_dir"]),
+            branch=args.get("branch"),
+            commit=args.get("commit"),
+            entry_symbols=args.get("entry_symbols"),
+            build_profile=args.get("build_profile") or None,
+            archive=True,
+        )
     from .nl_repo import analyze_repository
 
     return analyze_repository(
