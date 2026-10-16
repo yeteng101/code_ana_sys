@@ -1,5 +1,9 @@
 # 三类结果统一评测
 
+新仓库的通用验证项目流程见
+[`docs/validation-project-workflow.md`](../../docs/validation-project-workflow.md)。
+libuv/Redis 下面的 baseline 只属于各自固定 commit，不能作为其他仓库 Gold。
+
 四项看板交付：统一评测器 `178904939953773531550094`、libuv baseline
 `178904939961425020750097`、Redis 基准 `178904939969235275750100`、
 外部 JSON `178904939977269613650103`。认领人：630。

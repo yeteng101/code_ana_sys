@@ -18,6 +18,18 @@ validation/redis/sync-relations.json
 validation/人工复核表-2026-10-16.xlsx
 ```
 
+新仓库使用通用 CSV 复核表，不走上面的历史 Excel：
+
+```text
+validation/datasets/<project-id>/review-table.csv
+```
+
+新仓库初始化、候选收集、复核结论转 Gold 的完整命令见：
+
+```text
+docs/validation-project-workflow.md
+```
+
 自动生成的 benchmark 文件不要直接人工修改：
 
 ```text

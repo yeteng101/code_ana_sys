@@ -16,6 +16,7 @@ from .native_export import run_native_export
 from .nl_repo import prepare_question_context
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
 from .repo_agent import run_repo_analysis
+from scripts.validation_projects import collect_candidates, scaffold_project
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -154,6 +155,25 @@ def command_repo(args: argparse.Namespace) -> None:
         build_profile=args.profile,
         archive=not args.no_archive,
     )
+    if args.validation_project:
+        scaffold = scaffold_project(
+            project_id=args.validation_project,
+            name=args.validation_name,
+            repository=args.validation_repository or result["repository"],
+            repository_url=args.repo_url,
+            commit=result["commit"],
+            build_profile=result["build_profile"],
+        )
+        candidates = collect_candidates(
+            project_id=args.validation_project,
+            predictions_dir=Path(result["output_dir"]) / "external",
+            limit=args.validation_limit,
+            source_root=args.validation_source_root or result["source_dir"],
+        )
+        result["validation"] = {
+            "scaffold": scaffold,
+            "candidates": candidates,
+        }
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
@@ -249,6 +269,15 @@ def main() -> None:
     repo.add_argument("--work-root", default="")
     repo.add_argument("--profile", default="")
     repo.add_argument("--entry", action="append", default=[])
+    repo.add_argument(
+        "--validation-project",
+        default="",
+        help="同时创建通用验证项目并收集人工复核候选",
+    )
+    repo.add_argument("--validation-name", default="")
+    repo.add_argument("--validation-repository", default="")
+    repo.add_argument("--validation-source-root", default="")
+    repo.add_argument("--validation-limit", type=int, default=100)
     repo.add_argument(
         "--no-archive",
         action="store_true",

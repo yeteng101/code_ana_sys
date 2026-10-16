@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "project_id": "new-project",
+  "repository": "",
+  "commit": "",
+  "generated_at": "",
+  "prediction_sources": [],
+  "limit_per_category": null,
+  "truncated": false,
+  "facts": []
+}

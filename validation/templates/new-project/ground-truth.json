@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "new-project-validation-v1",
+  "repository": "",
+  "commit": "",
+  "review": {
+    "method": "human_review_of_analyzer_candidates",
+    "human_review": "pending"
+  },
+  "cases": []
+}

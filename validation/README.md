@@ -3,6 +3,9 @@
 统一评测、libuv/Redis baseline 与三类外部 JSON：
 [`benchmarks/README.md`](benchmarks/README.md)。
 
+新仓库验证项目从骨架到 Gold 的完整流程：
+[`../docs/validation-project-workflow.md`](../docs/validation-project-workflow.md)。
+
 人工复核步骤和 Excel 复核表：
 [`MANUAL_REVIEW_GUIDE.md`](MANUAL_REVIEW_GUIDE.md)。
 
@@ -13,6 +16,21 @@
 
 本目录的标注规范部分参照《第一组返回结果与通信接口规范 v2》，但验证集只负责
 记录可复核的事实和人工确认的 ground truth，不把验证集标签直接当作对外接口结论。
+
+## 通用框架与仓库专用 Gold
+
+评测器、schema、证据规则和脚本可以复用到任何 C/C++ 仓库；libuv/Redis 的
+`ground-truth.json` 只属于各自固定 commit。迁移到新仓库时：
+
+```text
+复用：分析器、JSON 导出、打分器、注册校验、source hash 规则
+重建：仓库 pin、candidate 复核、Gold、负样本和人工漏检补充
+禁止：把 libuv/Redis Gold 当作新仓库的标准答案
+```
+
+新项目目录统一放在 `validation/datasets/<project-id>/`，并在
+`validation/projects.json` 注册。分析结果先成为 candidate；只有人工
+`Confirmed` / `Rejected` 或 `gold-additions.json` 才进入 Gold。
 
 ## 三类结果
 

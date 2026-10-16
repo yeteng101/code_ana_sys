@@ -6,6 +6,8 @@
 >
 > 人工复核：[validation/MANUAL_REVIEW_GUIDE.md](validation/MANUAL_REVIEW_GUIDE.md)
 >
+> 新仓库验证流程：[docs/validation-project-workflow.md](docs/validation-project-workflow.md)
+>
 > 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)
 >
 > 本周把代码逆向分析结果从固定示例图升级为仓库无关、自动生成、嵌入 Agent 流程的
@@ -19,6 +21,10 @@
 >
 > 当前风险：资源流 transfer 和跨函数所有权未完成；同步关系 condition/线程身份未对齐；
 > external builtin 和宏边验证规则仍不完整；人工复核 pending。
+
+> 通用验证框架已补齐项目注册、candidate 复核、仓库专用 Gold、source hash 固定和
+> 注册校验。框架可迁移，但每个新仓库必须重建自己的 Gold，不能复用 libuv/Redis
+> 标准答案。
 
 ---
 

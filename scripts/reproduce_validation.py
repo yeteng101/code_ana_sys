@@ -12,6 +12,7 @@ def run(*args):
 
 
 def main():
+    run("scripts/check_validation_projects.py")
     run("scripts/prepare_validation_truth.py")
     for project in ("libuv", "redis"):
         run("scripts/check_benchmark_sources.py", "--benchmark", f"validation/benchmarks/{project}")

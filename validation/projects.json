@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "description": "Validation project registry. Existing libuv/Redis data remains backward compatible.",
+  "template": "validation/templates/new-project",
+  "projects": [
+    {
+      "id": "libuv",
+      "name": "libuv",
+      "repository": "libuv/libuv",
+      "commit": "8fb9cb919489a48880680a56efecff6a7dfb4504",
+      "datasets": {
+        "call_chain": "validation/call-chains/dataset.json",
+        "resource_flow": "validation/resource-flow/dataset.json",
+        "sync_relation": "validation/sync-relations/dataset.json"
+      },
+      "results": "validation/results/libuv"
+    },
+    {
+      "id": "redis",
+      "name": "Redis",
+      "repository": "redis/redis",
+      "commit": "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7",
+      "datasets": {
+        "call_chain": "validation/redis/call-chains.json",
+        "sync_relation": "validation/redis/sync-relations.json"
+      },
+      "results": "validation/results/redis"
+    }
+  ]
+}

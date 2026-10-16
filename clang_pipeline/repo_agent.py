@@ -13,6 +13,7 @@ from urllib.parse import unquote, urlparse
 from .clang_ast import read_json, utc_now, write_json
 from .nl_repo import discover_compile_commands, slugify_repository
 from .pipeline import run_pipeline
+from .visualization import write_visualization
 
 
 def repository_label(url: str) -> str:
@@ -20,6 +21,24 @@ def repository_label(url: str) -> str:
     path = Path(unquote(parsed.path)).name
     name = re.sub(r"\.git$", "", path)
     return slugify_repository(Path(name)) or "repository"
+
+
+def repository_identity(url: str) -> str:
+    parsed = urlparse(url)
+    raw_path = parsed.path
+    if parsed.scheme == "":
+        if ":" not in raw_path:
+            return repository_label(url)
+        raw_path = raw_path.split(":", 1)[1]
+    path = unquote(raw_path).strip("/")
+    if parsed.scheme in {"http", "https", "ssh", "git", ""} and path:
+        path = re.sub(r"\.git$", "", path)
+        parts = [part for part in path.split("/") if part]
+        if len(parts) >= 2:
+            return "/".join(parts[-2:])
+        if len(parts) == 1:
+            return parts[0]
+    return repository_label(url)
 
 
 def _git(args: list[str], cwd: Path) -> str:
@@ -179,6 +198,39 @@ def build_compile_commands(
     return generic_compile_commands(repo)
 
 
+def _relativize_json_paths(value: Any, source_root: Path) -> Any:
+    root = source_root.resolve()
+    if isinstance(value, dict):
+        return {
+            key: _relativize_json_paths(item, source_root)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_relativize_json_paths(item, source_root) for item in value]
+    if isinstance(value, str) and Path(value).is_absolute():
+        try:
+            resolved = Path(value).resolve()
+        except OSError:
+            return value
+        if resolved.is_relative_to(root):
+            return resolved.relative_to(root).as_posix()
+    return value
+
+
+def relativize_artifact_paths(output_dir: Path, source_root: Path) -> None:
+    paths = [output_dir / name for name in (
+        "graph.json",
+        "architecture.json",
+        "key-chains.json",
+        "run-result.json",
+    )]
+    paths.extend((output_dir / "external").glob("*.json"))
+    for path in paths:
+        if not path.is_file():
+            continue
+        write_json(path, _relativize_json_paths(read_json(path), source_root))
+
+
 def bundle_artifacts(
     workspace: Path,
     output_dir: Path,
@@ -219,6 +271,7 @@ def bundle_artifacts(
     manifest = {
         "schema_version": "1.0",
         "run_id": run_id,
+        "repository": graph.get("meta", {}).get("repository", repository_label(repository_url)),
         "repository_url": repository_url,
         "commit": commit,
         "build_profile": build_profile,
@@ -263,6 +316,7 @@ def run_repo_analysis(
         work_root=work_root,
     )
     run_id = f"run_{label}_{int(time.time())}"
+    repository = repository_identity(repository_url)
     compile_units = build_compile_commands(repo)
     target_output = Path(output_dir).expanduser().resolve()
     target_workspace = target_output / "workspace"
@@ -275,9 +329,9 @@ def run_repo_analysis(
         build_profile=profile,
         compile_commands=compile_units,
         publish_dir=target_output,
-        repository=label,
         commit=resolved_commit,
         entry_symbols=entry_symbols,
+        repository=repository,
     )
     bundle = bundle_artifacts(
         target_workspace,
@@ -287,6 +341,14 @@ def run_repo_analysis(
         run_id=run_id,
         build_profile=profile,
     )
+    relativize_artifact_paths(target_output, repo)
+    write_visualization(
+        target_output,
+        graph=read_json(target_output / "graph.json"),
+        resource_flow=read_json(target_output / "external" / "resource-flow.json"),
+        sync_relations=read_json(target_output / "external" / "sync-relations.json"),
+        output=target_output / "visualization.html",
+    )
     archive_path = ""
     if archive:
         archive_path = str(target_output) + ".zip"
@@ -295,9 +357,12 @@ def run_repo_analysis(
     return {
         "status": "succeeded",
         "repository_url": repository_url,
-        "repository": label,
+        "repository": repository,
+        "repository_label": label,
         "commit": resolved_commit,
         "run_id": run_id,
+        "build_profile": profile,
+        "source_dir": str(repo),
         "workspace": str(target_workspace),
         "output_dir": str(bundle),
         "archive": archive_path,

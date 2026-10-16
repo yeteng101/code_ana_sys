@@ -13,6 +13,7 @@
 → Agent 工具调用
 → 三类分析结果
 → 统一验证集
+→ 新仓库 candidate / Gold 工作流
 → 可视化
 → 仓库 URL 业务闭环
 ```
@@ -65,6 +66,11 @@ open /tmp/demo-analysis/visualization.html
 
 是。Gold 只用于评测，分析器不读取 Gold 作为预测。
 
+### 验证集能否直接迁移到新仓库？
+
+评测框架和流程可以复用，libuv/Redis 的 Gold 不能复用。每个仓库需要固定
+commit、重新收集 candidate、人工确认/拒绝，并补充分析器漏检的 Gold。
+
 ### Agent 体现在哪里？
 
 MCP 工具层、AgentContext、工具执行循环、Claude Code/OpenAI 后端和仓库 URL 闭环。
@@ -76,6 +82,21 @@ MCP 工具层、AgentContext、工具执行循环、Claude Code/OpenAI 后端和
 ### 结果是否可复现？
 
 固定 commit、源码 hash、evidence 和构建 profile，CI 可重复生成评测结果。
+
+### 新仓库从 URL 到 Gold 的命令是什么？
+
+完整命令和文件状态在
+[`validation-project-workflow.md`](validation-project-workflow.md)：
+
+```text
+scaffold_validation_project
+-> collect_validation_candidates
+-> 人工 review-table.csv
+-> build_validation_ground_truth
+-> pin_validation_project
+-> check_validation_projects
+-> evaluate_validation
+```
 
 ## 6. 汇报结尾
 
