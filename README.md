@@ -6,6 +6,8 @@
 >
 > 人工复核：[validation/MANUAL_REVIEW_GUIDE.md](validation/MANUAL_REVIEW_GUIDE.md)
 >
+> 模拟复核：[validation/reviews/README.md](validation/reviews/README.md)
+>
 > 新仓库验证流程：[docs/validation-project-workflow.md](docs/validation-project-workflow.md)
 >
 > 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)

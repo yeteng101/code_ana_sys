@@ -66,6 +66,12 @@ open /tmp/demo-analysis/visualization.html
 
 是。Gold 只用于评测，分析器不读取 Gold 作为预测。
 
+### 这次模拟复核能当作人工复核吗？
+
+不能。模拟复核完成了 356 行的 evidence 源码检查，并生成独立 reviewed Gold，
+但它仍是 `method=simulated_manual_review_by_codex`，官方
+`human_review=pending`。汇报时应明确这是 AI 辅助预审，最终需人工抽检确认。
+
 ### 验证集能否直接迁移到新仓库？
 
 评测框架和流程可以复用，libuv/Redis 的 Gold 不能复用。每个仓库需要固定

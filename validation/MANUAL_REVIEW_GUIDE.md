@@ -30,6 +30,16 @@ validation/datasets/<project-id>/review-table.csv
 docs/validation-project-workflow.md
 ```
 
+2026-10-16 的 Codex 模拟复核结果见：
+
+```text
+validation/reviews/simulated-review-2026-10-16.json
+validation/人工复核表-2026-10-16-simulated.xlsx
+```
+
+模拟复核只做 evidence 源码检查加分类规则，不冒充人工确认；
+原始 `human_review` 仍保持 `pending`。
+
 自动生成的 benchmark 文件不要直接人工修改：
 
 ```text

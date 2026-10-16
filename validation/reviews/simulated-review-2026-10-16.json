@@ -1,0 +1,3318 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-16T06:01:08+00:00",
+  "reviewer": "codex-simulated-review-2026-10-16",
+  "review": {
+    "human_review": "pending",
+    "method": "simulated_manual_review_by_codex",
+    "reviewer": "codex-simulated-review-2026-10-16",
+    "generated_at": "2026-10-16T06:01:08+00:00",
+    "scope": "Every evidence anchor was checked against the pinned checkout. Decisions are automated source checks plus category heuristics; they do not replace a human reviewer.",
+    "notes": "Generated placeholder call candidates and duplicate pending resource candidates were rejected as Gold. Official human_review remains pending."
+  },
+  "summary": {
+    "rows": 356,
+    "decisions": {
+      "Confirmed": 220,
+      "Confirmed with condition": 17,
+      "Rejected": 119
+    },
+    "gold_rows": 218,
+    "gold_by_category": {
+      "call_chain": 147,
+      "resource_flow": 17,
+      "sync_relation": 54
+    },
+    "libuv_gold_cases": 82,
+    "redis_gold_cases": 145,
+    "source_checks": "verified"
+  },
+  "entries": [
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_004",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_005",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_sample_006",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_004",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_sample_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_sample_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_sample_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_005",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_006",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_007",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_008",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_009",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_010",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_011",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_012",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_013",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_014",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_015",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_pos_libuv_016",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_004",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_005",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_006",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_007",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_008",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_009",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_010",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_neg_libuv_011",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "调用方向、类型与源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_001",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_002",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_003",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_004",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_005",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_006",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_007",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_008",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_009",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_010",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_011",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_012",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_013",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_014",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_015",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_016",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_017",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_018",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_019",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_020",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_021",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_022",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_023",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_024",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_025",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_026",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_027",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_028",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_029",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_030",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_031",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_032",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_033",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_034",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_035",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_036",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_037",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_038",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_039",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_040",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_041",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_042",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_043",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_044",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_045",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_046",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_047",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_048",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_049",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_050",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_051",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_052",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_053",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_054",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_055",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_056",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_057",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_058",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_059",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_060",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_061",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_062",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_063",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "libuv",
+      "id": "cc_negative_candidate_064",
+      "decision": "Rejected",
+      "evidence_valid": false,
+      "reason": "自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。",
+      "gold": false
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_004",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_005",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_006",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_007",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_008",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_009",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_010",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_011",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_012",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_013",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_014",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_015",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_016",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_017",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_018",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_019",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_020",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_021",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_022",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_023",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_024",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_025",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_026",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_027",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_028",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_029",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_030",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_031",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_032",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_033",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_034",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_035",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_036",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_037",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_038",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_039",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_040",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_041",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_042",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_043",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_044",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_045",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_046",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_047",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_048",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_049",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_050",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_051",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_052",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_053",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_054",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_055",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_056",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_057",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_058",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_059",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_060",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_061",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_062",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_063",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_064",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_065",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_066",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_067",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_068",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_069",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_070",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_071",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_072",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_073",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_074",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_075",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_076",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_077",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_078",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_079",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_080",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_081",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_082",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_083",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_084",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_085",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_086",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_087",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_088",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_089",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_090",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_091",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_092",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_093",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_094",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_095",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_096",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_097",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_098",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_099",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_100",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_101",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_102",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_103",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_104",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_105",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_106",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_107",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_108",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_109",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_call_110",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_004",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_005",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_006",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_007",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_008",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_009",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "call_chain",
+      "project": "redis",
+      "id": "redis_negative_010",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "固定 commit 源码、行号和调用片段一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1",
+      "operation_id": "op_fs_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1",
+      "operation_id": "op_fs_transfer",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1",
+      "operation_id": "op_fs_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1",
+      "operation_id": "op_pw_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1",
+      "operation_id": "op_pw_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1",
+      "operation_id": "op_async_acquire",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "平台分支或所有权条件成立时，该资源操作成立。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1",
+      "operation_id": "op_async_transfer",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "平台分支或所有权条件成立时，该资源操作成立。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1",
+      "operation_id": "op_async_release_wfd",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "平台分支或所有权条件成立时，该资源操作成立。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1",
+      "operation_id": "op_async_release_io",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "平台分支或所有权条件成立时，该资源操作成立。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1",
+      "operation_id": "op_leak_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1",
+      "operation_id": "op_leak_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_ownership_transfer_v1",
+      "operation_id": "op_transfer_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_ownership_transfer_v1",
+      "operation_id": "op_transfer_escape",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getaddrinfo_v1",
+      "operation_id": "op_gai_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getaddrinfo_v1",
+      "operation_id": "op_gai_transfer",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getaddrinfo_v1",
+      "operation_id": "op_gai_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_scandir_entries_v1",
+      "operation_id": "op_scan_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_scandir_entries_v1",
+      "operation_id": "op_scan_transfer",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_scandir_entries_v1",
+      "operation_id": "op_scan_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_dlopen_handle_v1",
+      "operation_id": "op_dl_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_dlopen_handle_v1",
+      "operation_id": "op_dl_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": true
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_double_free_v1",
+      "operation_id": "op_df_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_double_free_v1",
+      "operation_id": "op_df_release_1",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_double_free_v1",
+      "operation_id": "op_df_release_2",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_use_after_free_v1",
+      "operation_id": "op_uaf_acquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_use_after_free_v1",
+      "operation_id": "op_uaf_release",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_use_after_free_v1",
+      "operation_id": "op_uaf_use",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "资源操作事实和 evidence 与固定源码一致。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_001",
+      "operation_id": "op_fs_acquire_candidate_001",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_001",
+      "operation_id": "op_fs_transfer_candidate_001",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_001",
+      "operation_id": "op_fs_release_candidate_001",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_002",
+      "operation_id": "op_pw_acquire_candidate_002",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_002",
+      "operation_id": "op_pw_release_candidate_002",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "operation_id": "op_async_acquire_candidate_003",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "operation_id": "op_async_transfer_candidate_003",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "operation_id": "op_async_release_wfd_candidate_003",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_003",
+      "operation_id": "op_async_release_io_candidate_003",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_004",
+      "operation_id": "op_leak_acquire_candidate_004",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_004",
+      "operation_id": "op_leak_release_candidate_004",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_005",
+      "operation_id": "op_fs_acquire_candidate_005",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_005",
+      "operation_id": "op_fs_transfer_candidate_005",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_005",
+      "operation_id": "op_fs_release_candidate_005",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_006",
+      "operation_id": "op_pw_acquire_candidate_006",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_006",
+      "operation_id": "op_pw_release_candidate_006",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "operation_id": "op_async_acquire_candidate_007",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "operation_id": "op_async_transfer_candidate_007",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "operation_id": "op_async_release_wfd_candidate_007",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_007",
+      "operation_id": "op_async_release_io_candidate_007",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_008",
+      "operation_id": "op_leak_acquire_candidate_008",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_008",
+      "operation_id": "op_leak_release_candidate_008",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_009",
+      "operation_id": "op_fs_acquire_candidate_009",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_009",
+      "operation_id": "op_fs_transfer_candidate_009",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_009",
+      "operation_id": "op_fs_release_candidate_009",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_010",
+      "operation_id": "op_pw_acquire_candidate_010",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_010",
+      "operation_id": "op_pw_release_candidate_010",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "operation_id": "op_async_acquire_candidate_011",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "operation_id": "op_async_transfer_candidate_011",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "operation_id": "op_async_release_wfd_candidate_011",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_011",
+      "operation_id": "op_async_release_io_candidate_011",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_012",
+      "operation_id": "op_leak_acquire_candidate_012",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_012",
+      "operation_id": "op_leak_release_candidate_012",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_013",
+      "operation_id": "op_fs_acquire_candidate_013",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_013",
+      "operation_id": "op_fs_transfer_candidate_013",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_013",
+      "operation_id": "op_fs_release_candidate_013",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_014",
+      "operation_id": "op_pw_acquire_candidate_014",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_014",
+      "operation_id": "op_pw_release_candidate_014",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "operation_id": "op_async_acquire_candidate_015",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "operation_id": "op_async_transfer_candidate_015",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "operation_id": "op_async_release_wfd_candidate_015",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_015",
+      "operation_id": "op_async_release_io_candidate_015",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_016",
+      "operation_id": "op_leak_acquire_candidate_016",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_016",
+      "operation_id": "op_leak_release_candidate_016",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_017",
+      "operation_id": "op_fs_acquire_candidate_017",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_017",
+      "operation_id": "op_fs_transfer_candidate_017",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_fs_fd_v1_candidate_017",
+      "operation_id": "op_fs_release_candidate_017",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_018",
+      "operation_id": "op_pw_acquire_candidate_018",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_getpwuid_buf_v1_candidate_018",
+      "operation_id": "op_pw_release_candidate_018",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "operation_id": "op_async_acquire_candidate_019",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "operation_id": "op_async_transfer_candidate_019",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "operation_id": "op_async_release_wfd_candidate_019",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_libuv_async_fd_v1_candidate_019",
+      "operation_id": "op_async_release_io_candidate_019",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_020",
+      "operation_id": "op_leak_acquire_candidate_020",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "resource_flow",
+      "project": "libuv",
+      "id": "rf_synth_leak_error_path_v1_candidate_020",
+      "operation_id": "op_leak_release_candidate_020",
+      "decision": "Rejected",
+      "evidence_valid": true,
+      "reason": "与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。",
+      "gold": false
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_001_queue_publication",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_002_idle_before_wait",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_003_wait_reacquire",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_004_signal_not_dispatch",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_005_slow_counter_increment",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_006_slow_counter_decrement",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_007_callback_outside_mutex",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_008_worker_callbacks_overlap",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_009_work_before_completion",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_010_completion_lock",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_011_completion_notify",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_012_completion_transfer",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_013_done_outside_mutex",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_014_cancel_lock_order",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_015_cancel_unlock_order",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_016_cancel_publication",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_017_join_before_destroy",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_018_startup_handshake",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_019_pending_publish",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_020_relaxed_not_publication",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_021_busy_before_send",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_022_notify_before_not_busy",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_023_busy_drain",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_024_spin_before_remove",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_025_pending_before_callback",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_026_send_callback_not_bijection",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_027_epoll_dispatch",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_028_eventfd_wakeup",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_029_rw_writer_to_reader",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_030_rw_writer_to_writer",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步原语、执行上下文和 happens-before 证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_031_rw_readers_overlap",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "libuv",
+      "id": "sync_032_failed_trylock",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "结论表达的是未知或并发边界，条件和 evidence 一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_001",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_002",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_003",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_004",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_005",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_006",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_007",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_008",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_009",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_010",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_011",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_012",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_013",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "无法从现有证据推出确定顺序，unknown 结论成立。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_014",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "并发关系成立，但同一条源码锚点代表不同实例或分支，需要条件区分。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_015",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_016",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_017",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_018",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_019",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_020",
+      "decision": "Confirmed",
+      "evidence_valid": true,
+      "reason": "同步顺序、condition 和源码证据一致。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_021",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "并发关系成立，但同一条源码锚点代表不同实例或分支，需要条件区分。",
+      "gold": true
+    },
+    {
+      "category": "sync_relation",
+      "project": "redis",
+      "id": "redis_sync_022",
+      "decision": "Confirmed with condition",
+      "evidence_valid": true,
+      "reason": "无法从现有证据推出确定顺序，unknown 结论成立。",
+      "gold": true
+    }
+  ]
+}

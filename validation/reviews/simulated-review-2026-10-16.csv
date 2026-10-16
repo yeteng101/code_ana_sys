@@ -1,0 +1,357 @@
+﻿category,project,id,operation_id,decision,evidence_valid,gold,reason
+call_chain,libuv,cc_pos_sample_001,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_sample_002,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_sample_003,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_sample_004,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_sample_005,,Confirmed with condition,True,False,回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。
+call_chain,libuv,cc_pos_sample_006,,Confirmed with condition,True,False,回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。
+call_chain,libuv,cc_pos_libuv_001,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_002,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_003,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_004,,Confirmed with condition,True,True,回调边存在，但目标由注册点或结构体字段决定，需保留候选条件。
+call_chain,libuv,cc_neg_sample_001,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_sample_002,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_001,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_002,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_003,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_sample_003,,Confirmed,True,False,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_005,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_006,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_007,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_008,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_009,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_010,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_011,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_012,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_013,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_014,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_015,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_pos_libuv_016,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_004,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_005,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_006,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_007,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_008,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_009,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_010,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_neg_libuv_011,,Confirmed,True,True,调用方向、类型与源码证据一致。
+call_chain,libuv,cc_negative_candidate_001,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_002,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_003,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_004,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_005,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_006,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_007,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_008,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_009,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_010,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_011,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_012,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_013,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_014,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_015,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_016,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_017,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_018,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_019,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_020,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_021,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_022,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_023,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_024,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_025,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_026,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_027,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_028,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_029,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_030,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_031,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_032,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_033,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_034,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_035,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_036,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_037,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_038,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_039,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_040,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_041,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_042,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_043,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_044,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_045,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_046,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_047,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_048,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_049,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_050,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_051,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_052,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_053,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_054,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_055,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_056,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_057,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_058,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_059,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_060,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_061,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_062,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_063,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,libuv,cc_negative_candidate_064,,Rejected,False,False,自动生成占位负样本，evidence 指向 README 而不是目标源码，不能作为代码事实进入 Gold。
+call_chain,redis,redis_call_001,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_002,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_003,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_004,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_005,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_006,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_007,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_008,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_009,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_010,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_011,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_012,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_013,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_014,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_015,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_016,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_017,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_018,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_019,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_020,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_021,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_022,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_023,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_024,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_025,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_026,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_027,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_028,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_029,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_030,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_031,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_032,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_033,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_034,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_035,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_036,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_037,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_038,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_039,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_040,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_041,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_042,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_043,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_044,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_045,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_046,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_047,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_048,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_049,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_050,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_051,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_052,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_053,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_054,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_055,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_056,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_057,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_058,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_059,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_060,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_061,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_062,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_063,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_064,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_065,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_066,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_067,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_068,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_069,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_070,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_071,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_072,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_073,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_074,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_075,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_076,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_077,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_078,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_079,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_080,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_081,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_082,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_083,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_084,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_085,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_086,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_087,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_088,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_089,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_090,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_091,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_092,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_093,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_094,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_095,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_096,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_097,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_098,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_099,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_100,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_101,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_102,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_103,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_104,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_105,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_106,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_107,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_108,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_109,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_call_110,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_001,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_002,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_003,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_004,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_005,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_006,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_007,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_008,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_009,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+call_chain,redis,redis_negative_010,,Confirmed,True,True,固定 commit 源码、行号和调用片段一致。
+resource_flow,libuv,rf_libuv_fs_fd_v1,op_fs_acquire,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_fs_fd_v1,op_fs_transfer,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_fs_fd_v1,op_fs_release,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1,op_pw_acquire,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1,op_pw_release,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_async_fd_v1,op_async_acquire,Confirmed with condition,True,True,平台分支或所有权条件成立时，该资源操作成立。
+resource_flow,libuv,rf_libuv_async_fd_v1,op_async_transfer,Confirmed with condition,True,True,平台分支或所有权条件成立时，该资源操作成立。
+resource_flow,libuv,rf_libuv_async_fd_v1,op_async_release_wfd,Confirmed with condition,True,True,平台分支或所有权条件成立时，该资源操作成立。
+resource_flow,libuv,rf_libuv_async_fd_v1,op_async_release_io,Confirmed with condition,True,True,平台分支或所有权条件成立时，该资源操作成立。
+resource_flow,libuv,rf_synth_leak_error_path_v1,op_leak_acquire,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_leak_error_path_v1,op_leak_release,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_ownership_transfer_v1,op_transfer_acquire,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_ownership_transfer_v1,op_transfer_escape,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_getaddrinfo_v1,op_gai_acquire,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_getaddrinfo_v1,op_gai_transfer,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_getaddrinfo_v1,op_gai_release,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_scandir_entries_v1,op_scan_acquire,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_scandir_entries_v1,op_scan_transfer,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_scandir_entries_v1,op_scan_release,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_dlopen_handle_v1,op_dl_acquire,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_dlopen_handle_v1,op_dl_release,Confirmed,True,True,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_double_free_v1,op_df_acquire,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_double_free_v1,op_df_release_1,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_double_free_v1,op_df_release_2,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_use_after_free_v1,op_uaf_acquire,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_use_after_free_v1,op_uaf_release,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_synth_use_after_free_v1,op_uaf_use,Confirmed,True,False,资源操作事实和 evidence 与固定源码一致。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_001,op_fs_acquire_candidate_001,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_001,op_fs_transfer_candidate_001,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_001,op_fs_release_candidate_001,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_002,op_pw_acquire_candidate_002,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_002,op_pw_release_candidate_002,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_003,op_async_acquire_candidate_003,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_003,op_async_transfer_candidate_003,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_003,op_async_release_wfd_candidate_003,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_003,op_async_release_io_candidate_003,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_004,op_leak_acquire_candidate_004,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_004,op_leak_release_candidate_004,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_005,op_fs_acquire_candidate_005,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_005,op_fs_transfer_candidate_005,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_005,op_fs_release_candidate_005,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_006,op_pw_acquire_candidate_006,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_006,op_pw_release_candidate_006,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_007,op_async_acquire_candidate_007,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_007,op_async_transfer_candidate_007,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_007,op_async_release_wfd_candidate_007,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_007,op_async_release_io_candidate_007,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_008,op_leak_acquire_candidate_008,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_008,op_leak_release_candidate_008,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_009,op_fs_acquire_candidate_009,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_009,op_fs_transfer_candidate_009,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_009,op_fs_release_candidate_009,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_010,op_pw_acquire_candidate_010,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_010,op_pw_release_candidate_010,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_011,op_async_acquire_candidate_011,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_011,op_async_transfer_candidate_011,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_011,op_async_release_wfd_candidate_011,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_011,op_async_release_io_candidate_011,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_012,op_leak_acquire_candidate_012,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_012,op_leak_release_candidate_012,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_013,op_fs_acquire_candidate_013,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_013,op_fs_transfer_candidate_013,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_013,op_fs_release_candidate_013,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_014,op_pw_acquire_candidate_014,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_014,op_pw_release_candidate_014,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_015,op_async_acquire_candidate_015,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_015,op_async_transfer_candidate_015,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_015,op_async_release_wfd_candidate_015,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_015,op_async_release_io_candidate_015,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_016,op_leak_acquire_candidate_016,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_016,op_leak_release_candidate_016,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_017,op_fs_acquire_candidate_017,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_017,op_fs_transfer_candidate_017,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_fs_fd_v1_candidate_017,op_fs_release_candidate_017,Rejected,True,False,与已确认基础样本 rf_libuv_fs_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_018,op_pw_acquire_candidate_018,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_getpwuid_buf_v1_candidate_018,op_pw_release_candidate_018,Rejected,True,False,与已确认基础样本 rf_libuv_getpwuid_buf_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_019,op_async_acquire_candidate_019,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_019,op_async_transfer_candidate_019,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_019,op_async_release_wfd_candidate_019,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_libuv_async_fd_v1_candidate_019,op_async_release_io_candidate_019,Rejected,True,False,与已确认基础样本 rf_libuv_async_fd_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_020,op_leak_acquire_candidate_020,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+resource_flow,libuv,rf_synth_leak_error_path_v1_candidate_020,op_leak_release_candidate_020,Rejected,True,False,与已确认基础样本 rf_synth_leak_error_path_v1 重复，不作为独立 Gold。
+sync_relation,libuv,sync_001_queue_publication,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_002_idle_before_wait,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_003_wait_reacquire,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_004_signal_not_dispatch,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,libuv,sync_005_slow_counter_increment,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_006_slow_counter_decrement,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_007_callback_outside_mutex,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_008_worker_callbacks_overlap,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,libuv,sync_009_work_before_completion,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_010_completion_lock,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_011_completion_notify,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_012_completion_transfer,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_013_done_outside_mutex,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_014_cancel_lock_order,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_015_cancel_unlock_order,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_016_cancel_publication,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_017_join_before_destroy,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_018_startup_handshake,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_019_pending_publish,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_020_relaxed_not_publication,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,libuv,sync_021_busy_before_send,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_022_notify_before_not_busy,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_023_busy_drain,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_024_spin_before_remove,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_025_pending_before_callback,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_026_send_callback_not_bijection,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,libuv,sync_027_epoll_dispatch,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_028_eventfd_wakeup,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_029_rw_writer_to_reader,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_030_rw_writer_to_writer,,Confirmed,True,True,同步原语、执行上下文和 happens-before 证据一致。
+sync_relation,libuv,sync_031_rw_readers_overlap,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,libuv,sync_032_failed_trylock,,Confirmed with condition,True,True,结论表达的是未知或并发边界，条件和 evidence 一致。
+sync_relation,redis,redis_sync_001,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_002,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_003,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_004,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_005,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_006,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_007,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_008,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_009,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_010,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_011,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_012,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_013,,Confirmed with condition,True,True,无法从现有证据推出确定顺序，unknown 结论成立。
+sync_relation,redis,redis_sync_014,,Confirmed with condition,True,True,并发关系成立，但同一条源码锚点代表不同实例或分支，需要条件区分。
+sync_relation,redis,redis_sync_015,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_016,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_017,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_018,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_019,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_020,,Confirmed,True,True,同步顺序、condition 和源码证据一致。
+sync_relation,redis,redis_sync_021,,Confirmed with condition,True,True,并发关系成立，但同一条源码锚点代表不同实例或分支，需要条件区分。
+sync_relation,redis,redis_sync_022,,Confirmed with condition,True,True,无法从现有证据推出确定顺序，unknown 结论成立。
