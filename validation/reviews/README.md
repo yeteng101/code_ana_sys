@@ -26,6 +26,16 @@ The reviewed Excel workbook is:
 validation/人工复核表-2026-10-16-simulated.xlsx
 ```
 
+`Source evidence` / `Target evidence` keep repository-relative local paths for
+automated checking. `Source remote evidence` / `Target remote evidence` point
+to the same line at the pinned GitHub commit:
+
+```text
+libuv v1.50.0 -> github.com/libuv/libuv
+Redis 7.2.4  -> github.com/redis/redis
+project fixtures -> github.com/yeteng101/code_ana_sys
+```
+
 Reviewed Gold snapshots are separate from the official pending-review
 benchmarks:
 

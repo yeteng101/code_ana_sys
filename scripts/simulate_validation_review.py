@@ -27,6 +27,20 @@ from scripts.prepare_validation_truth import sync_cases
 ROOT = Path(__file__).resolve().parents[1]
 REVIEWER = "codex-simulated-review-2026-10-16"
 OUTPUT_DATE = "2026-10-16"
+REMOTE_REPOSITORIES = {
+    "third_party/libuv/": (
+        "https://github.com/libuv/libuv/blob/"
+        "8fb9cb919489a48880680a56efecff6a7dfb4504/"
+    ),
+    "third_party/redis/": (
+        "https://github.com/redis/redis/blob/"
+        "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7/"
+    ),
+}
+PROJECT_REMOTE = (
+    "https://github.com/yeteng101/code_ana_sys/blob/"
+    "151d0f40d5a18bee2bd364fc02816f78076f1de9/"
+)
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -70,6 +84,22 @@ def evidence_ok(evidence: dict[str, Any]) -> tuple[bool, str]:
     if normalize(lines[line - 1]) != normalize(snippet):
         return False, f"snippet mismatch: {file}:{line}"
     return True, "evidence anchor verified"
+
+
+def remote_evidence_url(value: Any) -> str:
+    if not value:
+        return ""
+    text = str(value)
+    if ":" not in text:
+        return text
+    path, line = text.rsplit(":", 1)
+    base = PROJECT_REMOTE
+    for prefix, repository in REMOTE_REPOSITORIES.items():
+        if path.startswith(prefix):
+            base = repository
+            path = path[len(prefix) :]
+            break
+    return f"{base}{path}#L{line}"
 
 
 def review_libuv_calls(data: dict[str, Any]) -> list[dict[str, Any]]:
@@ -466,7 +496,16 @@ def write_reviewed_workbook(report: dict[str, Any]) -> Path:
     _prepare_lookups(report)
     source = ROOT / "validation/人工复核表-2026-10-16.xlsx"
     rows, original_header = _load_workbook_rows(source)
-    header = original_header + ["Operation ID", "Evidence check", "Review reason"]
+    source_evidence_index = original_header.index("Source evidence")
+    target_evidence_index = original_header.index("Target evidence")
+    header = (
+        original_header[: source_evidence_index + 1]
+        + ["Source remote evidence"]
+        + original_header[source_evidence_index + 1 : target_evidence_index + 1]
+        + ["Target remote evidence"]
+        + original_header[target_evidence_index + 1 :]
+        + ["Operation ID", "Evidence check", "Review reason"]
+    )
     decision_fill = {
         "Confirmed": PatternFill("solid", fgColor="C6EFCE"),
         "Confirmed with condition": PatternFill("solid", fgColor="FFEB9C"),
@@ -537,8 +576,17 @@ def write_reviewed_workbook(report: dict[str, Any]) -> Path:
                 row["Expected / Classification"] = "inconsistent"
             else:
                 row["Expected / Classification"] = "consistent"
-        values = [row.get(key) for key in original_header]
-        values[original_header.index("Decision")] = entry.get("decision")
+        source_remote = remote_evidence_url(row.get("Source evidence"))
+        target_remote = remote_evidence_url(row.get("Target evidence"))
+        original_values = [row.get(key) for key in original_header]
+        values = []
+        for index, value in enumerate(original_values):
+            values.append(value)
+            if index == source_evidence_index:
+                values.append(source_remote)
+            if index == target_evidence_index:
+                values.append(target_remote)
+        values[header.index("Decision")] = entry.get("decision")
         values.extend(
             [
                 entry.get("operation_id", ""),
@@ -547,6 +595,17 @@ def write_reviewed_workbook(report: dict[str, Any]) -> Path:
             ]
         )
         sheet.append(values)
+        current_row = sheet.max_row
+        source_remote_column = header.index("Source remote evidence") + 1
+        target_remote_column = header.index("Target remote evidence") + 1
+        for column, url in (
+            (source_remote_column, source_remote),
+            (target_remote_column, target_remote),
+        ):
+            if url:
+                cell = sheet.cell(row=current_row, column=column)
+                cell.hyperlink = url
+                cell.font = Font(color="0563C1", underline="single")
 
     decision_column = header.index("Decision") + 1
     reason_column = header.index("Review reason") + 1
@@ -576,17 +635,20 @@ def write_reviewed_workbook(report: dict[str, Any]) -> Path:
         "C": 32,
         "D": 26,
         "E": 32,
-        "F": 30,
+        "F": 80,
         "G": 42,
         "H": 30,
         "I": 42,
-        "J": 20,
-        "K": 24,
+        "J": 80,
+        "K": 42,
         "L": 20,
-        "M": 18,
-        "N": 18,
-        "O": 28,
-        "P": 60,
+        "M": 24,
+        "N": 20,
+        "O": 18,
+        "P": 50,
+        "Q": 28,
+        "R": 18,
+        "S": 60,
     }
     for column, width in widths.items():
         sheet.column_dimensions[column].width = width
