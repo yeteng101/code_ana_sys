@@ -7,8 +7,8 @@
 > resource-flow 和 sync-relations，Agent 工具 `get_visualization` 可返回该文件路径。
 >
 > 当前指标：libuv 资源流 11 TP / 6 FN（recall 64.71%）；Redis 调用链 103 TP / 7 FN
-> （recall 93.64%）；Redis 同步关系原生预测 8 条。libuv / Redis 图已重新生成，
-> 分别包含 216 / 55 个 external function 节点。
+> （recall 93.64%）；同步关系已从 0% 提升到 libuv 12.50%、Redis 31.82%。
+> libuv / Redis 图已重新生成，分别包含 216 / 55 个 external function 节点。
 >
 > 当前风险：资源流 transfer 和跨函数所有权未完成；同步关系 condition/线程身份未对齐；
 > external builtin 和宏边验证规则仍不完整；人工复核 pending。

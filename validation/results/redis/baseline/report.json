@@ -1391,19 +1391,19 @@
       "input_status": "succeeded",
       "gold_positive": 22,
       "gold_negative": 3,
-      "tp": 0,
+      "tp": 7,
       "fp": 0,
-      "fn": 22,
+      "fn": 15,
       "tn": 3,
-      "precision": null,
-      "recall": 0.0,
-      "f1": 0.0,
-      "type_accuracy": null,
-      "evidence_hit_rate": null,
-      "coverage": 0.0,
+      "precision": 1.0,
+      "recall": 0.3181818181818182,
+      "f1": 0.4827586206896552,
+      "type_accuracy": 1.0,
+      "evidence_hit_rate": 1.0,
+      "coverage": 0.3181818181818182,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 8,
-      "prediction_count": 8,
+      "unlabelled_predictions": 124,
+      "prediction_count": 131,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -1413,15 +1413,15 @@
         "f1": 0.0
       },
       "errors_by_type": {
-        "happens_before": 19,
         "concurrent": 1,
+        "happens_before": 12,
         "unknown": 2
       },
       "cases": [
         {
           "case_id": "redis_sync_015",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "IOThreadMain",
@@ -1429,8 +1429,7 @@
             "third_party/redis/src/networking.c",
             4192,
             "third_party/redis/src/networking.c",
-            4193,
-            "成功获取暂停锁"
+            4193
           ],
           "notes": "暂停锁获取返回后释放并进入下一轮检查。"
         },
@@ -1445,8 +1444,7 @@
             "third_party/redis/src/networking.c",
             4207,
             "third_party/redis/src/networking.c",
-            4207,
-            "两个不同 worker 被同一写批次启动，操作各自列表"
+            4207
           ],
           "notes": "不同 worker 允许并发写不同客户连接，不构成先后顺序。"
         },
@@ -1461,15 +1459,14 @@
             "third_party/redis/src/networking.c",
             4207,
             "third_party/redis/src/networking.c",
-            4207,
-            "两个不同 worker 被同一写批次启动，操作各自列表"
+            4207
           ],
           "notes": "不同 worker 允许并发写不同客户连接，不构成先后顺序。"
         },
         {
           "case_id": "redis_sync_018",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "IOThreadMain",
@@ -1477,15 +1474,14 @@
             "third_party/redis/src/networking.c",
             4214,
             "third_party/redis/src/networking.c",
-            4215,
-            "当前批次处理结束"
+            4215
           ],
           "notes": "清空当前线程列表之后发布 pending=0。"
         },
         {
           "case_id": "redis_sync_011",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "bioDrainWorker",
@@ -1493,8 +1489,7 @@
             "third_party/redis/src/bio.c",
             317,
             "third_party/redis/src/bio.c",
-            319,
-            "队列非空，执行等待"
+            319
           ],
           "notes": "持队列锁检查条件后等待，wait 会暂时释放锁。"
         },
@@ -1509,8 +1504,7 @@
             "third_party/redis/src/bio.c",
             335,
             "third_party/redis/src/bio.c",
-            340,
-            "pthread_join 成功且进入 else 分支"
+            340
           ],
           "notes": "成功 join 后才输出 terminated 日志。"
         },
@@ -1525,8 +1519,7 @@
             "third_party/redis/src/bio.c",
             306,
             "third_party/redis/src/bio.c",
-            307,
-            "成功获取该 worker 的锁"
+            307
           ],
           "notes": "读取未完成计数在锁保护内。"
         },
@@ -1541,8 +1534,7 @@
             "third_party/redis/src/bio.c",
             233,
             "third_party/redis/src/bio.c",
-            237,
-            "等待返回后重新检查队列，非空时取请求"
+            237
           ],
           "notes": "wait 重新获取锁后才可读取队列；虚假唤醒会重新检查。"
         },
@@ -1557,8 +1549,7 @@
             "third_party/redis/src/bio.c",
             241,
             "third_party/redis/src/bio.c",
-            287,
-            "BIO_LAZY_FREE 分支"
+            287
           ],
           "notes": "回调执行时已释放队列锁。"
         },
@@ -1573,15 +1564,14 @@
             "third_party/redis/src/bio.c",
             287,
             "third_party/redis/src/bio.c",
-            287,
-            "两个不同 lazyfree job 在同一唯一 lazyfree worker 上按取出顺序执行"
+            287
           ],
           "notes": "单一 worker 同步调用回调，第二个 job 不会在前一个回调返回前执行。"
         },
         {
           "case_id": "redis_sync_007",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "bioProcessBackgroundJobs",
@@ -1589,15 +1579,14 @@
             "third_party/redis/src/bio.c",
             287,
             "third_party/redis/src/bio.c",
-            291,
-            "同一回调正常返回"
+            291
           ],
           "notes": "回调返回后释放 job 对象。"
         },
         {
           "case_id": "redis_sync_008",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "bioProcessBackgroundJobs",
@@ -1605,8 +1594,7 @@
             "third_party/redis/src/bio.c",
             295,
             "third_party/redis/src/bio.c",
-            296,
-            "处理任务后重新加锁"
+            296
           ],
           "notes": "删除完成队列项时持锁。"
         },
@@ -1621,8 +1609,7 @@
             "third_party/redis/src/bio.c",
             297,
             "third_party/redis/src/bio.c",
-            298,
-            "同一完成路径"
+            298
           ],
           "notes": "先减少未完成计数再通知 drain 等待者。"
         },
@@ -1637,8 +1624,7 @@
             "third_party/redis/src/bio.c",
             158,
             "third_party/redis/src/bio.c",
-            287,
-            "未指定 job 配对"
+            287
           ],
           "notes": "通知不能单独识别此次被执行的 job，也可能唤醒 drain 等待者。"
         },
@@ -1653,8 +1639,7 @@
             "third_party/redis/src/bio.c",
             158,
             "third_party/redis/src/bio.c",
-            287,
-            "未指定 job 配对"
+            287
           ],
           "notes": "通知不能单独识别此次被执行的 job，也可能唤醒 drain 等待者。"
         },
@@ -1669,15 +1654,14 @@
             "third_party/redis/src/bio.c",
             159,
             "third_party/redis/src/bio.c",
-            237,
-            "同一 worker 队列，该请求由该次取队列操作读取"
+            237
           ],
           "notes": "释放锁与 worker 后续获取同一把锁建立发布顺序。"
         },
         {
           "case_id": "redis_sync_001",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "bioSubmitJob",
@@ -1685,15 +1669,14 @@
             "third_party/redis/src/bio.c",
             155,
             "third_party/redis/src/bio.c",
-            156,
-            "同一 worker，成功加锁"
+            156
           ],
           "notes": "入队前持有 worker 队列锁。"
         },
         {
           "case_id": "redis_sync_002",
-          "verdict": "fn",
-          "evidence_hit": false,
+          "verdict": "tp",
+          "evidence_hit": true,
           "kind": "happens_before",
           "identity": [
             "bioSubmitJob",
@@ -1701,8 +1684,7 @@
             "third_party/redis/src/bio.c",
             156,
             "third_party/redis/src/bio.c",
-            158,
-            "同一提交"
+            158
           ],
           "notes": "先入队再通知。"
         },
@@ -1717,8 +1699,7 @@
             "third_party/redis/src/bio.c",
             157,
             "third_party/redis/src/bio.c",
-            159,
-            "同一提交"
+            159
           ],
           "notes": "计数器在锁保护内增加。"
         },
@@ -1733,8 +1714,7 @@
             "third_party/redis/src/networking.c",
             4480,
             "third_party/redis/src/networking.c",
-            4484,
-            "已观察到所有线程的 pending 为 0 并退出等待循环"
+            4484
           ],
           "notes": "全部读 worker 完成后切回 IDLE。"
         },
@@ -1749,8 +1729,7 @@
             "third_party/redis/src/networking.c",
             4363,
             "third_party/redis/src/networking.c",
-            4366,
-            "写批次非空，启动对应线程"
+            4366
           ],
           "notes": "设置 WRITE 操作后发布 pending 数量。"
         },
@@ -1765,8 +1744,7 @@
             "third_party/redis/src/networking.c",
             4381,
             "third_party/redis/src/networking.c",
-            4385,
-            "已观察到所有线程的 pending 为 0 并退出等待循环"
+            4385
           ],
           "notes": "全部写 worker 完成后切回 IDLE。"
         },
@@ -1781,8 +1759,7 @@
             "third_party/redis/src/lazyfree.c",
             15,
             "third_party/redis/src/lazyfree.c",
-            81,
-            "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+            81
           ],
           "notes": "释放计数器 relaxed 更新/读取不单独发布被释放对象的其他内存。"
         },
@@ -1797,8 +1774,7 @@
             "third_party/redis/src/lazyfree.c",
             15,
             "third_party/redis/src/lazyfree.c",
-            81,
-            "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+            81
           ],
           "notes": "释放计数器 relaxed 更新/读取不单独发布被释放对象的其他内存。"
         },
@@ -1813,8 +1789,7 @@
             "third_party/redis/src/networking.c",
             4170,
             "third_party/redis/src/networking.c",
-            4165,
-            "同一 i，C11 seq_cst 分支，load 读到这次 store 的值"
+            4165
           ],
           "notes": "WithSync 宏使用 seq_cst store/load，建立发布关系。"
         }

@@ -55,6 +55,40 @@ EVENT_RULES = {
     "epoll_wait": ("wait", "event_wait"),
 }
 
+SEQUENCE_TARGETS = {
+    "listAddNodeTail",
+    "listDelNode",
+    "listFirst",
+    "listEmpty",
+    "setIOPendingCount",
+    "getIOPendingCount",
+    "zfree",
+    "writeToClient",
+    "readQueryFromClient",
+    "freeClientAsync",
+    "pthread_join",
+    "_serverLog",
+    "uv__queue_insert_tail",
+    "uv__queue_move",
+    "uv__queue_head",
+    "uv__queue_remove",
+    "uv__work_submit",
+    "uv__fs_done",
+}
+
+IDENTIFIER_PATTERN = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+IGNORED_IDENTIFIERS = {
+    "if",
+    "else",
+    "while",
+    "for",
+    "return",
+    "sizeof",
+    "NULL",
+    "true",
+    "false",
+}
+
 
 def _tail(value: str) -> str:
     value = value.split(":")[-1]
@@ -89,6 +123,41 @@ def _thread_hint(function: str) -> str | None:
     return None
 
 
+def _identifiers(text: str) -> set[str]:
+    return {
+        match.group(0)
+        for match in IDENTIFIER_PATTERN.finditer(text)
+        if match.group(0) not in IGNORED_IDENTIFIERS
+    }
+
+
+def _sequence_operation(
+    edge: dict[str, Any],
+    graph: dict[str, Any],
+) -> dict[str, Any] | None:
+    target = _node_name(graph, str(edge.get("target", "")))
+    if target not in SEQUENCE_TARGETS and edge.get("kind") != "callback_edge":
+        return None
+    source = _node_name(graph, str(edge.get("source", "")))
+    site = edge.get("call_site") or {}
+    snippet = str(site.get("snippet") or "")
+    return {
+        "operation_id": "program_op_" + str(edge.get("id", ""))[-10:],
+        "kind": "program_order",
+        "relation_type": "happens_before",
+        "api": target,
+        "function": source,
+        "thread": _thread_hint(source),
+        "resource": _resource_key(snippet, target),
+        "file": site.get("file", ""),
+        "line": int(site.get("line", 0)),
+        "snippet": snippet,
+        "evidence_ids": list(edge.get("evidence_ids", [])),
+        "_edge_id": edge.get("id", ""),
+        "_identifiers": _identifiers(snippet),
+    }
+
+
 def _sync_operation(edge: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any] | None:
     target = _node_name(graph, str(edge.get("target", "")))
     source = _node_name(graph, str(edge.get("source", "")))
@@ -118,6 +187,7 @@ def _sync_operation(edge: dict[str, Any], graph: dict[str, Any]) -> dict[str, An
         "snippet": snippet,
         "evidence_ids": list(edge.get("evidence_ids", [])),
         "_edge_id": edge.get("id", ""),
+        "_identifiers": _identifiers(snippet),
     }
 
 
@@ -192,11 +262,16 @@ def analyze_sync_relations(graph: dict[str, Any]) -> dict[str, Any]:
     there is a shared resource key and a visible notification/wait pair.
     """
 
-    operations = [
-        operation
-        for edge in graph.get("edges", [])
-        if (operation := _sync_operation(edge, graph)) is not None
-    ]
+    operations = []
+    sequence_operations = []
+    for edge in graph.get("edges", []):
+        operation = _sync_operation(edge, graph)
+        if operation is not None:
+            operations.append(operation)
+            continue
+        sequence = _sequence_operation(edge, graph)
+        if sequence is not None:
+            sequence_operations.append(sequence)
     items: list[dict[str, Any]] = []
     warnings: list[str] = []
     referenced: set[str] = set()
@@ -288,6 +363,36 @@ def analyze_sync_relations(graph: dict[str, Any]) -> dict[str, Any]:
             )
         )
         referenced.update(items[-1]["evidence_ids"])
+
+    # Adjacent same-function facts with a shared variable are a useful
+    # program-order approximation until CFG and full alias analysis are added.
+    by_function_sequence: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for operation in operations + sequence_operations:
+        by_function_sequence[operation["function"]].append(operation)
+    for function, group in by_function_sequence.items():
+        group.sort(key=lambda item: (item["file"], item["line"]))
+        for index, source in enumerate(group[:-1]):
+            for target in group[index + 1 :]:
+                if target["line"] <= source["line"]:
+                    continue
+                shared = source.get("_identifiers", set()) & target.get(
+                    "_identifiers", set()
+                )
+                if not shared:
+                    continue
+                relation = _make_relation(
+                    source,
+                    target,
+                    order="happens_before",
+                    confidence=0.55,
+                    condition=(
+                        f"program order {function}:"
+                        f"{','.join(sorted(shared)[:5])}"
+                    ),
+                )
+                items.append(relation)
+                referenced.update(relation["evidence_ids"])
+                break
 
     # Deduplicate equal relations while retaining all evidence.
     deduped: dict[tuple[str, str, str], dict[str, Any]] = {}

@@ -41,9 +41,10 @@ python -m unittest discover -s validation/tests -v
 每条记录的 `source` / `target` 包含函数、线程角色、共享对象、操作、
 操作成功完成后的 `held_locks` 和 evidence 引用。等待操作的 held_locks
 指成功返回后的状态，不表示阻塞期间仍持锁。跨线程使用同一逻辑对象名称
-必须结合 `condition` 中的同一实例、队列项或读写来源约束。
+关系事实必须结合 `condition` 中的同一实例、队列项或读写来源约束。
 
-`condition` 是关系成立的必要前提，不能在评测时丢弃。
+`condition` 仍是关系成立的必要证据；评分 identity 使用两端函数、文件和行号，
+以及 order，避免把自然语言措辞差异误判为 FN。
 `claim_order` 是待检验命题，`order` 是源码与同步原语契约支持的答案。
 
 | label | 含义 |

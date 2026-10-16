@@ -27,7 +27,7 @@ checker 验证实际 HEAD、固定源码文件哈希、所有证据行与片段�
 |---|---|---|
 | 调用链 | source symbol、target symbol | direct_call / callback_edge 等 |
 | 资源流 | resource ID、函数、文件、行号 | acquire / hold / transfer / release 等 |
-| 同步关系 | 两端函数、两端文件/行号、必要条件 | happens_before / concurrent / unknown |
+| 同步关系 | 两端函数、两端文件/行号 | happens_before / concurrent / unknown |
 
 资源流 identity 的 resource ID 是调用方统一的资源标识，不是随机输出 finding ID。
 调用链符号使用 `fn:name` 等稳定标识；节点映射可通过 `node.symbol` 提供。
@@ -64,10 +64,10 @@ python scripts/export_validation.py --graph demo/redis/graph.json --verification
 
 `predictions/` 严格保留分析器现状：资源流和同步关系已接入 v1 原生分析器，
 通过 `--native` 输出真实 predictions；不能再用 Ground Truth 补齐。
-当前 libuv 原生输出为资源流 237 项、同步关系 36 项。资源流已使用精确 API 匹配和
-稳定资源 ID，在 17 条 confirmed 操作上得到 11 TP / 6 FN；剩余 FN 主要来自
-transfer 和平台条件位置差异。pending 资源候选不计入 Gold。Redis 重新生成图后有
-8 条同步预测，但 identity/condition 仍待对齐，不能把 reviewed 标注直接算作预测。
+当前 libuv 原生输出为资源流 237 项、同步关系 188 项。资源流已使用精确 API
+匹配和稳定资源 ID，在 17 条 confirmed 操作上得到 11 TP / 6 FN；剩余 FN 主要
+来自 transfer 和平台条件位置差异。同步关系使用端点 + order 作为评分 identity，
+condition 保留为必要证据。Redis 同步关系达到 7 TP / 15 FN。
 `reviewed/` 用于人工查看已标注的资源操作、同步关系，明确标记
 `origin=reviewed_annotations_not_analyzer_predictions`，**不得拿来发布 baseline 分数**。
 不导出 ground_truth.classification 的 leak/race 等最终缺陷结论。

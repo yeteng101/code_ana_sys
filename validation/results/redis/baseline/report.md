@@ -10,4 +10,4 @@ Unavailable/zero-denominator metrics are N/A. No quality gate is implied.
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | call_chain | 103 | 0 | 7 | 100.00% | 93.64% | 96.71% | 100.00% | 100.00% | 93.64% | 5.54% |
 | resource_flow | 0 | 0 | 0 | N/A | N/A | N/A | N/A | N/A | N/A | 100.00% |
-| sync_relation | 0 | 0 | 22 | N/A | 0.00% | 0.00% | N/A | N/A | 0.00% | 100.00% |
+| sync_relation | 7 | 0 | 15 | 100.00% | 31.82% | 48.28% | 100.00% | 100.00% | 31.82% | 100.00% |

@@ -83,6 +83,8 @@ event wait / notify
 - 同一函数、同一资源 key 的 lock -> unlock；
 - 同一资源 key 的 condition notify -> wait；
 - graph 中同时存在的 event notify/wait 作为低置信度关系；
+- 同一函数内相邻的队列、原子、回调、释放、join 等共享变量事件作为
+  `program order` 近似关系；
 - 每条关系带 source/target 文件、行号、snippet、confidence 和 evidence_ids。
 
 当前局限：
@@ -93,8 +95,9 @@ event wait / notify
 unknown 不会被伪装成 concurrent 或 happens_before
 ```
 
-Redis 图重新生成后有 8 条原生同步预测；仍待统一跨函数/跨线程 condition 与端点
-identity，才能和人工 Gold 精确对齐。
+Redis 图重新生成后有 131 条原生同步预测，其中 7 条与人工 Gold 精确匹配；
+libuv 有 188 条预测，其中 4 条精确匹配。剩余缺口主要是跨线程 reads-from、
+原子内存序、队列对象身份和 CFG 条件。
 
 ## 和外部 JSON 的关系
 

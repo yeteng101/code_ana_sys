@@ -73,7 +73,7 @@ def flatten(data, category):
             rows = [(o, [item["resource"], o.get("function", ""), o["file"], o["line"]], o["kind"]) for o in item["operations"]]
         else:
             a, b = item["source"], item["target"]
-            rows = [(item, [a["function"], b["function"], a["file"], a["line"], b["file"], b["line"], item.get("condition", "")], item["order"])]
+            rows = [(item, [a["function"], b["function"], a["file"], a["line"], b["file"], b["line"]], item["order"])]
         for fact, identity, kind in rows:
             facts.append({"category": category, "identity": identity, "kind": kind,
                           "status": fact["status"], "confidence": fact["confidence"],

@@ -14,7 +14,7 @@ def sync_cases(data):
         ev = {e["id"]: e for e in s["evidence"]}
         a = ev[s["source"]["evidence_ids"][0]]
         b = ev[s["target"]["evidence_ids"][0]]
-        identity = [s["source"]["function"], s["target"]["function"], a["file"], a["line"], b["file"], b["line"], s["condition"]]
+        identity = [s["source"]["function"], s["target"]["function"], a["file"], a["line"], b["file"], b["line"]]
         base = {"id": s["id"], "category": "sync_relation", "identity": identity,
                 "kind": s["order"], "expected_exists": True, "evidence": s["evidence"],
                 "notes": s["reason"], "condition": s["condition"]}

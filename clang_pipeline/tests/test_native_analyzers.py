@@ -10,6 +10,7 @@ from clang_pipeline.sync_flow import analyze_sync_relations
 
 ROOT = Path(__file__).resolve().parents[2]
 LIBUV_GRAPH = ROOT / "demo" / "libuv" / "graph.json"
+REDIS_GRAPH = ROOT / "demo" / "redis" / "graph.json"
 
 
 @unittest.skipUnless(LIBUV_GRAPH.exists(), "demo/libuv graph required")
@@ -122,6 +123,30 @@ class NativeAnalyzerTests(unittest.TestCase):
             self.assertEqual("unconfirmed", item["status"])
             self.assertTrue(item["evidence_ids"])
             self.assertIn(item["order"], {"happens_before", "happens_after", "concurrent", "unknown"})
+
+    @unittest.skipUnless(REDIS_GRAPH.exists(), "demo/redis graph required")
+    def test_redis_program_order_relations_are_emitted(self) -> None:
+        graph = json.loads(REDIS_GRAPH.read_text(encoding="utf-8"))
+        result = analyze_sync_relations(graph)
+        endpoints = {
+            (
+                item["source"]["function"],
+                item["source"]["line"],
+                item["target"]["function"],
+                item["target"]["line"],
+                item["order"],
+            )
+            for item in result["items"]
+        }
+        self.assertTrue(
+            {
+                ("bioSubmitJob", 155, "bioSubmitJob", 156, "happens_before"),
+                ("bioSubmitJob", 156, "bioSubmitJob", 158, "happens_before"),
+                ("bioDrainWorker", 317, "bioDrainWorker", 319, "happens_before"),
+                ("IOThreadMain", 4192, "IOThreadMain", 4193, "happens_before"),
+            }
+            <= endpoints
+        )
 
 
 if __name__ == "__main__":

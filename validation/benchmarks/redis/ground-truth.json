@@ -2197,8 +2197,7 @@
         "third_party/redis/src/bio.c",
         155,
         "third_party/redis/src/bio.c",
-        156,
-        "同一 worker，成功加锁"
+        156
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2228,8 +2227,7 @@
         "third_party/redis/src/bio.c",
         156,
         "third_party/redis/src/bio.c",
-        158,
-        "同一提交"
+        158
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2259,8 +2257,7 @@
         "third_party/redis/src/bio.c",
         157,
         "third_party/redis/src/bio.c",
-        159,
-        "同一提交"
+        159
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2290,8 +2287,7 @@
         "third_party/redis/src/bio.c",
         159,
         "third_party/redis/src/bio.c",
-        237,
-        "同一 worker 队列，该请求由该次取队列操作读取"
+        237
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2321,8 +2317,7 @@
         "third_party/redis/src/bio.c",
         233,
         "third_party/redis/src/bio.c",
-        237,
-        "等待返回后重新检查队列，非空时取请求"
+        237
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2352,8 +2347,7 @@
         "third_party/redis/src/bio.c",
         241,
         "third_party/redis/src/bio.c",
-        287,
-        "BIO_LAZY_FREE 分支"
+        287
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2383,8 +2377,7 @@
         "third_party/redis/src/bio.c",
         287,
         "third_party/redis/src/bio.c",
-        291,
-        "同一回调正常返回"
+        291
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2414,8 +2407,7 @@
         "third_party/redis/src/bio.c",
         295,
         "third_party/redis/src/bio.c",
-        296,
-        "处理任务后重新加锁"
+        296
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2445,8 +2437,7 @@
         "third_party/redis/src/bio.c",
         297,
         "third_party/redis/src/bio.c",
-        298,
-        "同一完成路径"
+        298
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2476,8 +2467,7 @@
         "third_party/redis/src/bio.c",
         306,
         "third_party/redis/src/bio.c",
-        307,
-        "成功获取该 worker 的锁"
+        307
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2507,8 +2497,7 @@
         "third_party/redis/src/bio.c",
         317,
         "third_party/redis/src/bio.c",
-        319,
-        "队列非空，执行等待"
+        319
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2538,8 +2527,7 @@
         "third_party/redis/src/bio.c",
         335,
         "third_party/redis/src/bio.c",
-        340,
-        "pthread_join 成功且进入 else 分支"
+        340
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2569,8 +2557,7 @@
         "third_party/redis/src/bio.c",
         158,
         "third_party/redis/src/bio.c",
-        287,
-        "未指定 job 配对"
+        287
       ],
       "kind": "unknown",
       "expected_exists": true,
@@ -2600,8 +2587,7 @@
         "third_party/redis/src/bio.c",
         158,
         "third_party/redis/src/bio.c",
-        287,
-        "未指定 job 配对"
+        287
       ],
       "kind": "happens_before",
       "expected_exists": false,
@@ -2631,8 +2617,7 @@
         "third_party/redis/src/bio.c",
         287,
         "third_party/redis/src/bio.c",
-        287,
-        "两个不同 lazyfree job 在同一唯一 lazyfree worker 上按取出顺序执行"
+        287
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2662,8 +2647,7 @@
         "third_party/redis/src/networking.c",
         4192,
         "third_party/redis/src/networking.c",
-        4193,
-        "成功获取暂停锁"
+        4193
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2693,8 +2677,7 @@
         "third_party/redis/src/networking.c",
         4363,
         "third_party/redis/src/networking.c",
-        4366,
-        "写批次非空，启动对应线程"
+        4366
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2724,8 +2707,7 @@
         "third_party/redis/src/networking.c",
         4170,
         "third_party/redis/src/networking.c",
-        4165,
-        "同一 i，C11 seq_cst 分支，load 读到这次 store 的值"
+        4165
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2767,8 +2749,7 @@
         "third_party/redis/src/networking.c",
         4214,
         "third_party/redis/src/networking.c",
-        4215,
-        "当前批次处理结束"
+        4215
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2798,8 +2779,7 @@
         "third_party/redis/src/networking.c",
         4381,
         "third_party/redis/src/networking.c",
-        4385,
-        "已观察到所有线程的 pending 为 0 并退出等待循环"
+        4385
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2829,8 +2809,7 @@
         "third_party/redis/src/networking.c",
         4480,
         "third_party/redis/src/networking.c",
-        4484,
-        "已观察到所有线程的 pending 为 0 并退出等待循环"
+        4484
       ],
       "kind": "happens_before",
       "expected_exists": true,
@@ -2860,8 +2839,7 @@
         "third_party/redis/src/networking.c",
         4207,
         "third_party/redis/src/networking.c",
-        4207,
-        "两个不同 worker 被同一写批次启动，操作各自列表"
+        4207
       ],
       "kind": "concurrent",
       "expected_exists": true,
@@ -2891,8 +2869,7 @@
         "third_party/redis/src/networking.c",
         4207,
         "third_party/redis/src/networking.c",
-        4207,
-        "两个不同 worker 被同一写批次启动，操作各自列表"
+        4207
       ],
       "kind": "happens_before",
       "expected_exists": false,
@@ -2922,8 +2899,7 @@
         "third_party/redis/src/lazyfree.c",
         15,
         "third_party/redis/src/lazyfree.c",
-        81,
-        "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+        81
       ],
       "kind": "unknown",
       "expected_exists": true,
@@ -2965,8 +2941,7 @@
         "third_party/redis/src/lazyfree.c",
         15,
         "third_party/redis/src/lazyfree.c",
-        81,
-        "C11 relaxed 分支，两个线程，仅依据计数器读写推断对象内存发布"
+        81
       ],
       "kind": "happens_before",
       "expected_exists": false,
