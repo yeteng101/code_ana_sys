@@ -15,6 +15,7 @@
 > 当前指标：libuv 资源流 11 TP / 6 FN（recall 64.71%）；Redis 调用链 103 TP / 7 FN
 > （recall 93.64%）；同步关系已从 0% 提升到 libuv 12.50%、Redis 31.82%。
 > libuv / Redis 图已重新生成，分别包含 216 / 55 个 external function 节点。
+> 同一个 URL Subagent 已对独立 C 和 C++ 示例仓库完成迁移验证，可分析任意 C/C++ 仓库。
 >
 > 当前风险：资源流 transfer 和跨函数所有权未完成；同步关系 condition/线程身份未对齐；
 > external builtin 和宏边验证规则仍不完整；人工复核 pending。
