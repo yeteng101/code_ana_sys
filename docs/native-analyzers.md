@@ -138,3 +138,7 @@ Findings：资源流、同步关系和关键链摘要
 
 页面内不请求外部服务，可以直接打开。Agent 上下文会把该文件作为
 `visualization` artifact，工具 `get_visualization` 可返回其路径。
+
+默认打开的是干净的总览视图。Graph 页面在低缩放时聚合为模块气泡，
+只显示模块间边；放大后展开节点和边。Edge mode 可选 Module edges、
+All edges 和 Selected only，避免全量图在一屏内过度拥挤。

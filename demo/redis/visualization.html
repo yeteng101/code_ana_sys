@@ -262,6 +262,16 @@
       padding: 0 10px;
       font: inherit;
     }
+    select {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 0 10px;
+      font: inherit;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -341,17 +351,24 @@
   <main>
     <section class="stats" id="viz-stats"></section>
     <nav class="tabs" aria-label="Views">
-      <button class="tab active" type="button" data-tab="graph">Graph</button>
-      <button class="tab" type="button" data-tab="overview">Overview</button>
+      <button class="tab active" type="button" data-tab="overview">Overview</button>
+      <button class="tab" type="button" data-tab="graph">Graph</button>
       <button class="tab" type="button" data-tab="modules">Modules</button>
       <button class="tab" type="button" data-tab="calls">Calls</button>
       <button class="tab" type="button" data-tab="findings">Findings</button>
     </nav>
-    <section class="panel active" id="panel-graph">
+    <section class="panel" id="panel-graph">
       <h2 class="section-title">Full Call Graph</h2>
       <div class="graph-toolbar">
         <label>Node
           <input id="graph-search" type="search" autocomplete="off">
+        </label>
+        <label>Edge mode
+          <select id="graph-edge-mode">
+            <option value="module">Module edges</option>
+            <option value="all">All edges</option>
+            <option value="selected">Selected only</option>
+          </select>
         </label>
         <button class="graph-zoom" id="graph-zoom-in" type="button" aria-label="Zoom in">+</button>
         <button class="graph-zoom" id="graph-zoom-out" type="button" aria-label="Zoom out">−</button>
@@ -366,7 +383,7 @@
       </div>
       <div class="graph-detail" id="graph-detail"></div>
     </section>
-    <section class="panel" id="panel-overview">
+    <section class="panel active" id="panel-overview">
       <h2 class="section-title">Module Graph</h2>
       <div class="graph-shell" id="module-graph"></div>
       <div class="overview-detail" id="overview-detail"></div>
@@ -426,6 +443,9 @@
           document.querySelectorAll(".panel").forEach((panel) => panel.classList.remove("active"));
           tab.classList.add("active");
           byId(`panel-${tab.dataset.tab}`).classList.add("active");
+          if (tab.dataset.tab === "graph") {
+            renderFullGraph();
+          }
         });
       });
 
@@ -449,6 +469,7 @@
         let pointerDown = false;
         let lastPointer = null;
         let moved = false;
+        let edgeMode = "module";
 
         function nodeColor(kind) {
           if (kind === "callback") return getComputedStyle(document.documentElement).getPropertyValue("--green").trim();
@@ -491,15 +512,42 @@
           const text = getComputedStyle(document.documentElement).getPropertyValue("--text").trim();
           const muted = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim();
           const border = getComputedStyle(document.documentElement).getPropertyValue("--border").trim();
+          if (view.scale < 0.28) {
+            drawAggregated(ctx, width, height, text, muted, border);
+            return;
+          }
+          drawDetailed(ctx, width, height, text, muted, border);
+        }
+
+        function visibleEdges() {
+          if (edgeMode === "selected") {
+            return edges.filter((edge) =>
+              edge.source === selectedId ||
+              edge.target === selectedId ||
+              edge.source === hoveredId ||
+              edge.target === hoveredId
+            );
+          }
+          if (edgeMode === "module") {
+            return edges.filter((edge) => {
+              const a = nodeById[edge.source];
+              const b = nodeById[edge.target];
+              return a && b && a.component !== b.component;
+            });
+          }
+          return edges;
+        }
+
+        function drawDetailed(ctx, width, height, text, muted, border) {
           ctx.save();
           ctx.translate(view.tx, view.ty);
           ctx.scale(view.scale, view.scale);
 
           ctx.lineWidth = 0.85 / view.scale;
           ctx.strokeStyle = muted;
-          ctx.globalAlpha = 0.24;
+          ctx.globalAlpha = edgeMode === "all" ? 0.11 : 0.22;
           ctx.beginPath();
-          for (const edge of edges) {
+          for (const edge of visibleEdges()) {
             const a = nodeById[edge.source];
             const b = nodeById[edge.target];
             if (!a || !b) continue;
@@ -510,12 +558,12 @@
           ctx.globalAlpha = 1;
 
           for (const node of nodes) {
-            const radius = (node.id === selectedId ? 6 : node.id === hoveredId ? 5 : 3.8) / view.scale;
+            const radius = (node.id === selectedId ? 6 : node.id === hoveredId ? 5 : 3.2) / view.scale;
             ctx.beginPath();
             ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
             ctx.fillStyle = nodeColor(node.kind);
             ctx.fill();
-            if (node.id === selectedId || node.id === hoveredId || view.scale > 0.9) {
+            if (node.id === selectedId || node.id === hoveredId || view.scale > 0.55) {
               ctx.font = `${Math.max(10, 12 / view.scale)}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
               ctx.fillStyle = text;
               ctx.textAlign = "center";
@@ -523,12 +571,72 @@
             }
           }
           ctx.restore();
+        }
+
+        function drawAggregated(ctx, width, height, text, muted, border) {
+          const components = data.full_graph.components || [];
+          const centers = new Map();
+          for (const node of nodes) {
+            const item = centers.get(node.component) || {
+              id: node.component,
+              x: 0,
+              y: 0,
+              count: 0,
+              name: node.component,
+            };
+            item.x += node.x;
+            item.y += node.y;
+            item.count += 1;
+            centers.set(node.component, item);
+          }
+          for (const [id, item] of centers) {
+            const info = components.find((component) => component.id === id);
+            item.name = info?.name || id;
+            item.x /= item.count;
+            item.y /= item.count;
+          }
+          const centerById = new Map([...centers.entries()]);
+
+          ctx.save();
+          ctx.translate(view.tx, view.ty);
+          ctx.scale(view.scale, view.scale);
+          ctx.lineWidth = 0.8 / view.scale;
+          ctx.strokeStyle = muted;
+          ctx.globalAlpha = 0.28;
+          ctx.beginPath();
+          for (const edge of data.module_edges || []) {
+            const a = centerById.get(edge.source);
+            const b = centerById.get(edge.target);
+            if (!a || !b) continue;
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+          }
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+
+          for (const item of centers.values()) {
+            const radius = 18 + Math.sqrt(item.count) * 3;
+            ctx.beginPath();
+            ctx.arc(item.x, item.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(127,127,127,0.18)";
+            ctx.fill();
+            ctx.strokeStyle = border;
+            ctx.lineWidth = 1 / view.scale;
+            ctx.stroke();
+            ctx.font = `${12 / view.scale}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillStyle = text;
+            ctx.textAlign = "center";
+            ctx.fillText(item.name, item.x, item.y - 2);
+            ctx.font = `${10 / view.scale}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+            ctx.fillText(item.count, item.x, item.y + 14);
+          }
+          ctx.restore();
 
           for (const component of data.full_graph.components || []) {
-            const node = nodes.find((item) => item.component === component.id);
-            if (!node) continue;
-            const sx = node.x * view.scale + view.tx;
-            const sy = node.y * view.scale + view.ty;
+            const item = centers.get(component.id);
+            if (!item) continue;
+            const sx = item.x * view.scale + view.tx;
+            const sy = item.y * view.scale + view.ty;
             ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
             ctx.fillStyle = border;
             ctx.textAlign = "left";
@@ -562,6 +670,7 @@
         function centerNode(node) {
           const width = shell.clientWidth || 900;
           const height = shell.clientHeight || 620;
+          view.scale = Math.max(view.scale, 0.42);
           view.tx = width / 2 - node.x * view.scale;
           view.ty = height / 2 - node.y * view.scale;
           selectedId = node.id;
@@ -623,6 +732,10 @@
         });
         byId("graph-zoom-out").addEventListener("click", () => {
           zoomAt(shell.clientWidth / 2, shell.clientHeight / 2, 0.8);
+        });
+        byId("graph-edge-mode").addEventListener("change", (event) => {
+          edgeMode = event.target.value;
+          draw();
         });
         byId("graph-search").addEventListener("input", (event) => {
           const term = event.target.value.trim().toLowerCase();
