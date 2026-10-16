@@ -3,6 +3,9 @@
 统一评测、libuv/Redis baseline 与三类外部 JSON：
 [`benchmarks/README.md`](benchmarks/README.md)。
 
+人工复核步骤和 Excel 复核表：
+[`MANUAL_REVIEW_GUIDE.md`](MANUAL_REVIEW_GUIDE.md)。
+
 同步关系样本已补齐：[`sync-relations/README.md`](sync-relations/README.md)。
 包含固定 libuv v1.50.0 源码上的 32 条关系（26 正例、6 反例），
 区分 happens_before / concurrent / unknown，并提供独立 schema、证据校验和 CI。

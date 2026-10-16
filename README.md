@@ -2,6 +2,12 @@
 
 > 详细材料：[docs/weekly-2026-10-16.md](docs/weekly-2026-10-16.md)
 >
+> Claude Code 接入：[docs/claude-code-integration.md](docs/claude-code-integration.md)
+>
+> 人工复核：[validation/MANUAL_REVIEW_GUIDE.md](validation/MANUAL_REVIEW_GUIDE.md)
+>
+> 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)
+>
 > 本周把代码逆向分析结果从固定示例图升级为仓库无关、自动生成、嵌入 Agent 流程的
 > 交互式可视化报告。流水线阶段 07 生成 `visualization.html`，原生分析完成后补充
 > resource-flow 和 sync-relations，Agent 工具 `get_visualization` 可返回该文件路径。
