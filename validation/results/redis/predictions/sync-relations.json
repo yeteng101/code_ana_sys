@@ -61,7 +61,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4197,
         "snippet": "serverAssert(getIOPendingCount(id) != 0);",
@@ -72,7 +72,7 @@
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4214,
         "snippet": "listEmpty(io_threads_list[id]);",
@@ -85,8 +85,8 @@
       "condition": "program order IOThreadMain:id",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -188,7 +188,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 317,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_ca34a55ee8dc"
         ]
@@ -199,7 +201,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 321,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_2a5413c60346"
         ]
@@ -314,12 +318,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_14568706cc50",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeLuaScripts",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 47,
+        "snippet": "atomicIncr(lazyfreed_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_80ff75f81841"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_80ff75f81841",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_14a2f3b6616d",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4187,
         "snippet": "if (getIOPendingCount(id) != 0) break;",
@@ -330,7 +375,7 @@
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4191,
         "snippet": "if (getIOPendingCount(id) == 0) {",
@@ -343,8 +388,8 @@
       "condition": "program order IOThreadMain:getIOPendingCount,id",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -437,6 +482,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_1dfe1b852f72",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "addReplyDeferredLen",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 754,
+        "snippet": "listAddNodeTail(c->reply,NULL); /* NULL is our placeholder. */",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4f25769c76ad"
+        ]
+      },
+      "target": {
+        "function": "setDeferredReply",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 801,
+        "snippet": "listDelNode(c->reply,ln);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_ceee5d027588"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication c->reply: addReplyDeferredLen -> setDeferredReply",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_4f25769c76ad",
+        "ev_ceee5d027588"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_1e7ee4435f16",
       "status": "unconfirmed",
       "relation_type": "happens_before",
@@ -483,7 +569,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 296,
         "snippet": "listDelNode(bio_jobs[worker], ln);",
@@ -494,7 +580,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 298,
         "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
@@ -507,14 +593,55 @@
       "condition": "program order bioProcessBackgroundJobs:worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
       "evidence_ids": [
         "ev_bba78f38e2a6",
         "ev_44cedd85d727"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_20ecc44668e8",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeFunctionsCtx",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 55,
+        "snippet": "atomicDecr(lazyfree_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_a72fe109fd93"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_a72fe109fd93",
+        "ev_e1de468a5b68"
       ],
       "origin": "analyzer"
     },
@@ -606,7 +733,7 @@
       "relation_type": "condition_variable",
       "source": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 158,
         "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
@@ -630,7 +757,7 @@
       "condition": "visible notification for shared resource bio_newjob_cond[worker]",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
+        "source_thread": "producer",
         "target_thread": "worker",
         "event_loop": null
       },
@@ -688,7 +815,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 251,
         "snippet": "serverLog(LL_WARNING, \"Fail to fsync the AOF file: %s\",strerror(errno));",
@@ -699,7 +826,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 255,
         "snippet": "serverLog(LL_NOTICE,\"Unable to reclaim page cache: %s\", strerror(errno));",
@@ -712,8 +839,8 @@
       "condition": "program order bioProcessBackgroundJobs:errno,s,serverLog,strerror,to",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -802,6 +929,47 @@
       "evidence_ids": [
         "ev_9e869ccb4ec2",
         "ev_bb1f7cb058e5"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_33ea7f22e1b7",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyfreeResetStats",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 86,
+        "snippet": "atomicSet(lazyfreed_objects,0);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_1816b2336e07"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_1816b2336e07",
+        "ev_d3b18607c4e3"
       ],
       "origin": "analyzer"
     },
@@ -987,7 +1155,7 @@
       "relation_type": "condition_variable",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 233,
         "snippet": "pthread_cond_wait(&bio_newjob_cond[worker], &bio_mutex[worker]);",
@@ -998,11 +1166,13 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 241,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_0e36f7949dd9"
         ]
@@ -1011,8 +1181,8 @@
       "condition": "program order bioProcessBackgroundJobs:bio_mutex,worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1028,7 +1198,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 309,
         "snippet": "now = getMonotonicUs();",
@@ -1045,7 +1215,7 @@
       },
       "target": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 334,
         "snippet": "now = getMonotonicUs();",
@@ -1065,8 +1235,8 @@
       "condition": "program order processTimeEvents:getMonotonicUs,now",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1089,7 +1259,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 287,
         "snippet": "monotime now = getMonotonicUs();",
@@ -1106,7 +1276,7 @@
       },
       "target": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 309,
         "snippet": "now = getMonotonicUs();",
@@ -1125,8 +1295,8 @@
       "condition": "program order processTimeEvents:getMonotonicUs,now",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1189,7 +1359,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioKillThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/bio.c",
         "line": 336,
         "snippet": "serverLog(LL_WARNING,",
@@ -1200,7 +1370,7 @@
       },
       "target": {
         "function": "bioKillThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/bio.c",
         "line": 340,
         "snippet": "serverLog(LL_WARNING,",
@@ -1213,8 +1383,8 @@
       "condition": "program order bioKillThreads:LL_WARNING,serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1225,12 +1395,94 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_412171fb60d7",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "freeTrackingRadixTreeAsync",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 189,
+        "snippet": "atomicIncr(lazyfree_objects,tracking->numele);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_8b57288ae88e"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_8b57288ae88e",
+        "ev_e1de468a5b68"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_424c85ec2a69",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyfreeFreeDatabase",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 29,
+        "snippet": "atomicIncr(lazyfreed_objects,numkeys);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e65645f918b2"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_e65645f918b2",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_46583037cfd6",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 271,
         "snippet": "serverLog(LL_WARNING,",
@@ -1241,7 +1493,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 281,
         "snippet": "serverLog(LL_NOTICE,\"Unable to reclaim page cache: %s\", strerror(errno));",
@@ -1254,8 +1506,8 @@
       "condition": "program order bioProcessBackgroundJobs:serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1271,7 +1523,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 436,
         "snippet": "fe->rfileProc(eventLoop,fd,fe->clientData,mask);",
@@ -1282,7 +1534,7 @@
       },
       "target": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 444,
         "snippet": "fe->wfileProc(eventLoop,fd,fe->clientData,mask);",
@@ -1295,8 +1547,8 @@
       "condition": "program order aeProcessEvents:clientData,eventLoop,fd,fe,mask",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1394,7 +1646,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4207,
         "snippet": "writeToClient(c,0);",
@@ -1405,7 +1657,7 @@
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4209,
         "snippet": "readQueryFromClient(c->conn);",
@@ -1418,8 +1670,8 @@
       "condition": "program order IOThreadMain:c",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1435,7 +1687,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "initThreadedIO",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4245,
         "snippet": "setIOPendingCount(i, 0);",
@@ -1446,11 +1698,13 @@
       },
       "target": {
         "function": "initThreadedIO",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4246,
         "snippet": "pthread_mutex_lock(&io_threads_mutex[i]); /* Thread will be stopped. */",
-        "held_locks": [],
+        "held_locks": [
+          "io_threads_mutex[i]"
+        ],
         "evidence_ids": [
           "ev_1b91ba4453ac"
         ]
@@ -1459,8 +1713,8 @@
       "condition": "program order initThreadedIO:i",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1471,23 +1725,66 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_4cc407692dee",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeTrackingTable",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 38,
+        "snippet": "atomicIncr(lazyfreed_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_6bb075704e67"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_6bb075704e67",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_4d25ed2be456",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 219,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_598a25a6efa7"
         ]
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 233,
         "snippet": "pthread_cond_wait(&bio_newjob_cond[worker], &bio_mutex[worker]);",
@@ -1500,8 +1797,8 @@
       "condition": "program order bioProcessBackgroundJobs:bio_mutex,worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1517,7 +1814,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 311,
         "snippet": "zfree(te);",
@@ -1528,7 +1825,7 @@
       },
       "target": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 331,
         "snippet": "retval = te->timeProc(eventLoop, id, te->clientData);",
@@ -1548,8 +1845,8 @@
       "condition": "program order processTimeEvents:te",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1572,7 +1869,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4191,
         "snippet": "if (getIOPendingCount(id) == 0) {",
@@ -1583,11 +1880,13 @@
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4192,
         "snippet": "pthread_mutex_lock(&io_threads_mutex[id]);",
-        "held_locks": [],
+        "held_locks": [
+          "io_threads_mutex[id]"
+        ],
         "evidence_ids": [
           "ev_6492d83567d7"
         ]
@@ -1596,8 +1895,8 @@
       "condition": "program order IOThreadMain:id",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1654,22 +1953,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4192,
         "snippet": "pthread_mutex_lock(&io_threads_mutex[id]);",
-        "held_locks": [],
+        "held_locks": [
+          "io_threads_mutex[id]"
+        ],
         "evidence_ids": [
           "ev_6492d83567d7"
         ]
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4193,
         "snippet": "pthread_mutex_unlock(&io_threads_mutex[id]);",
-        "held_locks": [],
+        "held_locks": [
+          "io_threads_mutex[id]"
+        ],
         "evidence_ids": [
           "ev_5e66003a4194"
         ]
@@ -1678,8 +1981,8 @@
       "condition": "same function/resource IOThreadMain:io_threads_mutex[id]",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -1736,22 +2039,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 155,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_671102684f50"
         ]
       },
       "target": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 159,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_c4d802be8d82"
         ]
@@ -1760,8 +2067,8 @@
       "condition": "same function/resource bioSubmitJob:bio_mutex[worker]",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -1830,7 +2137,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4366,
         "snippet": "setIOPendingCount(j, count);",
@@ -1841,7 +2148,7 @@
       },
       "target": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4381,
         "snippet": "pending += getIOPendingCount(j);",
@@ -1854,8 +2161,8 @@
       "condition": "program order handleClientsWithPendingWritesUsingThreads:j",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -1871,18 +2178,20 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 295,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_69bcca431a20"
         ]
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 296,
         "snippet": "listDelNode(bio_jobs[worker], ln);",
@@ -1895,8 +2204,8 @@
       "condition": "program order bioProcessBackgroundJobs:worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2003,12 +2312,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_5c55ca09a949",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyfreeFreeObject",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 14,
+        "snippet": "atomicDecr(lazyfree_objects,1);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_13c0a5f5a397"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_13c0a5f5a397",
+        "ev_e1de468a5b68"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_5d9944c1202a",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 408,
         "snippet": "eventLoop->aftersleep(eventLoop);",
@@ -2019,7 +2369,7 @@
       },
       "target": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 436,
         "snippet": "fe->rfileProc(eventLoop,fd,fe->clientData,mask);",
@@ -2032,8 +2382,8 @@
       "condition": "program order aeProcessEvents:eventLoop",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2049,7 +2399,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4352,
         "snippet": "listAddNodeTail(io_threads_list[0],c);",
@@ -2060,7 +2410,7 @@
       },
       "target": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4357,
         "snippet": "listAddNodeTail(io_threads_list[target_id],c);",
@@ -2073,8 +2423,8 @@
       "condition": "program order handleClientsWithPendingWritesUsingThreads:c,io_threads_list,listAddNodeTail",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2194,7 +2544,7 @@
       "relation_type": "condition_variable",
       "source": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 158,
         "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
@@ -2205,11 +2555,13 @@
       },
       "target": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 159,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_c4d802be8d82"
         ]
@@ -2218,8 +2570,8 @@
       "condition": "program order bioSubmitJob:worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2276,7 +2628,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 255,
         "snippet": "serverLog(LL_NOTICE,\"Unable to reclaim page cache: %s\", strerror(errno));",
@@ -2287,7 +2639,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 271,
         "snippet": "serverLog(LL_WARNING,",
@@ -2300,8 +2652,8 @@
       "condition": "program order bioProcessBackgroundJobs:serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2440,7 +2792,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "handleClientsWithPendingReadsUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4456,
         "snippet": "listAddNodeTail(io_threads_list[target_id],c);",
@@ -2451,7 +2803,7 @@
       },
       "target": {
         "function": "handleClientsWithPendingReadsUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4472,
         "snippet": "readQueryFromClient(c->conn);",
@@ -2464,8 +2816,8 @@
       "condition": "program order handleClientsWithPendingReadsUsingThreads:c",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2645,7 +2997,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 444,
         "snippet": "fe->wfileProc(eventLoop,fd,fe->clientData,mask);",
@@ -2656,7 +3008,7 @@
       },
       "target": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 456,
         "snippet": "fe->rfileProc(eventLoop,fd,fe->clientData,mask);",
@@ -2676,8 +3028,8 @@
       "condition": "program order aeProcessEvents:clientData,eventLoop,fd,fe,mask",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2823,7 +3175,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "processInlineBuffer",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 2193,
         "snippet": "if (c->argv) zfree(c->argv);",
@@ -2834,7 +3186,7 @@
       },
       "target": {
         "function": "processInlineBuffer",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 2205,
         "snippet": "zfree(argv);",
@@ -2847,8 +3199,8 @@
       "condition": "program order processInlineBuffer:argv,zfree",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2953,12 +3305,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_8094f1b2913d",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeReplicationBacklogRefMem",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 68,
+        "snippet": "atomicIncr(lazyfreed_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_3e304ac002c3"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_3e304ac002c3",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_820af630e4fa",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4357,
         "snippet": "listAddNodeTail(io_threads_list[target_id],c);",
@@ -2969,7 +3362,7 @@
       },
       "target": {
         "function": "handleClientsWithPendingWritesUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4373,
         "snippet": "writeToClient(c,0);",
@@ -2982,8 +3375,8 @@
       "condition": "program order handleClientsWithPendingWritesUsingThreads:c",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -3138,7 +3531,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 379,
         "snippet": "eventLoop->beforesleep(eventLoop);",
@@ -3155,7 +3548,7 @@
       },
       "target": {
         "function": "aeProcessEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 408,
         "snippet": "eventLoop->aftersleep(eventLoop);",
@@ -3168,8 +3561,8 @@
       "condition": "program order aeProcessEvents:eventLoop",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -3206,7 +3599,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 321,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_2a5413c60346"
         ]
@@ -3355,7 +3750,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "handleClientsWithPendingReadsUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4465,
         "snippet": "setIOPendingCount(j, count);",
@@ -3366,7 +3761,7 @@
       },
       "target": {
         "function": "handleClientsWithPendingReadsUsingThreads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4480,
         "snippet": "pending += getIOPendingCount(j);",
@@ -3379,8 +3774,8 @@
       "condition": "program order handleClientsWithPendingReadsUsingThreads:j",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -3437,7 +3832,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 287,
         "snippet": "job->free_args.free_fn(job->free_args.free_args);",
@@ -3454,7 +3849,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 291,
         "snippet": "zfree(job);",
@@ -3467,8 +3862,8 @@
       "condition": "program order bioProcessBackgroundJobs:job",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -3490,22 +3885,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 219,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_598a25a6efa7"
         ]
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 241,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_0e36f7949dd9"
         ]
@@ -3514,8 +3913,8 @@
       "condition": "same function/resource bioProcessBackgroundJobs:bio_mutex[worker]",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -3823,7 +4222,7 @@
       "relation_type": "condition_variable",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 298,
         "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
@@ -3847,7 +4246,7 @@
       "condition": "visible notification for shared resource bio_newjob_cond[worker]",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
+        "source_thread": "worker",
         "target_thread": "worker",
         "event_loop": null
       },
@@ -4085,7 +4484,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 306,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_2fde88b8d0fc"
         ]
@@ -4096,7 +4497,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 308,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_5e10140edb57"
         ]
@@ -4117,23 +4520,66 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_ba06edd773c5",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyfreeFreeDatabase",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 28,
+        "snippet": "atomicDecr(lazyfree_objects,numkeys);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_44126505153c"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_44126505153c",
+        "ev_e1de468a5b68"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_ba7d494a4b91",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4193,
         "snippet": "pthread_mutex_unlock(&io_threads_mutex[id]);",
-        "held_locks": [],
+        "held_locks": [
+          "io_threads_mutex[id]"
+        ],
         "evidence_ids": [
           "ev_5e66003a4194"
         ]
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4197,
         "snippet": "serverAssert(getIOPendingCount(id) != 0);",
@@ -4146,8 +4592,8 @@
       "condition": "program order IOThreadMain:id",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -4199,6 +4645,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_bcb1f117bb47",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "freeObjAsync",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 166,
+        "snippet": "atomicIncr(lazyfree_objects,1);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_7c5b4f880f7b"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_7c5b4f880f7b",
+        "ev_e1de468a5b68"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_bd40c574c7d3",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
@@ -4208,7 +4695,9 @@
         "file": "third_party/redis/src/bio.c",
         "line": 317,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_ca34a55ee8dc"
         ]
@@ -4236,6 +4725,47 @@
       "evidence_ids": [
         "ev_ca34a55ee8dc",
         "ev_0b93d27eb289"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c1ca331586e6",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeReplicationBacklogRefMem",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 67,
+        "snippet": "atomicDecr(lazyfree_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_08e6e16ae067"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_08e6e16ae067",
+        "ev_e1de468a5b68"
       ],
       "origin": "analyzer"
     },
@@ -4286,7 +4816,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "killIOThreads",
-        "thread": "thread",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4261,
         "snippet": "serverLog(LL_WARNING,",
@@ -4297,7 +4827,7 @@
       },
       "target": {
         "function": "killIOThreads",
-        "thread": "thread",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4265,
         "snippet": "serverLog(LL_WARNING,",
@@ -4310,14 +4840,96 @@
       "condition": "program order killIOThreads:LL_WARNING,serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
       "evidence_ids": [
         "ev_2e875b672264",
         "ev_ce9d79f0c1fd"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c43f6b3ba648",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyfreeFreeObject",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 15,
+        "snippet": "atomicIncr(lazyfreed_objects,1);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_58f836735276"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_58f836735276",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_c68955dff243",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeLuaScripts",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 46,
+        "snippet": "atomicDecr(lazyfree_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_f91c007a4376"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_f91c007a4376",
+        "ev_e1de468a5b68"
       ],
       "origin": "analyzer"
     },
@@ -4331,7 +4943,9 @@
         "file": "third_party/redis/src/networking.c",
         "line": 1721,
         "snippet": "pthread_mutex_lock(&async_free_queue_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "async_free_queue_mutex"
+        ],
         "evidence_ids": [
           "ev_cb72e52fafe1"
         ]
@@ -4342,7 +4956,9 @@
         "file": "third_party/redis/src/networking.c",
         "line": 1723,
         "snippet": "pthread_mutex_unlock(&async_free_queue_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "async_free_queue_mutex"
+        ],
         "evidence_ids": [
           "ev_47332439c3ce"
         ]
@@ -4368,18 +4984,20 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 155,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_671102684f50"
         ]
       },
       "target": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 156,
         "snippet": "listAddNodeTail(bio_jobs[worker],job);",
@@ -4392,8 +5010,8 @@
       "condition": "program order bioSubmitJob:worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -4450,7 +5068,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "initThreadedIO",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4231,
         "snippet": "serverLog(LL_WARNING,\"Fatal: too many I/O threads configured. \"",
@@ -4461,7 +5079,7 @@
       },
       "target": {
         "function": "initThreadedIO",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/redis/src/networking.c",
         "line": 4248,
         "snippet": "serverLog(LL_WARNING,\"Fatal: Can't initialize IO thread.\");",
@@ -4474,8 +5092,8 @@
       "condition": "program order initThreadedIO:Fatal,LL_WARNING,serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -4628,22 +5246,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 241,
         "snippet": "pthread_mutex_unlock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_0e36f7949dd9"
         ]
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 295,
         "snippet": "pthread_mutex_lock(&bio_mutex[worker]);",
-        "held_locks": [],
+        "held_locks": [
+          "bio_mutex[worker]"
+        ],
         "evidence_ids": [
           "ev_69bcca431a20"
         ]
@@ -4652,8 +5274,8 @@
       "condition": "program order bioProcessBackgroundJobs:bio_mutex,worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -5169,6 +5791,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_ee2d07c1354f",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeFunctionsCtx",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 56,
+        "snippet": "atomicIncr(lazyfreed_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_be23ddcb360b"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetFreedObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_d3b18607c4e3"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfreed_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_be23ddcb360b",
+        "ev_d3b18607c4e3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_ee3986f888bb",
       "status": "unconfirmed",
       "relation_type": "happens_before",
@@ -5272,7 +5935,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 308,
         "snippet": "te->finalizerProc(eventLoop, te->clientData);",
@@ -5283,7 +5946,7 @@
       },
       "target": {
         "function": "processTimeEvents",
-        "thread": "event",
+        "thread": "worker",
         "file": "third_party/redis/src/ae.c",
         "line": 311,
         "snippet": "zfree(te);",
@@ -5296,8 +5959,8 @@
       "condition": "program order processTimeEvents:te",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "event",
-        "target_thread": "event",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -5493,7 +6156,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 225,
         "snippet": "serverLog(LL_WARNING,",
@@ -5504,7 +6167,7 @@
       },
       "target": {
         "function": "bioProcessBackgroundJobs",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/redis/src/bio.c",
         "line": 251,
         "snippet": "serverLog(LL_WARNING, \"Fail to fsync the AOF file: %s\",strerror(errno));",
@@ -5517,8 +6180,8 @@
       "condition": "program order bioProcessBackgroundJobs:LL_WARNING,serverLog",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -5570,6 +6233,90 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_fc70d4a363d4",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "lazyFreeTrackingTable",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 37,
+        "snippet": "atomicDecr(lazyfree_objects,len);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_72ac78bb2ba3"
+        ]
+      },
+      "target": {
+        "function": "lazyfreeGetPendingObjectsCount",
+        "thread": null,
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e1de468a5b68"
+        ]
+      },
+      "order": "unknown",
+      "condition": "atomic relaxed lazyfree_objects; no acquire/release publication established",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.3,
+      "evidence_ids": [
+        "ev_72ac78bb2ba3",
+        "ev_e1de468a5b68"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_fce296a0d9ae",
+      "status": "unconfirmed",
+      "relation_type": "mutex_lock",
+      "source": {
+        "function": "initThreadedIO",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 4246,
+        "snippet": "pthread_mutex_lock(&io_threads_mutex[i]); /* Thread will be stopped. */",
+        "held_locks": [
+          "io_threads_mutex[i]"
+        ],
+        "evidence_ids": [
+          "ev_1b91ba4453ac"
+        ]
+      },
+      "target": {
+        "function": "initThreadedIO",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 4247,
+        "snippet": "if (pthread_create(&tid,NULL,IOThreadMain,(void*)(long)i) != 0) {",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_794a0e37f198"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "program order initThreadedIO:i",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_1b91ba4453ac",
+        "ev_794a0e37f198"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_fce3f4c9530f",
       "status": "unconfirmed",
       "relation_type": "event_wait",
@@ -5607,6 +6354,47 @@
       "evidence_ids": [
         "ev_630f5e98a3ad",
         "ev_46d4e549e9a3"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_fd2e8ded7539",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "bioSubmitJob",
+        "thread": "producer",
+        "file": "third_party/redis/src/bio.c",
+        "line": 156,
+        "snippet": "listAddNodeTail(bio_jobs[worker],job);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4906d207cb48"
+        ]
+      },
+      "target": {
+        "function": "bioProcessBackgroundJobs",
+        "thread": "worker",
+        "file": "third_party/redis/src/bio.c",
+        "line": 296,
+        "snippet": "listDelNode(bio_jobs[worker], ln);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_bba78f38e2a6"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication bio_jobs[worker]: bioSubmitJob -> bioProcessBackgroundJobs",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "producer",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_4906d207cb48",
+        "ev_bba78f38e2a6"
       ],
       "origin": "analyzer"
     },
@@ -5652,12 +6440,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_fe2a30c1593b",
+      "status": "unconfirmed",
+      "relation_type": "atomic",
+      "source": {
+        "function": "setIOPendingCount",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 4170,
+        "snippet": "atomicSetWithSync(io_threads_pending[i].value, count);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_47fd9016b347"
+        ]
+      },
+      "target": {
+        "function": "getIOPendingCount",
+        "thread": null,
+        "file": "third_party/redis/src/networking.c",
+        "line": 4165,
+        "snippet": "atomicGetWithSync(io_threads_pending[i].value, count);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_6fb683856aaf"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "atomic io_threads_pending[i].value release/acquire across setIOPendingCount -> getIOPendingCount",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.7,
+      "evidence_ids": [
+        "ev_47fd9016b347",
+        "ev_6fb683856aaf"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_fedfbfcb4a3d",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 156,
         "snippet": "listAddNodeTail(bio_jobs[worker],job);",
@@ -5668,7 +6497,7 @@
       },
       "target": {
         "function": "bioSubmitJob",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/redis/src/bio.c",
         "line": 158,
         "snippet": "pthread_cond_signal(&bio_newjob_cond[worker]);",
@@ -5681,8 +6510,8 @@
       "condition": "program order bioSubmitJob:worker",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -5698,7 +6527,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4214,
         "snippet": "listEmpty(io_threads_list[id]);",
@@ -5709,7 +6538,7 @@
       },
       "target": {
         "function": "IOThreadMain",
-        "thread": "main",
+        "thread": "worker",
         "file": "third_party/redis/src/networking.c",
         "line": 4215,
         "snippet": "setIOPendingCount(id, 0);",
@@ -5722,8 +6551,8 @@
       "condition": "program order IOThreadMain:id",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "main",
-        "target_thread": "main",
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -5844,6 +6673,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_08e6e16ae067",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 67,
+        "snippet": "atomicDecr(lazyfree_objects,len);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_093a4aa5581d",
       "kind": "call_site",
       "location": {
@@ -5952,6 +6791,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_13c0a5f5a397",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 14,
+        "snippet": "atomicDecr(lazyfree_objects,1);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_14aacdbe167a",
       "kind": "call_site",
       "location": {
@@ -5998,6 +6847,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_1816b2336e07",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 86,
+        "snippet": "atomicSet(lazyfreed_objects,0);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_18c68f7bbc74",
@@ -6360,6 +7219,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_3e304ac002c3",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 68,
+        "snippet": "atomicIncr(lazyfreed_objects,len);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_3ecb0ca6846a",
       "kind": "call_site",
       "location": {
@@ -6456,6 +7325,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_44126505153c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 28,
+        "snippet": "atomicDecr(lazyfree_objects,numkeys);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_44cedd85d727",
       "kind": "call_site",
       "location": {
@@ -6538,6 +7417,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_47fd9016b347",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 4170,
+        "snippet": "atomicSetWithSync(io_threads_pending[i].value, count);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_4906d207cb48",
@@ -6624,6 +7513,18 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_4f25769c76ad",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 754,
+        "column": 5,
+        "snippet": "listAddNodeTail(c->reply,NULL); /* NULL is our placeholder. */"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
       "id": "ev_4fd12e9326fa",
       "kind": "call_site",
       "location": {
@@ -6694,6 +7595,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_58f836735276",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 15,
+        "snippet": "atomicIncr(lazyfreed_objects,1);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_598a25a6efa7",
@@ -6888,6 +7799,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_6bb075704e67",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 38,
+        "snippet": "atomicIncr(lazyfreed_objects,len);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_6de48b75991a",
       "kind": "call_site",
       "location": {
@@ -6912,6 +7833,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_6fb683856aaf",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 4165,
+        "snippet": "atomicGetWithSync(io_threads_pending[i].value, count);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_7193ae6ae25b",
       "kind": "call_site",
       "location": {
@@ -6934,6 +7865,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_72ac78bb2ba3",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 37,
+        "snippet": "atomicDecr(lazyfree_objects,len);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_747c133a3f91",
@@ -7008,6 +7949,18 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_794a0e37f198",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/networking.c",
+        "line": 4247,
+        "column": 13,
+        "snippet": "if (pthread_create(&tid,NULL,IOThreadMain,(void*)(long)i) != 0) {"
+      },
+      "role": "supports",
+      "build_profile": "redis-linux-clang"
+    },
+    {
       "id": "ev_7a8afee52d8c",
       "kind": "call_site",
       "location": {
@@ -7018,6 +7971,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_7c5b4f880f7b",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 166,
+        "snippet": "atomicIncr(lazyfree_objects,1);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_7d0fec1e18cd",
@@ -7066,6 +8029,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_80ff75f81841",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 47,
+        "snippet": "atomicIncr(lazyfreed_objects,len);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_81b0851f98cf",
@@ -7150,6 +8123,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_8b57288ae88e",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 189,
+        "snippet": "atomicIncr(lazyfree_objects,tracking->numele);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_8eaa53b6250c",
@@ -7416,6 +8399,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_a72fe109fd93",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 55,
+        "snippet": "atomicDecr(lazyfree_objects,len);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_a79968c51548",
       "kind": "call_site",
       "location": {
@@ -7620,6 +8613,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_be23ddcb360b",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 56,
+        "snippet": "atomicIncr(lazyfreed_objects,len);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_c1925afcfbf0",
       "kind": "call_site",
       "location": {
@@ -7752,6 +8755,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_d3b18607c4e3",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 81,
+        "snippet": "atomicGet(lazyfreed_objects,aux);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_d525c16f3462",
       "kind": "call_site",
       "location": {
@@ -7824,6 +8837,16 @@
       "build_profile": "redis-linux-clang"
     },
     {
+      "id": "ev_e1de468a5b68",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 74,
+        "snippet": "atomicGet(lazyfree_objects,aux);"
+      },
+      "role": "supports"
+    },
+    {
       "id": "ev_e539172d7f22",
       "kind": "call_site",
       "location": {
@@ -7834,6 +8857,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_e65645f918b2",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 29,
+        "snippet": "atomicIncr(lazyfreed_objects,numkeys);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_e682f22c2ee7",
@@ -7990,6 +9023,16 @@
       },
       "role": "supports",
       "build_profile": "redis-linux-clang"
+    },
+    {
+      "id": "ev_f91c007a4376",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/redis/src/lazyfree.c",
+        "line": 46,
+        "snippet": "atomicDecr(lazyfree_objects,len);"
+      },
+      "role": "supports"
     },
     {
       "id": "ev_f9a53ae22b11",

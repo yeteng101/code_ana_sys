@@ -190,16 +190,31 @@ python3 scripts/check_validation_projects.py \
 ```
 
 ```bash
-python3 scripts/evaluate_validation.py \
+python3 scripts/run_validation_project.py \
+  --project-id project \
   --ground-truth validation/datasets/project/ground-truth.json \
   --predictions artifacts/project-analysis/external \
-  --output validation/results/project/baseline
+  --output validation/results/project/baseline \
+  --min-call-recall 0.90 \
+  --min-resource-recall 0.60 \
+  --min-sync-recall 0.20 \
+  --max-fp 0
 ```
+
+该命令同时生成 `report.json`、`report.md` 和 `gate.json`。任一阈值不满足时
+返回非零退出码，可直接作为 CI 门禁。最终人工验收阶段增加：
+
+```text
+--strict-review
+```
+
+它会要求 `review.human_review=confirmed`，否则 CI 失败。
 
 打开报告：
 
 ```bash
 cat validation/results/project/baseline/report.md
+cat validation/results/project/baseline/gate.json
 ```
 
 ## 9. 状态含义

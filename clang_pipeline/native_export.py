@@ -22,8 +22,12 @@ def run_native_export(
     if not source_graph.exists():
         source_graph = workspace_path / "07-report" / "graph.json"
     graph = read_json(source_graph)
-    resource_flow = analyze_resource_flow(graph)
-    sync_relations = analyze_sync_relations(graph)
+    request_path = workspace_path / "request.json"
+    source_root = None
+    if request_path.exists():
+        source_root = read_json(request_path).get("source_root")
+    resource_flow = analyze_resource_flow(graph, source_root=source_root)
+    sync_relations = analyze_sync_relations(graph, source_root=source_root)
 
     resource_path = workspace_path / "08-resource-flow" / "resource-flow.json"
     sync_path = workspace_path / "09-sync-relations" / "sync-relations.json"

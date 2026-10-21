@@ -4,8 +4,9 @@
   "scope": "annotated facts only; unlabelled predictions excluded from precision",
   "scoring": "candidate facts including unconfirmed; confirmed-only metrics reported separately",
   "review": {
-    "method": "source_review_by_ai; lexical candidate collection followed by explicit source review; not derived from analyzer graph",
-    "human_review": "pending"
+    "human_review": "pending",
+    "method": "source_review_by_ai; lexical candidate collection followed by explicit source review; not derived from analyzer graph + source_review_by_ai",
+    "limitation": "Redis annotations cover explicitly selected source units; pending human review remains part of the benchmark metadata."
   },
   "categories": {
     "call_chain": {
@@ -1374,8 +1375,8 @@
       "evidence_hit_rate": null,
       "coverage": null,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 132,
-      "prediction_count": 132,
+      "unlabelled_predictions": 99,
+      "prediction_count": 99,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -1391,19 +1392,19 @@
       "input_status": "succeeded",
       "gold_positive": 22,
       "gold_negative": 3,
-      "tp": 7,
+      "tp": 9,
       "fp": 0,
-      "fn": 15,
+      "fn": 13,
       "tn": 3,
       "precision": 1.0,
-      "recall": 0.3181818181818182,
-      "f1": 0.4827586206896552,
+      "recall": 0.4090909090909091,
+      "f1": 0.5806451612903226,
       "type_accuracy": 1.0,
-      "evidence_hit_rate": 1.0,
-      "coverage": 0.3181818181818182,
+      "evidence_hit_rate": 0.7777777777777778,
+      "coverage": 0.4090909090909091,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 124,
-      "prediction_count": 131,
+      "unlabelled_predictions": 141,
+      "prediction_count": 150,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -1414,8 +1415,8 @@
       },
       "errors_by_type": {
         "concurrent": 1,
-        "happens_before": 12,
-        "unknown": 2
+        "happens_before": 11,
+        "unknown": 1
       },
       "cases": [
         {
@@ -1765,7 +1766,7 @@
         },
         {
           "case_id": "redis_sync_022",
-          "verdict": "fn",
+          "verdict": "tp",
           "evidence_hit": false,
           "kind": "unknown",
           "identity": [
@@ -1780,7 +1781,7 @@
         },
         {
           "case_id": "redis_sync_017",
-          "verdict": "fn",
+          "verdict": "tp",
           "evidence_hit": false,
           "kind": "happens_before",
           "identity": [

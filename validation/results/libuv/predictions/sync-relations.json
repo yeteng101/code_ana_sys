@@ -452,6 +452,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_06b0c1eaa98d",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv__stream_try_select",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 369,
+        "snippet": "err = uv_thread_create(&s->thread, uv__stream_osx_select, stream);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_1f965ef19eb1"
+        ]
+      },
+      "target": {
+        "function": "uv__stream_close",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 1521,
+        "snippet": "uv_thread_join(&s->thread);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_7fda347c51a3"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "thread handle s->thread is joined",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.75,
+      "evidence_ids": [
+        "ev_1f965ef19eb1",
+        "ev_7fda347c51a3"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_07b8c90cca96",
       "status": "unconfirmed",
       "relation_type": "happens_before",
@@ -1089,7 +1130,9 @@
         "file": "third_party/libuv/src/unix/loop.c",
         "line": 182,
         "snippet": "uv_mutex_lock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_9d8621a083b6"
         ]
@@ -1100,7 +1143,9 @@
         "file": "third_party/libuv/src/unix/loop.c",
         "line": 185,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_374464ee690c"
         ]
@@ -1117,6 +1162,47 @@
       "evidence_ids": [
         "ev_9d8621a083b6",
         "ev_374464ee690c"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_09caaebfaad3",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv_loop_fork",
+        "thread": "loop",
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 157,
+        "snippet": "uv__queue_insert_tail(&loop->watcher_queue, &w->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_38a3cb2ec3da"
+        ]
+      },
+      "target": {
+        "function": "uv__io_poll",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/kqueue.c",
+        "line": 193,
+        "snippet": "q = uv__queue_head(&loop->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c0ebd547cc9c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication loop->watcher_queue: uv_loop_fork -> uv__io_poll",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "loop",
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_38a3cb2ec3da",
+        "ev_c0ebd547cc9c"
       ],
       "origin": "analyzer"
     },
@@ -1423,6 +1509,47 @@
         "ev_fd40b04980f7",
         "ev_fee781bf7238",
         "ev_649f56ac6cfb"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_0c8f0c2fb022",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "post",
+        "thread": "producer",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 147,
+        "snippet": "uv__queue_insert_tail(&slow_io_pending_wq, q);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_879b038cf0b3"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 108,
+        "snippet": "q = uv__queue_head(&slow_io_pending_wq);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_354f7f3ab324"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication slow_io_pending_wq: post -> worker",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "producer",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_879b038cf0b3",
+        "ev_354f7f3ab324"
       ],
       "origin": "analyzer"
     },
@@ -1787,7 +1914,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 128,
         "snippet": "*(void **)(&pLSApplicationCheckIn) = pCFBundleGetFunctionPointerForName(",
@@ -1889,7 +2016,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 136,
         "snippet": "pCFBundleGetFunctionPointerForName(",
@@ -1993,8 +2120,8 @@
       "condition": "program order uv__set_process_title:pCFBundleGetFunctionPointerForName",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2142,18 +2269,20 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "uv_get_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 139,
         "snippet": "uv_mutex_unlock(&process_title_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "process_title_mutex"
+        ],
         "evidence_ids": [
           "ev_0cad6778fed2"
         ]
       },
       "target": {
         "function": "uv_get_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 148,
         "snippet": "uv_mutex_unlock(&process_title_mutex);",
@@ -2166,8 +2295,8 @@
       "condition": "program order uv_get_process_title:process_title_mutex,uv_mutex_unlock",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -2228,7 +2357,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 294,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_0ccc461ace9e"
         ]
@@ -2239,7 +2370,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 303,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_3e9fa5a521d7"
         ]
@@ -2310,7 +2443,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 318,
         "snippet": "uv_mutex_lock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_61604e565231"
         ]
@@ -2392,7 +2527,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 875,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_f697f0d480ca"
         ]
@@ -2403,7 +2540,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 879,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_53bfb4a21c78"
         ]
@@ -2749,7 +2888,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 894,
         "snippet": "UV__FSEVENTS_PROCESS(handle, {",
-        "held_locks": [],
+        "held_locks": [
+          "uv_mutex_lock"
+        ],
         "evidence_ids": [
           "ev_9d90a87fafb6"
         ]
@@ -3348,6 +3489,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_1f68230711b8",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__udp_sendmsg",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 1379,
+        "snippet": "uv__queue_insert_tail(&handle->write_completed_queue, &req->queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_9a0559702f1c"
+        ]
+      },
+      "target": {
+        "function": "uv__udp_run_completed",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 103,
+        "snippet": "q = uv__queue_head(&handle->write_completed_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_374b3592f790"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication handle->write_completed_queue: uv__udp_sendmsg -> uv__udp_run_completed",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_9a0559702f1c",
+        "ev_374b3592f790"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_1f7479e298e4",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
@@ -3357,7 +3539,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 84,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_12fb7ada444f"
         ]
@@ -3385,6 +3569,47 @@
       "evidence_ids": [
         "ev_12fb7ada444f",
         "ev_a957e6c7b4ac"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_1ffcebe8a52a",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv__fsevents_loop_init",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 637,
+        "snippet": "err = UV__ERR(pthread_create(&loop->cf_thread, &attr, uv__cf_loop_runner, loop));",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_bf48a63262eb"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_loop_delete",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 682,
+        "snippet": "uv_thread_join(&loop->cf_thread);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c516ecd16c03"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "thread handle loop->cf_thread is joined",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.75,
+      "evidence_ids": [
+        "ev_bf48a63262eb",
+        "ev_c516ecd16c03"
       ],
       "origin": "analyzer"
     },
@@ -3439,7 +3664,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 421,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_87e0b4b4f8e6"
         ]
@@ -3480,7 +3707,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 776,
         "snippet": "uv_mutex_lock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_2d8a74aae8b0"
         ]
@@ -3623,7 +3852,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 784,
         "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_06390490032e"
         ]
@@ -3740,7 +3971,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 138,
         "snippet": "S(\"_LSSetApplicationLaunchServicesServerConnectionStatus\"));",
@@ -3842,7 +4073,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 159,
         "snippet": "S(title),",
@@ -3946,8 +4177,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -4069,7 +4300,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 320,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_ca49d7b8c64c"
         ]
@@ -4450,7 +4683,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 147,
         "snippet": "uv__queue_insert_tail(&slow_io_pending_wq, q);",
@@ -4461,7 +4694,7 @@
       },
       "target": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 157,
         "snippet": "uv__queue_insert_tail(&wq, q);",
@@ -4474,8 +4707,8 @@
       "condition": "program order post:q,uv__queue_insert_tail",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -4495,7 +4728,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 741,
         "snippet": "uv_mutex_lock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_92db1b96584c"
         ]
@@ -4536,7 +4771,9 @@
         "file": "third_party/libuv/src/unix/thread.c",
         "line": 782,
         "snippet": "if (pthread_mutex_lock(&mutex))",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_0fd87609ba65"
         ]
@@ -4547,7 +4784,9 @@
         "file": "third_party/libuv/src/unix/thread.c",
         "line": 792,
         "snippet": "if (pthread_mutex_unlock(&mutex))",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_0bdb2483fe67"
         ]
@@ -4564,6 +4803,47 @@
       "evidence_ids": [
         "ev_0fd87609ba65",
         "ev_0bdb2483fe67"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_335db85b8fd0",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv_write2",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 1375,
+        "snippet": "uv__queue_insert_tail(&stream->write_queue, &req->queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_1cf43bc2d4aa"
+        ]
+      },
+      "target": {
+        "function": "uv__write",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 858,
+        "snippet": "q = uv__queue_head(&stream->write_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_7e6a3fa339ef"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication stream->write_queue: uv_write2 -> uv__write",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_1cf43bc2d4aa",
+        "ev_7e6a3fa339ef"
       ],
       "origin": "analyzer"
     },
@@ -4894,7 +5174,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 839,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_f451aaf7215d"
         ]
@@ -4915,6 +5197,49 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_3832fa6226dd",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv__fsevents_loop_init",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 637,
+        "snippet": "err = UV__ERR(pthread_create(&loop->cf_thread, &attr, uv__cf_loop_runner, loop));",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_bf48a63262eb"
+        ]
+      },
+      "target": {
+        "function": "uv__fsevents_loop_init",
+        "thread": "event",
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 646,
+        "snippet": "uv_sem_wait(&loop->cf_sem);",
+        "held_locks": [
+          "loop->cf_sem"
+        ],
+        "evidence_ids": [
+          "ev_5685aa20daa9"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "program order uv__fsevents_loop_init:loop",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "event",
+        "target_thread": "event",
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_bf48a63262eb",
+        "ev_5685aa20daa9"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_3a383666d090",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
@@ -4924,7 +5249,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1043,
         "snippet": "uv_mutex_lock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_960ecf83810d"
         ]
@@ -4935,7 +5262,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1046,
         "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_d980178ead5f"
         ]
@@ -5699,7 +6028,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 300,
         "snippet": "uv_mutex_lock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_748ab347c266"
         ]
@@ -5710,7 +6041,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 303,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_3e9fa5a521d7"
         ]
@@ -5740,7 +6073,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 199,
         "snippet": "uv_mutex_lock(&handle->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "handle->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_16ab7a80375d"
         ]
@@ -5751,7 +6086,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 208,
         "snippet": "uv_mutex_unlock(&handle->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "handle->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_dbfcab4bbeda"
         ]
@@ -5768,6 +6105,47 @@
       "evidence_ids": [
         "ev_16ab7a80375d",
         "ev_dbfcab4bbeda"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_435e2e035b13",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__udp_finish_close",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 80,
+        "snippet": "uv__queue_insert_tail(&handle->write_completed_queue, &req->queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_052fa201b701"
+        ]
+      },
+      "target": {
+        "function": "uv__udp_run_completed",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 103,
+        "snippet": "q = uv__queue_head(&handle->write_completed_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_374b3592f790"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication handle->write_completed_queue: uv__udp_finish_close -> uv__udp_run_completed",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_052fa201b701",
+        "ev_374b3592f790"
       ],
       "origin": "analyzer"
     },
@@ -5792,7 +6170,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 484,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_7cbe7f5d4fb7"
         ]
@@ -5822,7 +6202,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 300,
         "snippet": "uv_mutex_lock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_748ab347c266"
         ]
@@ -5863,7 +6245,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 879,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_53bfb4a21c78"
         ]
@@ -5874,7 +6258,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 888,
         "snippet": "uv_sem_wait(&state->fsevent_sem);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_sem"
+        ],
         "evidence_ids": [
           "ev_a464e6686716"
         ]
@@ -5904,7 +6290,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 99,
         "snippet": "uv_mutex_lock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_0821a6ac16cc"
         ]
@@ -5915,7 +6303,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 118,
         "snippet": "uv_mutex_unlock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_f8a5f2b68799"
         ]
@@ -5986,7 +6376,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 240,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_85a3a740507a"
         ]
@@ -5997,7 +6389,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 323,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_1ed3b77b8bc6"
         ]
@@ -6068,7 +6462,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 776,
         "snippet": "uv_mutex_lock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_2d8a74aae8b0"
         ]
@@ -6079,7 +6475,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 784,
         "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_06390490032e"
         ]
@@ -6307,6 +6705,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_50a21692fe94",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "post",
+        "thread": "producer",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 157,
+        "snippet": "uv__queue_insert_tail(&wq, q);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_5fbcf071d1f8"
+        ]
+      },
+      "target": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 81,
+        "snippet": "q = uv__queue_head(&wq);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_8398ce4bdc2f"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication wq: post -> worker",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "producer",
+        "target_thread": "worker",
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_5fbcf071d1f8",
+        "ev_8398ce4bdc2f"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_51739336733d",
       "status": "unconfirmed",
       "relation_type": "event_notify",
@@ -6327,7 +6766,9 @@
         "file": "third_party/libuv/src/unix/stream.c",
         "line": 225,
         "snippet": "uv_sem_wait(&s->async_sem);",
-        "held_locks": [],
+        "held_locks": [
+          "s->async_sem"
+        ],
         "evidence_ids": [
           "ev_3beb65947784"
         ]
@@ -7028,7 +7469,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 743,
         "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_cae38e8a39ab"
         ]
@@ -7372,7 +7815,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 287,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_5619dff01858"
         ]
@@ -7383,7 +7828,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 293,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_1d044a6853e0"
         ]
@@ -7441,6 +7888,47 @@
       "evidence_ids": [
         "ev_bcaabc955863",
         "ev_c54b4a9d40e6"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_5fedeb2152f3",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv_thread_create",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 129,
+        "snippet": "return uv_thread_create_ex(tid, &params, entry, arg);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_46e211d4dc45"
+        ]
+      },
+      "target": {
+        "function": "uv_thread_join",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 295,
+        "snippet": "return UV__ERR(pthread_join(*tid, NULL));",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4bae0407c446"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "thread handle tid is joined",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.75,
+      "evidence_ids": [
+        "ev_46e211d4dc45",
+        "ev_4bae0407c446"
       ],
       "origin": "analyzer"
     },
@@ -7842,7 +8330,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 318,
         "snippet": "uv_mutex_lock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_61604e565231"
         ]
@@ -7853,7 +8343,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 320,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_ca49d7b8c64c"
         ]
@@ -7894,7 +8386,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 141,
         "snippet": "uv_mutex_unlock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_9d2740ba66c2"
         ]
@@ -8454,7 +8948,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 118,
         "snippet": "uv_mutex_unlock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_f8a5f2b68799"
         ]
@@ -8475,12 +8971,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_736d956b864b",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "uv_thread_create_ex",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 181,
+        "snippet": "err = pthread_create(tid, attr, f.out, arg);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4de397bdc926"
+        ]
+      },
+      "target": {
+        "function": "uv_thread_join",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 295,
+        "snippet": "return UV__ERR(pthread_join(*tid, NULL));",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4bae0407c446"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "thread handle tid is joined",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.75,
+      "evidence_ids": [
+        "ev_4de397bdc926",
+        "ev_4bae0407c446"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_74405a040671",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 116,
         "snippet": "S(\"_kLSDisplayNameKey\"));",
@@ -8582,7 +9119,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 130,
         "snippet": "S(\"_LSApplicationCheckIn\"));",
@@ -8686,8 +9223,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -9100,7 +9637,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 96,
         "snippet": "pCFBundleGetBundleWithIdentifier(S(\"com.apple.LaunchServices\"));",
@@ -9194,7 +9731,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 103,
         "snippet": "S(\"_LSGetCurrentApplicationASN\"));",
@@ -9298,8 +9835,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -9402,12 +9939,53 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_783cd2461116",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 96,
+        "snippet": "uv__queue_insert_tail(&wq, q);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c54b4a9d40e6"
+        ]
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 325,
+        "snippet": "q = uv__queue_head(&wq);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e539607ea3c4"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication wq: worker -> uv__work_done",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_c54b4a9d40e6",
+        "ev_e539607ea3c4"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_7a47d22a8de9",
       "status": "unconfirmed",
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 130,
         "snippet": "S(\"_LSApplicationCheckIn\"));",
@@ -9509,7 +10087,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 138,
         "snippet": "S(\"_LSSetApplicationLaunchServicesServerConnectionStatus\"));",
@@ -9613,8 +10191,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -10039,7 +10617,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 743,
         "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_cae38e8a39ab"
         ]
@@ -10258,7 +10838,7 @@
       "relation_type": "thread_join",
       "source": {
         "function": "init_threads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/libuv/src/threadpool.c",
         "line": 235,
         "snippet": "if (uv_thread_create_ex(threads + i, &config, worker, &sem))",
@@ -10269,11 +10849,13 @@
       },
       "target": {
         "function": "init_threads",
-        "thread": "thread",
+        "thread": null,
         "file": "third_party/libuv/src/threadpool.c",
         "line": 239,
         "snippet": "uv_sem_wait(&sem);",
-        "held_locks": [],
+        "held_locks": [
+          "sem"
+        ],
         "evidence_ids": [
           "ev_c025fef04414"
         ]
@@ -10282,8 +10864,8 @@
       "condition": "program order init_threads:sem",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": "thread",
-        "target_thread": "thread",
+        "source_thread": null,
+        "target_thread": null,
         "event_loop": null
       },
       "confidence": 0.55,
@@ -10299,22 +10881,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "uv_set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 108,
         "snippet": "uv_mutex_lock(&process_title_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "process_title_mutex"
+        ],
         "evidence_ids": [
           "ev_d236797ac25a"
         ]
       },
       "target": {
         "function": "uv_set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 121,
         "snippet": "uv_mutex_unlock(&process_title_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "process_title_mutex"
+        ],
         "evidence_ids": [
           "ev_7ba421a35714"
         ]
@@ -10323,8 +10909,8 @@
       "condition": "same function/resource uv_set_process_title:process_title_mutex",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -10422,18 +11008,20 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 151,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_c0bffae61bd8"
         ]
       },
       "target": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 160,
         "snippet": "uv_mutex_unlock(&mutex);",
@@ -10446,8 +11034,8 @@
       "condition": "program order post:mutex,uv_mutex_unlock",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -11089,7 +11677,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 286,
         "snippet": "uv_mutex_lock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_ecc8fcb91523"
         ]
@@ -11100,7 +11690,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 287,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_5619dff01858"
         ]
@@ -11485,7 +12077,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 741,
         "snippet": "uv_mutex_lock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_92db1b96584c"
         ]
@@ -11496,7 +12090,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 743,
         "snippet": "uv_mutex_unlock(&loop->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_cae38e8a39ab"
         ]
@@ -11526,7 +12122,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 439,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_73bbc97ad5bc"
         ]
@@ -11649,7 +12247,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 510,
         "snippet": "pthread_mutex_lock(&global_init_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "global_init_mutex"
+        ],
         "evidence_ids": [
           "ev_dd4a9ef4cc5d"
         ]
@@ -11660,7 +12260,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 574,
         "snippet": "pthread_mutex_unlock(&global_init_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "global_init_mutex"
+        ],
         "evidence_ids": [
           "ev_af82ff27a973"
         ]
@@ -12650,7 +13252,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 125,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_043a1f8589cf"
         ]
@@ -13023,22 +13627,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "uv_get_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 136,
         "snippet": "uv_mutex_lock(&process_title_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "process_title_mutex"
+        ],
         "evidence_ids": [
           "ev_30ff8b024343"
         ]
       },
       "target": {
         "function": "uv_get_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/proctitle.c",
         "line": 139,
         "snippet": "uv_mutex_unlock(&process_title_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "process_title_mutex"
+        ],
         "evidence_ids": [
           "ev_0cad6778fed2"
         ]
@@ -13047,8 +13655,8 @@
       "condition": "same function/resource uv_get_process_title:process_title_mutex",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -13150,7 +13758,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 489,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_b7605aff065c"
         ]
@@ -13871,7 +14481,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 303,
         "snippet": "uv_mutex_unlock(&loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_3e9fa5a521d7"
         ]
@@ -13942,7 +14554,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 835,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_a08f4b3f95f8"
         ]
@@ -14024,7 +14638,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 99,
         "snippet": "uv_mutex_lock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_0821a6ac16cc"
         ]
@@ -14355,7 +14971,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 132,
         "snippet": "uv_mutex_lock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_58fe38b49ad4"
         ]
@@ -14396,7 +15014,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 125,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_043a1f8589cf"
         ]
@@ -14743,7 +15363,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 419,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_919d9de04858"
         ]
@@ -14754,7 +15376,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 421,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_87e0b4b4f8e6"
         ]
@@ -14784,7 +15408,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1005,
         "snippet": "uv_mutex_lock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_13917c12f56a"
         ]
@@ -14795,7 +15421,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1009,
         "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_a74f997bc693"
         ]
@@ -14821,7 +15449,7 @@
       "relation_type": "condition_variable",
       "source": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 159,
         "snippet": "uv_cond_signal(&cond);",
@@ -14845,7 +15473,7 @@
       "condition": "visible notification for shared resource cond",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
+        "source_thread": "producer",
         "target_thread": "worker",
         "event_loop": null
       },
@@ -14866,7 +15494,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 434,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_48641e4f806c"
         ]
@@ -14877,7 +15507,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 439,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_73bbc97ad5bc"
         ]
@@ -15600,6 +16232,47 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_cad6bf162b19",
+      "status": "unconfirmed",
+      "relation_type": "thread_join",
+      "source": {
+        "function": "init_threads",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 235,
+        "snippet": "if (uv_thread_create_ex(threads + i, &config, worker, &sem))",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_b44af00b137a"
+        ]
+      },
+      "target": {
+        "function": "uv__threadpool_cleanup",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 180,
+        "snippet": "if (uv_thread_join(threads + i))",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_08d113fd8759"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "thread handle threads + i is joined",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.75,
+      "evidence_ids": [
+        "ev_b44af00b137a",
+        "ev_08d113fd8759"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_ce0440af4bb2",
       "status": "unconfirmed",
       "relation_type": "happens_before",
@@ -16016,7 +16689,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 293,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_1d044a6853e0"
         ]
@@ -16392,7 +17067,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 125,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_043a1f8589cf"
         ]
@@ -16403,7 +17080,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 130,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_e60690493e4f"
         ]
@@ -16444,7 +17123,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 130,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_e60690493e4f"
         ]
@@ -16958,7 +17639,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 103,
         "snippet": "S(\"_LSGetCurrentApplicationASN\"));",
@@ -17060,7 +17741,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 110,
         "snippet": "S(\"_LSSetApplicationInformationItem\"));",
@@ -17164,8 +17845,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -17317,7 +17998,9 @@
         "file": "third_party/libuv/src/unix/fs.c",
         "line": 346,
         "snippet": "uv_rwlock_rdlock(&req->loop->cloexec_lock);",
-        "held_locks": [],
+        "held_locks": [
+          "req->loop->cloexec_lock"
+        ],
         "evidence_ids": [
           "ev_9c783d6aa9ce"
         ]
@@ -17328,7 +18011,9 @@
         "file": "third_party/libuv/src/unix/fs.c",
         "line": 361,
         "snippet": "uv_rwlock_rdunlock(&req->loop->cloexec_lock);",
-        "held_locks": [],
+        "held_locks": [
+          "req->loop->cloexec_lock"
+        ],
         "evidence_ids": [
           "ev_0d62d8f5e472"
         ]
@@ -17399,7 +18084,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 835,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_a08f4b3f95f8"
         ]
@@ -17410,7 +18097,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 839,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_f451aaf7215d"
         ]
@@ -17451,7 +18140,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 130,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_e60690493e4f"
         ]
@@ -17468,6 +18159,47 @@
       "evidence_ids": [
         "ev_a957e6c7b4ac",
         "ev_e60690493e4f"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_dacca620cae1",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__udp_send",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 608,
+        "snippet": "uv__queue_insert_tail(&handle->write_queue, &req->queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_048840dd2d4c"
+        ]
+      },
+      "target": {
+        "function": "uv__udp_sendmsg",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 1396,
+        "snippet": "q = uv__queue_head(&handle->write_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_b60a1c9b57c3"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication handle->write_queue: uv__udp_send -> uv__udp_sendmsg",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_048840dd2d4c",
+        "ev_b60a1c9b57c3"
       ],
       "origin": "analyzer"
     },
@@ -17787,7 +18519,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 66,
         "snippet": "uv_mutex_lock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_51f56cb20b31"
         ]
@@ -17828,7 +18562,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 293,
         "snippet": "uv_mutex_unlock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_1d044a6853e0"
         ]
@@ -17839,7 +18575,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 294,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_0ccc461ace9e"
         ]
@@ -18224,7 +18962,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 66,
         "snippet": "uv_mutex_lock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_51f56cb20b31"
         ]
@@ -18235,7 +18975,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 84,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_12fb7ada444f"
         ]
@@ -18306,7 +19048,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 484,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_7cbe7f5d4fb7"
         ]
@@ -18317,7 +19061,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 489,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_b7605aff065c"
         ]
@@ -18743,7 +19489,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 132,
         "snippet": "uv_mutex_lock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_58fe38b49ad4"
         ]
@@ -18754,7 +19502,9 @@
         "file": "third_party/libuv/src/thread-common.c",
         "line": 141,
         "snippet": "uv_mutex_unlock(&b->mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "b->mutex"
+        ],
         "evidence_ids": [
           "ev_9d2740ba66c2"
         ]
@@ -18771,6 +19521,47 @@
       "evidence_ids": [
         "ev_58fe38b49ad4",
         "ev_9d2740ba66c2"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_e3ffd9474331",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "worker",
+        "thread": "worker",
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 114,
+        "snippet": "uv__queue_insert_tail(&wq, &run_slow_work_message);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_65c480cb5920"
+        ]
+      },
+      "target": {
+        "function": "uv__work_done",
+        "thread": null,
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 325,
+        "snippet": "q = uv__queue_head(&wq);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_e539607ea3c4"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication wq: worker -> uv__work_done",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": "worker",
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_65c480cb5920",
+        "ev_e539607ea3c4"
       ],
       "origin": "analyzer"
     },
@@ -18862,7 +19653,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 109,
         "snippet": "pCFBundleGetFunctionPointerForName(launch_services_bundle,",
@@ -18964,7 +19755,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 115,
         "snippet": "display_name_key = pCFBundleGetDataPointerForName(launch_services_bundle,",
@@ -19068,8 +19859,8 @@
       "condition": "program order uv__set_process_title:launch_services_bundle",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -19171,6 +19962,88 @@
       "origin": "analyzer"
     },
     {
+      "id": "sync_ecab58d3ea11",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__io_stop",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 972,
+        "snippet": "uv__queue_insert_tail(&loop->watcher_queue, &w->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_5de8b5cf4f68"
+        ]
+      },
+      "target": {
+        "function": "uv__io_poll",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/kqueue.c",
+        "line": 193,
+        "snippet": "q = uv__queue_head(&loop->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c0ebd547cc9c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication loop->watcher_queue: uv__io_stop -> uv__io_poll",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_5de8b5cf4f68",
+        "ev_c0ebd547cc9c"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_edc4e029ab80",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__io_start",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 936,
+        "snippet": "uv__queue_insert_tail(&loop->watcher_queue, &w->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_b1d03e18b3f3"
+        ]
+      },
+      "target": {
+        "function": "uv__io_poll",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/kqueue.c",
+        "line": 193,
+        "snippet": "q = uv__queue_head(&loop->watcher_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_c0ebd547cc9c"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication loop->watcher_queue: uv__io_start -> uv__io_poll",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_b1d03e18b3f3",
+        "ev_c0ebd547cc9c"
+      ],
+      "origin": "analyzer"
+    },
+    {
       "id": "sync_ef1d66ae55bd",
       "status": "unconfirmed",
       "relation_type": "mutex_lock",
@@ -19180,7 +20053,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1022,
         "snippet": "uv_mutex_lock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_a62cc61b73fc"
         ]
@@ -19191,7 +20066,9 @@
         "file": "third_party/libuv/src/uv-common.c",
         "line": 1024,
         "snippet": "uv_mutex_unlock(&loop_metrics->lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop_metrics->lock"
+        ],
         "evidence_ids": [
           "ev_b3da1033776b"
         ]
@@ -19277,7 +20154,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 434,
         "snippet": "uv_mutex_lock(&state->fsevent_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "state->fsevent_mutex"
+        ],
         "evidence_ids": [
           "ev_48641e4f806c"
         ]
@@ -19307,7 +20186,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 287,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "w->loop->wq_mutex"
+        ],
         "evidence_ids": [
           "ev_5619dff01858"
         ]
@@ -19344,22 +20225,26 @@
       "relation_type": "mutex_lock",
       "source": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 144,
         "snippet": "uv_mutex_lock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_e88d9afa7f1e"
         ]
       },
       "target": {
         "function": "post",
-        "thread": null,
+        "thread": "producer",
         "file": "third_party/libuv/src/threadpool.c",
         "line": 151,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_c0bffae61bd8"
         ]
@@ -19368,8 +20253,8 @@
       "condition": "same function/resource post:mutex",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "producer",
+        "target_thread": "producer",
         "event_loop": null
       },
       "confidence": 0.85,
@@ -19385,7 +20270,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 102,
         "snippet": "pCFBundleGetFunctionPointerForName(launch_services_bundle,",
@@ -19487,7 +20372,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 109,
         "snippet": "pCFBundleGetFunctionPointerForName(launch_services_bundle,",
@@ -19591,8 +20476,8 @@
       "condition": "program order uv__set_process_title:launch_services_bundle,pCFBundleGetFunctionPointerForName",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -19785,7 +20670,9 @@
         "file": "third_party/libuv/src/unix/fsevents.c",
         "line": 208,
         "snippet": "uv_mutex_unlock(&handle->cf_mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "handle->cf_mutex"
+        ],
         "evidence_ids": [
           "ev_dbfcab4bbeda"
         ]
@@ -19904,7 +20791,7 @@
       "relation_type": "happens_before",
       "source": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 110,
         "snippet": "S(\"_LSSetApplicationInformationItem\"));",
@@ -20006,7 +20893,7 @@
       },
       "target": {
         "function": "uv__set_process_title",
-        "thread": null,
+        "thread": "worker",
         "file": "third_party/libuv/src/unix/darwin-proctitle.c",
         "line": 116,
         "snippet": "S(\"_kLSDisplayNameKey\"));",
@@ -20110,8 +20997,8 @@
       "condition": "program order uv__set_process_title:S",
       "execution_context": {
         "process": "target-repository",
-        "source_thread": null,
-        "target_thread": null,
+        "source_thread": "worker",
+        "target_thread": "worker",
         "event_loop": null
       },
       "confidence": 0.55,
@@ -20222,7 +21109,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 286,
         "snippet": "uv_mutex_lock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_ecc8fcb91523"
         ]
@@ -20233,7 +21122,9 @@
         "file": "third_party/libuv/src/threadpool.c",
         "line": 294,
         "snippet": "uv_mutex_unlock(&mutex);",
-        "held_locks": [],
+        "held_locks": [
+          "mutex"
+        ],
         "evidence_ids": [
           "ev_0ccc461ace9e"
         ]
@@ -20250,6 +21141,47 @@
       "evidence_ids": [
         "ev_ecc8fcb91523",
         "ev_0ccc461ace9e"
+      ],
+      "origin": "analyzer"
+    },
+    {
+      "id": "sync_fd1043eccb67",
+      "status": "unconfirmed",
+      "relation_type": "happens_before",
+      "source": {
+        "function": "uv__udp_sendmsg",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 1400,
+        "snippet": "uv__queue_insert_tail(&handle->write_completed_queue, &req->queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_4ca86b17fc93"
+        ]
+      },
+      "target": {
+        "function": "uv__udp_run_completed",
+        "thread": null,
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 103,
+        "snippet": "q = uv__queue_head(&handle->write_completed_queue);",
+        "held_locks": [],
+        "evidence_ids": [
+          "ev_374b3592f790"
+        ]
+      },
+      "order": "happens_before",
+      "condition": "cross-function queue publication handle->write_completed_queue: uv__udp_sendmsg -> uv__udp_run_completed",
+      "execution_context": {
+        "process": "target-repository",
+        "source_thread": null,
+        "target_thread": null,
+        "event_loop": null
+      },
+      "confidence": 0.55,
+      "evidence_ids": [
+        "ev_4ca86b17fc93",
+        "ev_374b3592f790"
       ],
       "origin": "analyzer"
     },
@@ -20304,7 +21236,9 @@
         "file": "third_party/libuv/src/unix/process.c",
         "line": 914,
         "snippet": "uv_rwlock_wrlock(&loop->cloexec_lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cloexec_lock"
+        ],
         "evidence_ids": [
           "ev_845f29d716c9"
         ]
@@ -20315,7 +21249,9 @@
         "file": "third_party/libuv/src/unix/process.c",
         "line": 919,
         "snippet": "uv_rwlock_wrunlock(&loop->cloexec_lock);",
-        "held_locks": [],
+        "held_locks": [
+          "loop->cloexec_lock"
+        ],
         "evidence_ids": [
           "ev_677f6776adf7"
         ]
@@ -20362,6 +21298,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_048840dd2d4c",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 608,
+        "column": 3,
+        "snippet": "uv__queue_insert_tail(&handle->write_queue, &req->queue);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_04b38854c433",
       "kind": "call_site",
       "location": {
@@ -20381,6 +21329,18 @@
         "line": 188,
         "column": 3,
         "snippet": "UV__FSEVENTS_PROCESS(handle, {"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_052fa201b701",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/udp.c",
+        "line": 80,
+        "column": 5,
+        "snippet": "uv__queue_insert_tail(&handle->write_completed_queue, &req->queue);"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -20441,6 +21401,18 @@
         "line": 463,
         "column": 16,
         "snippet": "cf_paths = pCFArrayCreate(NULL, (const void**) paths, path_count, NULL);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_08d113fd8759",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/threadpool.c",
+        "line": 180,
+        "column": 9,
+        "snippet": "if (uv_thread_join(threads + i))"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -20698,6 +21670,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_1cf43bc2d4aa",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 1375,
+        "column": 3,
+        "snippet": "uv__queue_insert_tail(&stream->write_queue, &req->queue);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_1d044a6853e0",
       "kind": "call_site",
       "location": {
@@ -20777,6 +21761,18 @@
         "line": 476,
         "column": 9,
         "snippet": "pCFRelease(paths[--i]);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_1f965ef19eb1",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 369,
+        "column": 9,
+        "snippet": "err = uv_thread_create(&s->thread, uv__stream_osx_select, stream);"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -21202,6 +22198,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_38a3cb2ec3da",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/loop.c",
+        "line": 157,
+        "column": 7,
+        "snippet": "uv__queue_insert_tail(&loop->watcher_queue, &w->watcher_queue);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_391f7b5ae52c",
       "kind": "assignment",
       "location": {
@@ -21418,6 +22426,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_46e211d4dc45",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 129,
+        "column": 10,
+        "snippet": "return uv_thread_create_ex(tid, &params, entry, arg);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_48641e4f806c",
       "kind": "call_site",
       "location": {
@@ -21478,6 +22498,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_4bae0407c446",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 295,
+        "column": 18,
+        "snippet": "return UV__ERR(pthread_join(*tid, NULL));"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_4ca86b17fc93",
       "kind": "call_site",
       "location": {
@@ -21497,6 +22529,18 @@
         "line": 747,
         "column": 5,
         "snippet": "uv__queue_remove(item);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_4de397bdc926",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/thread.c",
+        "line": 181,
+        "column": 9,
+        "snippet": "err = pthread_create(tid, attr, f.out, arg);"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -21665,6 +22709,18 @@
         "line": 287,
         "column": 3,
         "snippet": "uv_mutex_lock(&w->loop->wq_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_5685aa20daa9",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 646,
+        "column": 3,
+        "snippet": "uv_sem_wait(&loop->cf_sem);"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -22145,6 +23201,18 @@
         "line": 425,
         "column": 3,
         "snippet": "uv_mutex_unlock(&state->fsevent_mutex);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_7e6a3fa339ef",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/stream.c",
+        "line": 858,
+        "column": 9,
+        "snippet": "q = uv__queue_head(&stream->write_queue);"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"
@@ -23146,6 +24214,18 @@
       "build_profile": "libuv-macos-clang"
     },
     {
+      "id": "ev_b1d03e18b3f3",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/core.c",
+        "line": 936,
+        "column": 5,
+        "snippet": "uv__queue_insert_tail(&loop->watcher_queue, &w->watcher_queue);"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
       "id": "ev_b3da1033776b",
       "kind": "call_site",
       "location": {
@@ -23321,6 +24401,18 @@
         "line": 713,
         "column": 3,
         "snippet": "pCFRunLoopAddSource(state->loop,"
+      },
+      "role": "supports",
+      "build_profile": "libuv-macos-clang"
+    },
+    {
+      "id": "ev_bf48a63262eb",
+      "kind": "call_site",
+      "location": {
+        "file": "third_party/libuv/src/unix/fsevents.c",
+        "line": 637,
+        "column": 17,
+        "snippet": "err = UV__ERR(pthread_create(&loop->cf_thread, &attr, uv__cf_loop_runner, loop));"
       },
       "role": "supports",
       "build_profile": "libuv-macos-clang"

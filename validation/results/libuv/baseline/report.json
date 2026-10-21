@@ -5,7 +5,7 @@
   "scoring": "candidate facts including unconfirmed; confirmed-only metrics reported separately",
   "review": {
     "human_review": "pending",
-    "method": "existing annotations plus AI source review",
+    "method": "source_review_by_ai",
     "limitation": "Legacy libuv call labels were selected against the same graph; regression scores are not independent accuracy estimates."
   },
   "categories": {
@@ -350,8 +350,8 @@
       "evidence_hit_rate": 1.0,
       "coverage": 0.6470588235294118,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 227,
-      "prediction_count": 238,
+      "unlabelled_predictions": 229,
+      "prediction_count": 240,
       "duplicate_predictions": 0,
       "confirmed_only": {
         "precision": null,
@@ -604,8 +604,8 @@
       "evidence_hit_rate": 1.0,
       "coverage": 0.125,
       "unconfirmed_ratio": 1.0,
-      "unlabelled_predictions": 183,
-      "prediction_count": 187,
+      "unlabelled_predictions": 201,
+      "prediction_count": 205,
       "duplicate_predictions": 1,
       "confirmed_only": {
         "precision": null,

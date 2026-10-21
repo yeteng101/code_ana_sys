@@ -124,6 +124,123 @@ class NativeAnalyzerTests(unittest.TestCase):
             self.assertTrue(item["evidence_ids"])
             self.assertIn(item["order"], {"happens_before", "happens_after", "concurrent", "unknown"})
 
+    def test_cross_function_queue_atomic_and_thread_join_relations(self) -> None:
+        graph = {
+            "run_id": "sync-enhancement-test",
+            "meta": {"repository": "fixture/repo", "commit": "a" * 40},
+            "nodes": [
+                {"id": "fn:producer", "kind": "function", "name": "producer"},
+                {"id": "fn:consumer", "kind": "function", "name": "consumer"},
+                {"id": "fn:main", "kind": "function", "name": "main"},
+                {"id": "fn:listAddNodeTail", "kind": "external_function", "name": "listAddNodeTail"},
+                {"id": "fn:listFirst", "kind": "external_function", "name": "listFirst"},
+                {"id": "fn:atomic_store_explicit", "kind": "external_function", "name": "atomic_store_explicit"},
+                {"id": "fn:atomic_load_explicit", "kind": "external_function", "name": "atomic_load_explicit"},
+                {"id": "fn:pthread_create", "kind": "external_function", "name": "pthread_create"},
+                {"id": "fn:pthread_join", "kind": "external_function", "name": "pthread_join"},
+            ],
+            "edges": [
+                {
+                    "id": "queue-producer",
+                    "source": "fn:producer",
+                    "target": "fn:listAddNodeTail",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/queue.c",
+                        "line": 10,
+                        "snippet": "listAddNodeTail(queue, item);",
+                    },
+                    "evidence_ids": ["ev-queue-producer"],
+                },
+                {
+                    "id": "queue-consumer",
+                    "source": "fn:consumer",
+                    "target": "fn:listFirst",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/queue.c",
+                        "line": 20,
+                        "snippet": "item = listFirst(queue);",
+                    },
+                    "evidence_ids": ["ev-queue-consumer"],
+                },
+                {
+                    "id": "atomic-release",
+                    "source": "fn:producer",
+                    "target": "fn:atomic_store_explicit",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/atomic.c",
+                        "line": 12,
+                        "snippet": "atomic_store_explicit(&ready, 1, memory_order_release);",
+                    },
+                    "evidence_ids": ["ev-atomic-release"],
+                },
+                {
+                    "id": "atomic-acquire",
+                    "source": "fn:consumer",
+                    "target": "fn:atomic_load_explicit",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/atomic.c",
+                        "line": 22,
+                        "snippet": "value = atomic_load_explicit(&ready, memory_order_acquire);",
+                    },
+                    "evidence_ids": ["ev-atomic-acquire"],
+                },
+                {
+                    "id": "thread-create",
+                    "source": "fn:main",
+                    "target": "fn:pthread_create",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/thread.c",
+                        "line": 5,
+                        "snippet": "pthread_create(&worker, NULL, run, NULL);",
+                    },
+                    "evidence_ids": ["ev-thread-create"],
+                },
+                {
+                    "id": "thread-join",
+                    "source": "fn:main",
+                    "target": "fn:pthread_join",
+                    "kind": "direct_call",
+                    "call_site": {
+                        "file": "src/thread.c",
+                        "line": 30,
+                        "snippet": "pthread_join(worker, NULL);",
+                    },
+                    "evidence_ids": ["ev-thread-join"],
+                },
+            ],
+            "evidence": [
+                {"id": "ev-queue-producer", "file": "src/queue.c", "line": 10},
+                {"id": "ev-queue-consumer", "file": "src/queue.c", "line": 20},
+                {"id": "ev-atomic-release", "file": "src/atomic.c", "line": 12},
+                {"id": "ev-atomic-acquire", "file": "src/atomic.c", "line": 22},
+                {"id": "ev-thread-create", "file": "src/thread.c", "line": 5},
+                {"id": "ev-thread-join", "file": "src/thread.c", "line": 30},
+            ],
+        }
+        result = analyze_sync_relations(graph)
+        relations = result["items"]
+        self.assertTrue(any(
+            "cross-function queue publication queue" in str(item.get("condition"))
+            for item in relations
+        ))
+        self.assertTrue(any(
+            item["relation_type"] == "atomic"
+            and item["source"]["function"] == "producer"
+            and item["target"]["function"] == "consumer"
+            and item["order"] == "happens_before"
+            for item in relations
+        ))
+        self.assertTrue(any(
+            item["relation_type"] == "thread_join"
+            and "thread handle worker" in str(item.get("condition"))
+            for item in relations
+        ))
+
     @unittest.skipUnless(REDIS_GRAPH.exists(), "demo/redis graph required")
     def test_redis_program_order_relations_are_emitted(self) -> None:
         graph = json.loads(REDIS_GRAPH.read_text(encoding="utf-8"))
@@ -146,6 +263,23 @@ class NativeAnalyzerTests(unittest.TestCase):
                 ("IOThreadMain", 4192, "IOThreadMain", 4193, "happens_before"),
             }
             <= endpoints
+        )
+        self.assertTrue(
+            any(
+                "cross-function queue publication" in str(item.get("condition"))
+                and item["source"]["function"] == "bioSubmitJob"
+                and item["target"]["function"] == "bioProcessBackgroundJobs"
+                for item in result["items"]
+            )
+        )
+        source_result = analyze_sync_relations(graph, source_root=ROOT)
+        self.assertTrue(
+            any(
+                item["relation_type"] == "atomic"
+                and item["source"]["function"] == "setIOPendingCount"
+                and item["target"]["function"] == "getIOPendingCount"
+                for item in source_result["items"]
+            )
         )
 
 

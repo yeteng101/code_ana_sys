@@ -71,7 +71,8 @@ python scripts/export_validation.py --graph demo/redis/graph.json --verification
 当前 libuv 原生输出为资源流 237 项、同步关系 188 项。资源流已使用精确 API
 匹配和稳定资源 ID，在 17 条 confirmed 操作上得到 11 TP / 6 FN；剩余 FN 主要
 来自 transfer 和平台条件位置差异。同步关系使用端点 + order 作为评分 identity，
-condition 保留为必要证据。Redis 同步关系达到 7 TP / 15 FN。
+condition 保留为必要证据。增加跨函数队列、atomic release/acquire 和
+thread join 后，Redis 同步关系达到 9 TP / 13 FN，recall 40.91%、F1 58.06%。
 `reviewed/` 用于人工查看已标注的资源操作、同步关系，明确标记
 `origin=reviewed_annotations_not_analyzer_predictions`，**不得拿来发布 baseline 分数**。
 不导出 ground_truth.classification 的 leak/race 等最终缺陷结论。

@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "human_review": "pending",
+  "strict_review": false,
+  "checks": [
+    {
+      "name": "call_chain.recall",
+      "status": "passed",
+      "actual": 1.0,
+      "minimum": 1.0
+    },
+    {
+      "name": "resource_flow.recall",
+      "status": "passed",
+      "actual": 0.6470588235294118,
+      "minimum": 0.64
+    },
+    {
+      "name": "sync_relation.recall",
+      "status": "passed",
+      "actual": 0.125,
+      "minimum": 0.12
+    },
+    {
+      "name": "false_positives",
+      "status": "passed",
+      "actual": 0,
+      "maximum": 0
+    },
+    {
+      "name": "human_review",
+      "status": "informational",
+      "actual": "pending"
+    }
+  ],
+  "project_check": {
+    "project_id": "libuv",
+    "name": "libuv",
+    "status": "passed",
+    "project_status": "legacy_pending_review",
+    "human_review": "pending",
+    "cases": 32,
+    "errors": [],
+    "warnings": [
+      "legacy project is pending human review unless all pending labels are resolved"
+    ]
+  }
+}

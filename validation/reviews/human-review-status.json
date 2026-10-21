@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "status": "pending",
+  "simulated_review_completed": true,
+  "human_review_completed": false,
+  "scope": {
+    "libuv_sync_relations": 32,
+    "redis_sync_relations": 22,
+    "libuv_resource_operations": 82,
+    "libuv_call_chain_rows": 100,
+    "redis_call_chain_rows": 120
+  },
+  "required_steps": [
+    "Review synchronization relations",
+    "Review resource-flow operations and duplicate candidates",
+    "Spot-check call-chain rows",
+    "Record disagreements as Needs fix",
+    "Synchronize decisions into source JSON datasets",
+    "Set review.human_review=confirmed after sign-off",
+    "Run the strict validation quality gate"
+  ]
+}

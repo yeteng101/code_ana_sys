@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 
 from clang_pipeline.pipeline import run_pipeline
+from clang_pipeline.resource_flow import analyze_resource_flow
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -214,6 +215,79 @@ class ClangPipelineTests(unittest.TestCase):
             ).read_text(encoding="utf-8")
             self.assertIn("pthread_mutex_lock", visualization)
             self.assertIn("open", visualization)
+
+    def test_macro_builtin_and_platform_conditions_are_resolved(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "workspace"
+            run_pipeline(
+                source_root=EXTERNAL_FIXTURE.parent,
+                workspace=workspace,
+                run_id="run_test_macro_builtin",
+                build_profile="fixture-platform",
+                defines=["PLATFORM_TEST"],
+                publish_dir=None,
+            )
+
+            graph = json.loads(
+                (workspace / "07-report" / "graph.json").read_text()
+            )
+            node_names = {node["id"]: node["name"] for node in graph["nodes"]}
+            edges = [
+                (node_names[edge["source"]], node_names[edge["target"]], edge)
+                for edge in graph["edges"]
+            ]
+            memset_edges = [
+                edge for source, target, edge in edges
+                if source == "clear_buffer" and target == "memset"
+            ]
+            self.assertEqual(1, len(memset_edges))
+            self.assertIn("ZERO_BUFFER", str(memset_edges[0].get("condition")))
+
+            poll_edges = [
+                edge for source, target, edge in edges
+                if source == "wait_platform" and target == "poll"
+            ]
+            self.assertEqual(1, len(poll_edges))
+            self.assertIn("PLATFORM_TEST", str(poll_edges[0].get("condition")))
+            verification = json.loads(
+                (workspace / "06-verify" / "verification.json").read_text()
+            )
+            self.assertTrue(
+                any(item.get("method") == "macro_expansion" for item in verification["checks"])
+            )
+
+    def test_resource_assignment_alias_and_cross_function_ownership(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "workspace"
+            run_pipeline(
+                source_root=EXTERNAL_FIXTURE.parent,
+                workspace=workspace,
+                run_id="run_test_resource_ownership",
+                build_profile="fixture-resource",
+                publish_dir=None,
+            )
+            graph = json.loads(
+                (workspace / "07-report" / "graph.json").read_text()
+            )
+            result = analyze_resource_flow(
+                graph,
+                source_root=EXTERNAL_FIXTURE.parent,
+            )
+            transfers = [
+                item
+                for item in result["items"]
+                if item["ownership_model"] == "cross_function_transfer"
+            ]
+            self.assertTrue(transfers)
+            self.assertTrue(any(
+                operation["kind"] == "transfer"
+                for item in transfers
+                for operation in item["operations"]
+            ))
+            self.assertTrue(any(
+                item.get("data_flow")
+                for item in transfers
+            ))
 
 
 if __name__ == "__main__":

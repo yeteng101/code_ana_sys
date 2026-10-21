@@ -229,6 +229,16 @@ def relativize_artifact_paths(output_dir: Path, source_root: Path) -> None:
         if not path.is_file():
             continue
         write_json(path, _relativize_json_paths(read_json(path), source_root))
+    root_text = str(source_root.resolve())
+    for name in ("report.md", "analysis.md"):
+        path = output_dir / name
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        path.write_text(
+            text.replace(root_text + "/", "").replace(root_text, ""),
+            encoding="utf-8",
+        )
 
 
 def bundle_artifacts(

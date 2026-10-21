@@ -3,7 +3,7 @@
   "dataset_id": "libuv-baseline-v1",
   "review": {
     "human_review": "pending",
-    "method": "existing annotations plus AI source review",
+    "method": "source_review_by_ai",
     "limitation": "Legacy libuv call labels were selected against the same graph; regression scores are not independent accuracy estimates."
   },
   "repository": "libuv/libuv",

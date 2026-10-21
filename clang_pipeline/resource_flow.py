@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import re
 from collections import defaultdict
+from pathlib import Path
 from typing import Any
 
-from .clang_ast import stable_digest, utc_now
+from .clang_ast import evidence_id, stable_digest, utc_now
 
 
 ACQUIRE_TARGETS = frozenset(
@@ -234,9 +235,11 @@ def _resource_type(resource_id: str, target: str, source: str) -> str:
 
 def _resource_key(snippet: str, fallback: str) -> str:
     text = snippet.strip()
-    assignment = re.match(r"^([A-Za-z_][A-Za-z0-9_]*(?:->|\.)[A-Za-z0-9_]+|[A-Za-z_][A-Za-z0-9_]*)\s*=", text)
+    assignment = ASSIGNMENT_PATTERN.search(text)
     if assignment:
-        return assignment.group(1)
+        expression = _simple_expression(assignment.group("lhs"))
+        if expression:
+            return expression
     arguments = re.search(r"\(([^()]*)\)", text)
     if arguments:
         first = arguments.group(1).split(",", 1)[0].strip()
@@ -292,6 +295,307 @@ def _pair_key(source: str, target: str) -> str:
     return f"single:{source}:{target}"
 
 
+ASSIGNMENT_PATTERN = re.compile(
+    r"(?P<lhs>[A-Za-z_]\w*(?:(?:->|\.)[A-Za-z_]\w*|\[[^\]]+\])*)"
+    r"\s*=\s*(?P<rhs>[^;]+);"
+)
+RETURN_PATTERN = re.compile(r"^\s*return\s+(?P<expr>[^;]+);")
+
+
+def _simple_expression(value: str) -> str | None:
+    cleaned = re.sub(r"^[\s(&*]+|[\s)]+$", "", value.strip())
+    match = re.fullmatch(
+        r"[A-Za-z_]\w*(?:(?:->|\.)[A-Za-z_]\w*|\[[^\]]+\])*",
+        cleaned,
+    )
+    return match.group(0) if match else None
+
+
+def _resolve_source_path(source_root: Path, file: str) -> Path:
+    path = Path(file)
+    if path.is_absolute():
+        return path
+    candidates = [source_root / path, Path.cwd() / path]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return candidates[0]
+
+
+def _function_ranges(
+    graph: dict[str, Any],
+    source_root: Path | None,
+) -> dict[tuple[str, str], tuple[int, int]]:
+    by_file: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for node in graph.get("nodes", []):
+        if node.get("kind") != "function":
+            continue
+        file = str(node.get("file") or "")
+        line = int(node.get("line") or 0)
+        if not file or line <= 0:
+            continue
+        by_file[file].append(node)
+    ranges: dict[tuple[str, str], tuple[int, int]] = {}
+    for file, nodes in by_file.items():
+        path = _resolve_source_path(
+            source_root or Path.cwd(),
+            file,
+        )
+        try:
+            line_count = len(path.read_text(encoding="utf-8", errors="replace").splitlines())
+        except OSError:
+            line_count = 0
+        nodes.sort(key=lambda item: int(item["line"]))
+        for index, node in enumerate(nodes):
+            start = int(node["line"])
+            end = (
+                int(nodes[index + 1]["line"]) - 1
+                if index + 1 < len(nodes)
+                else line_count
+            )
+            ranges[(file, str(node["name"]))] = (start, max(start, end))
+    return ranges
+
+
+def _scan_source_facts(
+    graph: dict[str, Any],
+    source_root: Path,
+) -> dict[str, Any]:
+    facts: dict[str, Any] = {
+        "assignments": [],
+        "returns": [],
+        "evidence": {},
+    }
+    ranges = _function_ranges(graph, source_root)
+    file_cache: dict[str, list[str]] = {}
+    for (file, function), (start, end) in ranges.items():
+        path = _resolve_source_path(source_root, file)
+        if file not in file_cache:
+            try:
+                file_cache[file] = path.read_text(
+                    encoding="utf-8", errors="replace"
+                ).splitlines()
+            except OSError:
+                continue
+        lines = file_cache[file]
+        for line in range(start, min(end, len(lines)) + 1):
+            snippet = lines[line - 1].strip()
+            assignment = ASSIGNMENT_PATTERN.search(snippet)
+            if assignment:
+                lhs = _simple_expression(assignment.group("lhs"))
+                rhs = assignment.group("rhs").strip()
+                if lhs:
+                    evidence = evidence_id("assignment", file, line, lhs)
+                    facts["assignments"].append(
+                        {
+                            "function": function,
+                            "file": file,
+                            "line": line,
+                            "lhs": lhs,
+                            "rhs": rhs,
+                            "snippet": snippet,
+                            "evidence_id": evidence,
+                        }
+                    )
+                    facts["evidence"].setdefault(
+                        evidence,
+                        {
+                            "id": evidence,
+                            "kind": "assignment",
+                            "location": {"file": file, "line": line, "snippet": snippet},
+                            "role": "supports",
+                        },
+                    )
+            returned = RETURN_PATTERN.match(snippet)
+            if returned:
+                expression = _simple_expression(returned.group("expr"))
+                if expression:
+                    evidence = evidence_id(
+                        "control_flow", file, line, f"return:{expression}"
+                    )
+                    facts["returns"].append(
+                        {
+                            "function": function,
+                            "file": file,
+                            "line": line,
+                            "expression": expression,
+                            "snippet": snippet,
+                            "evidence_id": evidence,
+                        }
+                    )
+                    facts["evidence"].setdefault(
+                        evidence,
+                        {
+                            "id": evidence,
+                            "kind": "control_flow",
+                            "location": {"file": file, "line": line, "snippet": snippet},
+                            "role": "supports",
+                        },
+                    )
+    return facts
+
+
+def _alias_sets(facts: dict[str, Any]) -> dict[str, dict[str, str]]:
+    result: dict[str, dict[str, str]] = defaultdict(dict)
+
+    def find(mapping: dict[str, str], value: str) -> str:
+        mapping.setdefault(value, value)
+        if mapping[value] != value:
+            mapping[value] = find(mapping, mapping[value])
+        return mapping[value]
+
+    def union(mapping: dict[str, str], left: str, right: str) -> None:
+        left_root, right_root = find(mapping, left), find(mapping, right)
+        if left_root != right_root:
+            mapping[max(left_root, right_root)] = min(left_root, right_root)
+
+    for assignment in facts.get("assignments", []):
+        rhs = assignment["rhs"]
+        if "(" in rhs:
+            continue
+        right = _simple_expression(rhs)
+        if right:
+            mapping = result[assignment["function"]]
+            union(mapping, assignment["lhs"], right)
+    return {function: dict(mapping) for function, mapping in result.items()}
+
+
+def _canonical_expression(
+    function: str,
+    expression: str,
+    aliases: dict[str, dict[str, str]],
+) -> str:
+    mapping = aliases.get(function, {})
+    if expression not in mapping:
+        return expression
+    value = expression
+    while mapping.get(value, value) != value:
+        value = mapping[value]
+    return value
+
+
+def _assignment_chain(
+    function: str,
+    expression: str,
+    facts: dict[str, Any],
+    aliases: dict[str, dict[str, str]],
+) -> list[dict[str, Any]]:
+    canonical = _canonical_expression(function, expression, aliases)
+    chain = []
+    for assignment in facts.get("assignments", []):
+        if assignment["function"] != function:
+            continue
+        rhs = _simple_expression(assignment["rhs"])
+        if canonical not in {
+            _canonical_expression(function, assignment["lhs"], aliases),
+            _canonical_expression(function, rhs or "", aliases),
+        }:
+            continue
+        chain.append(
+            {
+                "file": assignment["file"],
+                "line": assignment["line"],
+                "lhs": assignment["lhs"],
+                "rhs": assignment["rhs"],
+                "evidence_id": assignment["evidence_id"],
+            }
+        )
+    return chain
+
+
+def _returning_resource_summaries(
+    operations: list[dict[str, Any]],
+    facts: dict[str, Any],
+    aliases: dict[str, dict[str, str]],
+) -> dict[str, dict[str, Any]]:
+    summaries: dict[str, dict[str, Any]] = {}
+    returns_by_function: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for item in facts.get("returns", []):
+        returns_by_function[item["function"]].append(item)
+    for operation in operations:
+        if operation["kind"] != "acquire":
+            continue
+        function = operation["function"]
+        expression = operation["_resource_expression"]
+        canonical = _canonical_expression(function, expression, aliases)
+        visible_return = operation["snippet"].lstrip().startswith("return ")
+        returned = any(
+            _canonical_expression(function, item["expression"], aliases) == canonical
+            for item in returns_by_function.get(function, [])
+        )
+        if visible_return or returned:
+            summaries.setdefault(function, operation)
+    return summaries
+
+
+def _cross_function_transfers(
+    graph: dict[str, Any],
+    operations: list[dict[str, Any]],
+    facts: dict[str, Any],
+    aliases: dict[str, dict[str, str]],
+) -> list[dict[str, Any]]:
+    summaries = _returning_resource_summaries(operations, facts, aliases)
+    if not summaries:
+        return []
+    node_names = {
+        str(node.get("id")): str(node.get("name") or _tail(str(node.get("id"))))
+        for node in graph.get("nodes", [])
+    }
+    transfers: list[dict[str, Any]] = []
+    for edge in graph.get("edges", []):
+        if edge.get("kind") != "direct_call":
+            continue
+        target_name = node_names.get(str(edge.get("target", "")), "")
+        summary = summaries.get(target_name)
+        if summary is None:
+            continue
+        source = node_names.get(str(edge.get("source", "")), _tail(str(edge.get("source", ""))))
+        site = edge.get("call_site") or {}
+        snippet = str(site.get("snippet") or "")
+        target_pattern = re.escape(target_name)
+        assignment = re.search(
+            rf"(?P<lhs>[A-Za-z_]\w*(?:(?:->|\.)[A-Za-z_]\w*|\[[^\]]+\])*)"
+            rf"\s*=\s*{target_pattern}\s*\(",
+            snippet,
+        )
+        if assignment:
+            expression = assignment.group("lhs")
+        elif re.search(rf"\breturn\s+{target_pattern}\s*\(", snippet):
+            expression = f"{target_name}()"
+        else:
+            continue
+        function = source
+        stable_resource = summary["_resource_id"]
+        if not stable_resource.startswith("rf_"):
+            stable_resource = "rf_flow_" + stable_digest(
+                [summary["_pair_key"], target_name]
+            )[:12]
+        transfers.append(
+            {
+                "operation_id": "transfer_" + str(edge.get("id", ""))[-10:],
+                "kind": "transfer",
+                "api": target_name,
+                "function": function,
+                "file": site.get("file", ""),
+                "line": int(site.get("line", 0)),
+                "snippet": snippet,
+                "evidence_ids": list(edge.get("evidence_ids", [])),
+                "status": "unconfirmed",
+                "confidence": 0.7,
+                "from_function": target_name,
+                "assignment_chain": _assignment_chain(
+                    function, expression, facts, aliases
+                ),
+                "_pair_key": summary["_pair_key"],
+                "_resource_id": stable_resource,
+                "_resource_expression": expression,
+                "_resource_type": summary["_resource_type"],
+                "_edge_id": edge.get("id", ""),
+            }
+        )
+    return transfers
+
+
 def _public_operation(operation: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in operation.items() if not key.startswith("_")}
 
@@ -304,7 +608,11 @@ def _evidence_map(graph: dict[str, Any], evidence_ids: set[str]) -> list[dict[st
     return sorted(result, key=lambda item: str(item.get("id", "")))
 
 
-def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
+def analyze_resource_flow(
+    graph: dict[str, Any],
+    *,
+    source_root: str | Path | None = None,
+) -> dict[str, Any]:
     """Extract resource operations from a Clang-produced evidence graph.
 
     The first native version is intentionally rule based. It does not claim
@@ -312,6 +620,13 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
     termination reason and leaves the final judgement to the consumer.
     """
 
+    root = Path(source_root).resolve() if source_root is not None else None
+    facts = (
+        _scan_source_facts(graph, root)
+        if root is not None
+        else {"assignments": [], "returns": [], "evidence": {}}
+    )
+    aliases = _alias_sets(facts)
     operations: list[dict[str, Any]] = []
     for edge in graph.get("edges", []):
         target = _node_name(graph, str(edge.get("target", "")))
@@ -320,14 +635,39 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
         if kind:
             operations.append(_operation(edge, graph, kind))
 
+    transfers = _cross_function_transfers(graph, operations, facts, aliases)
+    operations.extend(transfers)
+    transfer_ids = {
+        item["_pair_key"]: item["_resource_id"]
+        for item in transfers
+    }
+    for operation in operations:
+        operation["_canonical_expression"] = _canonical_expression(
+            operation["function"],
+            operation["_resource_expression"],
+            aliases,
+        )
+        if (
+            operation["kind"] != "transfer"
+            and operation["_pair_key"] in transfer_ids
+            and not operation["_resource_id"].startswith("rf_")
+        ):
+            operation["_resource_id"] = transfer_ids[operation["_pair_key"]]
+        operation["assignment_chain"] = _assignment_chain(
+            operation["function"],
+            operation["_resource_expression"],
+            facts,
+            aliases,
+        )
+
     grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for operation in operations:
-        cross_function = operation["_resource_id"] != operation["_resource_expression"]
+        cross_function = operation["_pair_key"] in transfer_ids
         grouped[
             (
                 operation["_pair_key"],
                 operation["_resource_id"],
-                operation["_resource_expression"],
+                "" if cross_function else operation["_canonical_expression"],
                 "" if cross_function else operation["function"],
             )
         ].append(operation)
@@ -335,21 +675,25 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     warnings: list[str] = []
     referenced_evidence: set[str] = set()
+    used_fact_ids: set[str] = set()
     for (pair_key, resource_id, resource_expression, function), group in sorted(
         grouped.items()
     ):
         group.sort(key=lambda item: (item["file"], item["line"]))
         acquires = [item for item in group if item["kind"] == "acquire"]
         releases = [item for item in group if item["kind"] == "release"]
+        group_transfers = [item for item in group if item["kind"] == "transfer"]
         selected: list[dict[str, Any]] = []
         if acquires:
             selected.append(acquires[0])
+        selected.extend(group_transfers)
         if releases:
             selected.append(releases[-1] if acquires else releases[0])
         if not selected:
             continue
         selected.sort(key=lambda item: (item["file"], item["line"]))
         complete = bool(acquires and releases)
+        cross_function = bool(group_transfers)
         termination = (
             "release_found"
             if complete
@@ -361,6 +705,12 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
         for operation in selected:
             referenced_evidence.update(operation["evidence_ids"])
         public_operations = [_public_operation(item) for item in selected]
+        data_flow = [
+            fact
+            for item in public_operations
+            for fact in item.get("assignment_chain", [])
+        ]
+        used_fact_ids.update(fact["evidence_id"] for fact in data_flow)
         item_id = "rf_" + stable_digest(
             [
                 pair_key,
@@ -375,16 +725,24 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
                 "id": item_id,
                 "status": "unconfirmed",
                 "resource": resource_id,
-                "resource_expression": resource_expression,
+                "resource_expression": (
+                    group_transfers[0]["_resource_expression"]
+                    if group_transfers
+                    else resource_expression
+                ),
                 "resource_type": selected[0]["_resource_type"],
                 "operations": public_operations,
                 "owner": function,
                 "thread": None,
                 "ownership_model": (
-                    "visible_acquire_release"
+                    "cross_function_transfer"
+                    if cross_function
+                    else "visible_acquire_release"
                     if complete
                     else "unresolved_from_visible_graph"
                 ),
+                "data_flow": data_flow,
+                "assignment_chain": data_flow,
                 "paths": [
                     {
                         "path_id": item_id + "_path",
@@ -416,6 +774,19 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
                 f"{function}:{resource_id}[{resource_expression}]"
             )
 
+    fact_evidence = {
+        evidence_id_value: item
+        for evidence_id_value, item in facts.get("evidence", {}).items()
+        if evidence_id_value in used_fact_ids
+    }
+    combined_evidence = {
+        **fact_evidence,
+        **{
+            item["id"]: item
+            for item in _evidence_map(graph, referenced_evidence)
+        },
+    }
+
     if len(warnings) > 50:
         warnings = warnings[:50] + [
             f"{len(warnings) - 50} additional unresolved resource paths omitted"
@@ -434,6 +805,6 @@ def analyze_resource_flow(graph: dict[str, Any]) -> dict[str, Any]:
             "provider": "native_resource_flow_v1",
         },
         "items": items,
-        "evidence": _evidence_map(graph, referenced_evidence),
+        "evidence": sorted(combined_evidence.values(), key=lambda item: item["id"]),
         "warnings": warnings,
     }

@@ -23,6 +23,19 @@ from .libclang_extract import extract_compact_ast
 from .visualization import write_visualization
 
 
+BUILTIN_ALIASES = {
+    "__builtin_memset": "memset",
+    "__builtin_memcpy": "memcpy",
+    "__builtin_memmove": "memmove",
+    "__builtin_strlen": "strlen",
+    "__builtin_strcmp": "strcmp",
+    "__builtin_sigemptyset": "sigemptyset",
+    "__builtin_sigaddset": "sigaddset",
+    "__builtin___memcpy_chk": "memcpy",
+    "__builtin___memset_chk": "memset",
+}
+
+
 def _load_request(workspace: Path) -> dict[str, Any]:
     return read_json(workspace / "request.json")
 
@@ -489,6 +502,10 @@ def stage03_callgraph(workspace: Path) -> dict[str, Any]:
     by_name, by_id = _function_index(symbols)
     macros = read_json(workspace / "02-macro" / "macros.json")
     macro_map = _macro_location_map(macros["expansions"])
+    platform_conditions = _platform_condition_map(
+        macros.get("conditional_regions", []),
+        profile,
+    )
 
     nodes: dict[str, dict[str, Any]] = {}
     edges: dict[str, dict[str, Any]] = {}
@@ -524,6 +541,7 @@ def stage03_callgraph(workspace: Path) -> dict[str, Any]:
             by_name,
             field_ids,
             macro_map,
+            platform_conditions,
             nodes,
             edges,
             evidence,
@@ -552,8 +570,31 @@ def stage03_callgraph(workspace: Path) -> dict[str, Any]:
 def _macro_location_map(expansions: list[dict[str, Any]]) -> dict[tuple[str, int], str]:
     result: dict[tuple[str, int], str] = {}
     for expansion in expansions:
-        result[(expansion["file"], expansion["line"])] = expansion["name"]
+        for call_site in expansion.get("call_sites", []):
+            result[(call_site["file"], int(call_site["line"]))] = expansion["name"]
     return result
+
+
+def _platform_condition_map(
+    regions: list[dict[str, Any]],
+    profile: str,
+) -> dict[tuple[str, int], str]:
+    result: dict[tuple[str, int], str] = defaultdict(str)
+    for region in regions:
+        if profile not in region.get("active_in_profiles", []):
+            continue
+        file = str(region.get("file") or "")
+        start = int(region.get("start_line") or 0)
+        end = int(region.get("end_line") or start)
+        condition = str(region.get("condition") or "")
+        if not file or start <= 0 or not condition:
+            continue
+        for line in range(start, end + 1):
+            previous = result[(file, line)]
+            result[(file, line)] = (
+                f"{previous} && {condition}" if previous else condition
+            )
+    return dict(result)
 
 
 def _graph_node(symbol: dict[str, Any]) -> dict[str, Any]:
@@ -592,6 +633,7 @@ def _collect_call_edges(
     by_name: dict[str, list[dict[str, Any]]],
     field_ids: dict[str, str],
     macro_map: dict[tuple[str, int], str],
+    platform_conditions: dict[tuple[str, int], str],
     nodes: dict[str, dict[str, Any]],
     edges: dict[str, dict[str, Any]],
     evidence: dict[str, dict[str, Any]],
@@ -628,6 +670,7 @@ def _collect_call_edges(
                 by_name,
                 field_ids,
                 macro_map,
+                platform_conditions,
                 nodes,
                 edges,
                 evidence,
@@ -648,6 +691,7 @@ def _handle_call_expr(
     by_name: dict[str, list[dict[str, Any]]],
     field_ids: dict[str, str],
     macro_map: dict[tuple[str, int], str],
+    platform_conditions: dict[tuple[str, int], str],
     nodes: dict[str, dict[str, Any]],
     edges: dict[str, dict[str, Any]],
     evidence: dict[str, dict[str, Any]],
@@ -664,16 +708,30 @@ def _handle_call_expr(
     if callee is None:
         return
 
-    macro_name = _macro_at_call(call, macro_map, root, unit_file)
+    macro_name = _macro_at_call(
+        call,
+        macro_map,
+        root,
+        unit_file,
+        fallback_file=call_site["file"],
+        fallback_line=int(call_site["line"]),
+    )
+    platform_condition = platform_conditions.get(
+        (call_site["file"], int(call_site["line"])),
+        "",
+    )
     if callee.get("kind") == "DeclRefExpr":
         referenced = callee.get("referencedDecl") or {}
         if referenced.get("kind") == "FunctionDecl":
-            target_id = _resolve_function(by_name, referenced.get("name") or "", call_site["file"])
+            target_name = _canonical_function_name(referenced.get("name") or "")
+            target_id = _resolve_function(by_name, target_name, call_site["file"])
             if target_id is None or target_id not in nodes:
                 # Keep calls to libc/system or third-party functions in the
                 # graph.  Dropping them made the verifier report false
                 # negatives for otherwise source-backed call sites.
-                target_id = _ensure_external_function(nodes, referenced, call_site)
+                external_reference = dict(referenced)
+                external_reference["name"] = target_name
+                target_id = _ensure_external_function(nodes, external_reference, call_site)
             _add_edge(
                 "direct_call",
                 source_id,
@@ -683,6 +741,7 @@ def _handle_call_expr(
                 edges,
                 profile,
                 macro_name,
+                platform_condition,
             )
             return
         if is_fptr_qual_type(referenced.get("type") or {}):
@@ -697,6 +756,7 @@ def _handle_call_expr(
                     edges,
                     profile,
                     macro_name,
+                    platform_condition,
                     confidence=0.5,
                 )
             return
@@ -724,8 +784,13 @@ def _handle_call_expr(
                 edges,
                 profile,
                 macro_name,
+                platform_condition,
                 confidence=0.5,
             )
+
+
+def _canonical_function_name(name: str) -> str:
+    return BUILTIN_ALIASES.get(name, name)
 
 
 def _unwrap(node: dict[str, Any] | None) -> dict[str, Any] | None:
@@ -790,7 +855,12 @@ def _macro_at_call(
     macro_map: dict[tuple[str, int], str],
     root: Path,
     unit_file: str,
+    *,
+    fallback_file: str = "",
+    fallback_line: int = 0,
 ) -> str | None:
+    if (fallback_file, fallback_line) in macro_map:
+        return macro_map[(fallback_file, fallback_line)]
     begin = (call.get("range") or {}).get("begin") or {}
     # Clang reports the source token in spellingLoc and the invocation in
     # expansionLoc.  Verification must attach the macro to the invocation
@@ -812,6 +882,7 @@ def _add_edge(
     edges: dict[str, dict[str, Any]],
     profile: str,
     macro_name: str | None,
+    platform_condition: str = "",
     *,
     confidence: float = 1.0,
 ) -> None:
@@ -828,13 +899,18 @@ def _add_edge(
             item["macro_stack"] = [macro_name]
         evidence[ev_id] = item
     edge_id = "e_" + stable_digest([source, target, call_site["file"], call_site["line"]])[:12]
+    condition = macro_name
+    if platform_condition:
+        condition = (
+            f"{condition} && {platform_condition}" if condition else platform_condition
+        )
     edge = {
         "id": edge_id,
         "source": source,
         "target": target,
         "kind": kind,
         "call_site": call_site,
-        "condition": macro_name,
+        "condition": condition,
         "execution_context": None,
         "confidence": confidence,
         "evidence_ids": [ev_id],
@@ -1261,6 +1337,7 @@ def stage06_verify(workspace: Path) -> dict[str, Any]:
     graph = read_json(workspace / "03-callgraph" / "callgraph.json")
     fptr = read_json(workspace / "04-fptr" / "fptr-candidates.json")
     async_result = read_json(workspace / "05-async" / "async-chains.json")
+    macros = read_json(workspace / "02-macro" / "macros.json")
     symbols = _symbols(workspace)
     nodes = {node["id"]: node for node in graph["nodes"]}
     evidence_ids = {item["id"] for item in graph["evidence"]}
@@ -1268,6 +1345,9 @@ def stage06_verify(workspace: Path) -> dict[str, Any]:
     evidence_ids.update(item["id"] for item in async_result.get("evidence", []))
 
     checks: list[dict[str, Any]] = []
+    macro_definitions = {
+        str(item.get("name")): item for item in macros.get("expansions", [])
+    }
     confirmed = 0
     for edge in graph["edges"]:
         edge_id = edge["id"]
@@ -1288,12 +1368,22 @@ def stage06_verify(workspace: Path) -> dict[str, Any]:
             continue
         if edge["kind"] == "direct_call":
             target_name = nodes[edge["target"]]["name"]
-            if target_name not in snippet and not edge.get("condition"):
+            condition = str(edge.get("condition") or "")
+            macro_confirmed = any(
+                name in condition
+                and (
+                    target_name in str(expansion.get("definition") or "")
+                    or target_name in str(expansion.get("expanded_text") or "")
+                )
+                for name, expansion in macro_definitions.items()
+            )
+            if target_name not in snippet and not macro_confirmed:
                 ok = False
                 checks.append(_check(f"{edge_id}: 直接调用目标与源码一致", "refuted", "source_recheck", edge["evidence_ids"], 0.0))
             else:
                 confirmed += 1
-                checks.append(_check(f"{edge_id}: 直接调用目标与源码一致", "confirmed", "source_recheck", edge["evidence_ids"], 1.0))
+                method = "macro_expansion" if macro_confirmed else "source_recheck"
+                checks.append(_check(f"{edge_id}: 直接调用目标与源码一致", "confirmed", method, edge["evidence_ids"], 1.0))
         elif edge["kind"] == "indirect_call":
             field_key = edge["target"].removeprefix("cb:")
             candidate = next(

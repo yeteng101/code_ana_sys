@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "human_review": "pending",
+  "strict_review": false,
+  "checks": [
+    {
+      "name": "call_chain.recall",
+      "status": "passed",
+      "actual": 0.9363636363636364,
+      "minimum": 0.93
+    },
+    {
+      "name": "sync_relation.recall",
+      "status": "passed",
+      "actual": 0.4090909090909091,
+      "minimum": 0.4
+    },
+    {
+      "name": "false_positives",
+      "status": "passed",
+      "actual": 0,
+      "maximum": 0
+    },
+    {
+      "name": "human_review",
+      "status": "informational",
+      "actual": "pending"
+    }
+  ],
+  "project_check": {
+    "project_id": "redis",
+    "name": "Redis",
+    "status": "passed",
+    "project_status": "legacy_pending_review",
+    "human_review": "pending",
+    "cases": 142,
+    "errors": [],
+    "warnings": [
+      "legacy project is pending human review unless all pending labels are resolved"
+    ]
+  }
+}

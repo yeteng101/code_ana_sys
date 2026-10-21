@@ -11,6 +11,13 @@ human_review = pending
 method = simulated_manual_review_by_codex
 ```
 
+Human-only handoff steps:
+
+```text
+validation/reviews/HUMAN_REVIEW_PENDING.md
+validation/reviews/human-review-status.json
+```
+
 Decisions:
 
 ```text

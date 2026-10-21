@@ -33,10 +33,32 @@ jobs:
           test "$(git -C third_party/redis rev-parse HEAD)" = "d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7"
           python scripts/reproduce_validation.py
           git diff --exit-code -- validation/benchmarks validation/results
+      - name: Validation quality gate
+        run: |
+          python scripts/run_validation_project.py \
+            --project-id libuv \
+            --ground-truth validation/benchmarks/libuv/ground-truth.json \
+            --predictions validation/results/libuv/predictions \
+            --output /tmp/validation-gate/libuv \
+            --min-call-recall 1.0 \
+            --min-resource-recall 0.64 \
+            --min-sync-recall 0.12 \
+            --max-fp 0
+          python scripts/run_validation_project.py \
+            --project-id redis \
+            --ground-truth validation/benchmarks/redis/ground-truth.json \
+            --predictions validation/results/redis/predictions \
+            --output /tmp/validation-gate/redis \
+            --min-call-recall 0.93 \
+            --min-sync-recall 0.40 \
+            --max-fp 0
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: sync-validation-report
-          path: /tmp/sync-validation-report.json
+          name: validation-gate
+          path: |
+            /tmp/sync-validation-report.json
+            /tmp/validation-gate
 
   python-regression:
     runs-on: ubuntu-latest
@@ -46,6 +68,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Install validation dependencies
+        run: python -m pip install -r validation/sync-relations/requirements.txt
       - name: Install Clang
         run: sudo apt-get update && sudo apt-get install -y clang libclang-dev
       - name: Fetch pinned libuv source

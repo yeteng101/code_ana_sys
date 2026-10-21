@@ -6,9 +6,13 @@
 >
 > 人工复核：[validation/MANUAL_REVIEW_GUIDE.md](validation/MANUAL_REVIEW_GUIDE.md)
 >
+> 人工待办：[validation/reviews/HUMAN_REVIEW_PENDING.md](validation/reviews/HUMAN_REVIEW_PENDING.md)
+>
 > 模拟复核：[validation/reviews/README.md](validation/reviews/README.md)
 >
 > 新仓库验证流程：[docs/validation-project-workflow.md](docs/validation-project-workflow.md)
+>
+> 本轮分析器增强：[docs/analyzer-enhancements-2026-10-21.md](docs/analyzer-enhancements-2026-10-21.md)
 >
 > 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)
 >
@@ -17,12 +21,14 @@
 > resource-flow 和 sync-relations，Agent 工具 `get_visualization` 可返回该文件路径。
 >
 > 当前指标：libuv 资源流 11 TP / 6 FN（recall 64.71%）；Redis 调用链 103 TP / 7 FN
-> （recall 93.64%）；同步关系已从 0% 提升到 libuv 12.50%、Redis 31.82%。
+> （recall 93.64%）；同步关系已从 0% 提升到 libuv 12.50%、Redis 40.91%。
 > libuv / Redis 图已重新生成，分别包含 216 / 55 个 external function 节点。
 > 同一个 URL Subagent 已对独立 C 和 C++ 示例仓库完成迁移验证，可分析任意 C/C++ 仓库。
 >
-> 当前风险：资源流 transfer 和跨函数所有权未完成；同步关系 condition/线程身份未对齐；
-> external builtin 和宏边验证规则仍不完整；人工复核 pending。
+> 当前风险：资源流已加入赋值/别名和跨函数 transfer，但复杂指针与路径敏感性仍不足；
+> 同步关系已加入跨函数队列、atomic release/acquire 和 thread join，但完整 CFG、
+> alias 和 reads-from 仍未完成；builtin/宏/平台条件已修复主链路，仍需扩充规则；
+> 最终人工复核 pending。
 
 > 通用验证框架已补齐项目注册、candidate 复核、仓库专用 Gold、source hash 固定和
 > 注册校验。框架可迁移，但每个新仓库必须重建自己的 Gold，不能复用 libuv/Redis
@@ -37,7 +43,7 @@
 | libuv 资源流 | 在已确认资源操作 Gold 中，分析器找到 `11 TP`、漏掉 `6 FN` | recall 64.71%，F1 78.57% |
 | Redis 调用链 | 在 110 条正样本中，分析器找到 `103 TP`、漏掉 `7 FN` | recall 93.64%，F1 96.71% |
 | libuv 同步关系 | 从没有真实预测到能够输出部分同步事实 | recall 12.50% |
-| Redis 同步关系 | 从没有真实预测到能够输出部分同步事实 | recall 31.82% |
+| Redis 同步关系 | 加入跨函数队列、atomic 和动态规划顺序后 | recall 40.91%，F1 58.06% |
 | external function | libuv / Redis 图中恢复的系统库和外部符号节点 | 216 / 55 |
 
 recall 的提升来自恢复 external 节点、精确资源 API 匹配、稳定资源 ID，
@@ -50,7 +56,7 @@ recall 的提升来自恢复 external 节点、精确资源 API 匹配、稳定�
 
 第一，修复验证机后，libuv 资源流 recall 从 29.41% 提升到 64.71%，
 Redis 调用链 recall 从 68.18% 提升到 93.64%。同步关系从没有真实预测，
-提升到 libuv 12.50%、Redis 31.82%。
+提升到 libuv 12.50%、Redis 40.91%。
 
 第二，调用图、资源流和同步关系已经统一生成离线交互式可视化。
 重新生成后的 libuv 和 Redis 图分别包含 216 个和 55 个外部函数节点，
@@ -60,8 +66,9 @@ Redis 调用链 recall 从 68.18% 提升到 93.64%。同步关系从没有真实
 七阶段分析、三类 JSON 导出和可视化打包。同一个入口已经在独立 C 和 C++
 示例仓库上完成迁移验证。
 
-当前主要风险是资源流 transfer、跨函数所有权、同步关系线程语义以及宏边
-验证还不完整。下一步补齐这些深层分析能力，并完成最终人工复核。
+本轮还补齐了跨函数队列、atomic release/acquire、thread join、资源赋值/别名、
+跨函数所有权 transfer、builtin/宏/平台条件调用目标，并加入评测质量门禁。
+下一步重点是完整 CFG、路径敏感 alias 和最终人工复核。
 
 ### 一句话总结
 

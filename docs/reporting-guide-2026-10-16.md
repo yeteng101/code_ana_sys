@@ -27,7 +27,7 @@
 | Redis 调用链 recall | 93.64% |
 | Redis 调用链 F1 | 96.71% |
 | libuv 同步关系 recall | 12.50% |
-| Redis 同步关系 recall | 31.82% |
+| Redis 同步关系 recall | 40.91% |
 | 当前 FP | 0 |
 
 ## 4. 可现场演示
@@ -55,7 +55,8 @@ open /tmp/demo-analysis/visualization.html
 
 ### 同步关系为什么仍较低？
 
-跨线程队列、原子变量、CFG、reads-from、held-locks 尚未完整实现。
+跨函数队列、atomic release/acquire、thread join 和 held-locks 已接入；
+完整 CFG、路径敏感 alias、reads-from 和复杂线程身份仍未完整实现。
 
 ### 这是否只支持 libuv/Redis？
 
@@ -107,5 +108,6 @@ scaffold_validation_project
 ## 6. 汇报结尾
 
 当前系统已经完成从仓库输入到结果输出的闭环，验证集能够衡量调用链、资源流和
-同步关系的准确率。同一个入口已经能迁移到新的 C/C++ 仓库。下一阶段重点是
-同步关系、资源流深层语义、人工复核和 CI 门禁。
+同步关系的准确率。同一个入口已经能迁移到新的 C/C++ 仓库。跨函数队列、
+atomic、thread join、资源赋值/别名、跨函数 transfer、宏/builtin/平台条件和
+CI 质量门禁均已接入；下一阶段重点是完整 CFG、路径敏感 alias 和最终人工复核。

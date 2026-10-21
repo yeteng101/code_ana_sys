@@ -9,7 +9,8 @@
 | 候选 F1 | 100% | 96.71% |
 | TP 证据命中率 | 100% | 100% |
 | 同步关系标注 | 32 | 22 |
-| 同步 recall | 0% | 0% |
+| 同步 TP / FP / FN | 4 / 0 / 28 | 9 / 0 / 13 |
+| 同步 recall | 12.50% | 40.91% |
 | 资源操作标注 | 17 confirmed | 未标注 |
 | 资源操作 recall | 64.71% | N/A |
 
@@ -46,8 +47,9 @@ https://github.com/kuangami2/code_ana_sys/actions/runs/35050453666
 评测将 refuted 从正向预测排除，故存在图中的宏边也可能形成 FN。
 未确认比例 5.54% 是全部去重、非 refuted 候选的比例，不是漏报比例。
 
-Redis 现在有 8 条原生同步预测，但条件、端点和 identity 尚未匹配 22 条人工 Gold；
-没有把人工标注当作预测。Redis 资源流有 132 条预测但没有真值，资源指标保持 N/A。
+Redis 现在有 150 条原生同步预测，条件、端点和 identity 与 22 条人工 Gold
+匹配后达到 9 TP / 13 FN；没有把人工标注当作预测。Redis 资源流有 75 条预测，
+但没有真值，资源指标保持 N/A。
 
 ## 原生分析器复核（2026-09-18）
 
@@ -59,11 +61,12 @@ Redis 现在有 8 条原生同步预测，但条件、端点和 identity 尚未�
 | libuv resource_flow | 237 条 item / 238 条 evidence | 11 TP / 6 FN，227 条 unlabelled predictions |
 | libuv sync_relation | 36 条 relation / 67 条 evidence | 仍为 0 TP / 32 FN，36 条 unlabelled predictions |
 | Redis resource_flow | 132 条 item / 132 条 evidence | 无真值，保持 N/A |
-| Redis sync_relation | 8 条 relation / 15 条 evidence | 仍为 0 TP / 22 FN，8 条 unlabelled predictions |
+| Redis sync_relation | 150 条 relation / 212 条 evidence | 9 TP / 13 FN，recall 40.91%、F1 58.06% |
 
 这说明“分析器已经能输出 JSON”和“分析器输出能直接匹配当前人工 identity”是两件事。
-当前阻塞点是资源 resource ID、同步 condition/顺序的 identity 对齐，而不是导出文件缺失。
-后续应优先统一 analyzer 的资源/关系命名约定，再由人工复核确认 Ground Truth。
+当前已统一主要资源/关系 identity，并加入跨函数队列、atomic release/acquire
+和 thread join；剩余阻塞点转向完整 CFG、路径敏感 alias 和 reads-from。
+最终仍需人工复核确认 Ground Truth。
 
 ## 资源流身份收口（2026-10-15）
 
@@ -73,8 +76,8 @@ Redis 现在有 8 条原生同步预测，但条件、端点和 identity 尚未�
 基础分配器配对，同时不再把名字包含 `free/open/close` 的高层函数误当资源操作。
 
 当前 libuv confirmed Gold 上资源流为 11 TP / 6 FN，precision 100%、recall 64.71%。
-剩余 FN 是 5 条 transfer 和 async 平台条件位置差异；下一步需要 assignment/return
-数据流、平台分支归一化和所有权 transfer。
+剩余 FN 仍主要是 transfer 和平台条件位置差异。分析器已加入 assignment/return
+数据流、别名闭包和跨函数所有权 transfer，但复杂指针和路径敏感性仍需继续完善。
 
 ## 调用图刷新（2026-10-15）
 
@@ -83,3 +86,14 @@ Redis 现在有 8 条原生同步预测，但条件、端点和 identity 尚未�
 因此 Redis 调用链 baseline 从 75 TP 恢复到 103 TP，recall 提升到 93.64%。
 
 完整结果在两个 `baseline/report.json` 和 `report.md`；新增标准答案人工复核 pending。
+
+## 分析器增强（2026-10-21）
+
+- 同步关系：跨函数队列 publication/consume、atomic release/acquire、
+  relaxed unknown、thread create/join 和 held-locks。
+- 资源流：函数内赋值/返回扫描、别名闭包、跨函数返回资源的所有权 transfer。
+- 调用图：builtin 名称归一化、宏调用点映射、平台条件写入 `condition`，
+  并让验证器使用宏定义确认展开目标。
+- CI：`run_validation_project.py` 自动生成 `report.json`、`report.md`、
+  `gate.json`，阈值回退直接失败。
+- 人工复核：新增 `validation/reviews/HUMAN_REVIEW_PENDING.md`，仍需人工签字。

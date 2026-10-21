@@ -24,7 +24,7 @@ def _call_chain_node(node):
     return exported
 
 
-def export_graph(graph, verification=None, native=False):
+def export_graph(graph, verification=None, native=False, source_root=None):
     docs = {k: envelope(k, graph["run_id"], graph.get("meta", {}), "analyzer") for k in FILES}
     doc = docs["call_chain"]
     evidence = {e["id"]: e for e in graph["evidence"]}
@@ -46,8 +46,14 @@ def export_graph(graph, verification=None, native=False):
     doc["evidence"] = graph["evidence"]
     doc["warnings"].append("Absent per-edge verification remains unconfirmed; confidence is not a verification verdict.")
     if native:
-        docs["resource_flow"] = analyze_resource_flow(graph)
-        docs["sync_relation"] = analyze_sync_relations(graph)
+        docs["resource_flow"] = analyze_resource_flow(
+            graph,
+            source_root=source_root or Path.cwd(),
+        )
+        docs["sync_relation"] = analyze_sync_relations(
+            graph,
+            source_root=source_root or Path.cwd(),
+        )
     else:
         for k in ("resource_flow", "sync_relation"):
             docs[k]["warnings"].append(
@@ -126,6 +132,7 @@ def main():
         read(a.graph),
         read(a.verification) if a.verification else None,
         native=a.native,
+        source_root=Path.cwd() if a.native else None,
     )
     if a.reviewed_resources:
         reviewed_resources(read(a.reviewed_resources), docs["resource_flow"])
