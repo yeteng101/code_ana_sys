@@ -98,20 +98,49 @@ external/knowledge-graph.json
 
 ## 5. 准确率提升
 
-当前结果：
+### 5.1 指标口径
 
-| 指标 | 当前结果 |
-|---|---:|
-| libuv 资源流 TP / FN | 11 / 6 |
-| libuv 资源流 recall | 64.71% |
-| libuv 资源流 F1 | 78.57% |
-| Redis 调用链 TP / FN | 103 / 7 |
-| Redis 调用链 recall | 93.64% |
-| Redis 调用链 F1 | 96.71% |
-| libuv 同步关系 recall | 12.50% |
-| Redis 同步关系 recall | 40.91% |
-| Redis 同步关系 F1 | 58.06% |
-| 标注范围内 FP | 0 |
+- `TP`：标准答案中存在，系统也找到。
+- `FN`：标准答案中存在，系统漏掉。
+- `FP`：系统输出，但标准答案否定或类型/顺序错误。
+- **Precision（精确率）**：系统找到的结果中有多少是对的。
+- **Recall（召回率）**：标准答案中的正例有多少被找到了。
+- **F1**：Precision 和 Recall 的调和平均，综合反映“找得对”和“找得全”。
+
+计算公式：
+
+```text
+Precision = TP / (TP + FP)
+Recall    = TP / (TP + FN)
+F1        = 2 × Precision × Recall / (Precision + Recall)
+          = 2 × TP / (2 × TP + FP + FN)
+```
+
+这里的“准确率”统一指 **Precision**，不是全仓库所有预测的普通 Accuracy。当前 precision 只在已标注 identity 范围内计算，未标注预测不计入 FP。
+
+### 5.2 当前结果
+
+| 项目 / 类型 | TP | FP | FN | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| libuv 资源流 | 11 | 0 | 6 | 100% | 64.71% | 78.57% |
+| Redis 调用链 | 103 | 0 | 7 | 100% | 93.64% | 96.71% |
+| libuv 同步关系 | 4 | 0 | 28 | 100% | 12.50% | 22.22% |
+| Redis 同步关系 | 9 | 0 | 13 | 100% | 40.91% | 58.06% |
+
+计算示例：
+
+```text
+libuv 资源流 Recall = 11 / (11 + 6) = 64.71%
+libuv 资源流 F1      = 22 / (22 + 0 + 6) = 78.57%
+
+Redis 调用链 Recall  = 103 / (103 + 7) = 93.64%
+Redis 调用链 F1      = 206 / (206 + 0 + 7) = 96.71%
+
+Redis 同步 Recall    = 9 / (9 + 13) = 40.91%
+Redis 同步 F1        = 18 / (18 + 0 + 13) = 58.06%
+```
+
+当前 Precision 均为 100% 的原因是已标注 identity 内没有命中 FP；这不等价于整个仓库所有未标注预测都是正确的。
 
 提升来源：
 
