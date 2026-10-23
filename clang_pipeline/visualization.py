@@ -296,6 +296,7 @@ def _prepare_data(
     run_result: dict[str, Any],
     verification: dict[str, Any],
     analysis_text: str,
+    knowledge_graph: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     nodes = graph.get("nodes", [])
     edges = graph.get("edges", [])
@@ -322,6 +323,9 @@ def _prepare_data(
         for item in sync_relations.get("items", [])
     )
     coverage = (verification.get("coverage") or {}).get("coverage_rate")
+    knowledge_graph = knowledge_graph or {}
+    knowledge_entities = knowledge_graph.get("entities", [])
+    knowledge_relations = knowledge_graph.get("relations", [])
 
     return {
         "run_id": str(graph.get("run_id", "")),
@@ -338,6 +342,8 @@ def _prepare_data(
             "coverage": round(float(coverage), 4) if coverage is not None else None,
             "resource_items": len(resource_flow.get("items", [])),
             "sync_items": len(sync_relations.get("items", [])),
+            "knowledge_entities": len(knowledge_entities),
+            "knowledge_relations": len(knowledge_relations),
         },
         "node_kinds": dict(
             Counter(
@@ -364,6 +370,11 @@ def _prepare_data(
             "status": sync_relations.get("status", "not_available"),
             "types": dict(sync_types.most_common()),
         },
+        "knowledge": {
+            "summary": knowledge_graph.get("summary", {}),
+            "entities": knowledge_entities[:1200],
+            "relations": knowledge_relations[:1800],
+        },
         "analysis": analysis_text[:6000],
         "summary": str(
             (run_result.get("summary") or "").strip()
@@ -387,6 +398,7 @@ def write_visualization(
     *,
     resource_flow: dict[str, Any] | None = None,
     sync_relations: dict[str, Any] | None = None,
+    knowledge_graph: dict[str, Any] | None = None,
     output: str | Path | None = None,
 ) -> Path:
     workspace_path = Path(workspace).resolve()
@@ -405,6 +417,14 @@ def write_visualization(
             "09-sync-relations/sync-relations.json",
             "external/sync-relations.json",
             "sync-relations.json",
+        )
+    )
+    knowledge_graph = knowledge_graph or _optional_json(
+        _artifact(
+            workspace_path,
+            "external/knowledge-graph.json",
+            "knowledge-graph.json",
+            "10-knowledge/knowledge-graph.json",
         )
     )
     architecture = _optional_json(
@@ -454,6 +474,7 @@ def write_visualization(
         run_result,
         verification,
         analysis_text,
+        knowledge_graph,
     )
     report_dir = workspace_path / "07-report"
     target = Path(output).resolve() if output else (
@@ -824,6 +845,7 @@ TEMPLATE = r"""<!doctype html>
       <button class="tab" type="button" data-tab="modules">Modules</button>
       <button class="tab" type="button" data-tab="calls">Calls</button>
       <button class="tab" type="button" data-tab="findings">Findings</button>
+      <button class="tab" type="button" data-tab="knowledge">Knowledge</button>
     </nav>
     <section class="panel" id="panel-graph">
       <h2 class="section-title">Full Call Graph</h2>
@@ -879,6 +901,33 @@ TEMPLATE = r"""<!doctype html>
       <h2 class="section-title">Findings</h2>
       <div class="finding-grid" id="finding-grid"></div>
     </section>
+    <section class="panel" id="panel-knowledge">
+      <h2 class="section-title">Knowledge Graph</h2>
+      <div class="toolbar">
+        <label>Entity / File
+          <input id="knowledge-filter" type="search" autocomplete="off">
+        </label>
+        <label>Entity kind
+          <select id="knowledge-kind">
+            <option value="">All kinds</option>
+          </select>
+        </label>
+      </div>
+      <div class="call-count" id="knowledge-count"></div>
+      <table>
+        <thead>
+          <tr><th>Entity</th><th>Kind</th><th>Name</th><th>Location</th><th>Properties</th></tr>
+        </thead>
+        <tbody id="knowledge-rows"></tbody>
+      </table>
+      <h3 class="section-title" style="margin-top:20px">Relations</h3>
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Source</th><th>Target</th></tr>
+        </thead>
+        <tbody id="knowledge-relation-rows"></tbody>
+      </table>
+    </section>
   </main>
   <script id="viz-data" type="application/json">__VIS_DATA__</script>
   <script>
@@ -898,6 +947,7 @@ TEMPLATE = r"""<!doctype html>
         ["Evidence", data.metrics.evidence],
         ["Resource", data.metrics.resource_items],
         ["Sync", data.metrics.sync_items],
+        ["Knowledge", data.metrics.knowledge_entities || 0],
         ["Coverage", data.metrics.coverage == null ? "N/A" : `${(data.metrics.coverage * 100).toFixed(1)}%`]
       ];
       byId("viz-stats").innerHTML = metrics.map(([label, value]) =>
@@ -913,6 +963,9 @@ TEMPLATE = r"""<!doctype html>
           byId(`panel-${tab.dataset.tab}`).classList.add("active");
           if (tab.dataset.tab === "graph") {
             renderFullGraph();
+          }
+          if (tab.dataset.tab === "knowledge") {
+            renderKnowledge();
           }
         });
       });
@@ -1339,12 +1392,57 @@ TEMPLATE = r"""<!doctype html>
            </div>`;
       }
 
+      function renderKnowledge() {
+        const knowledge = data.knowledge || {};
+        const entities = knowledge.entities || [];
+        const relations = knowledge.relations || [];
+        const entityById = Object.fromEntries(entities.map((item) => [item.id, item]));
+        const kindSelect = byId("knowledge-kind");
+        if (kindSelect.options.length === 1) {
+          [...new Set(entities.map((item) => item.kind))].sort().forEach((kind) => {
+            const option = document.createElement("option");
+            option.value = kind;
+            option.textContent = kind;
+            kindSelect.appendChild(option);
+          });
+        }
+        const term = byId("knowledge-filter").value.trim().toLowerCase();
+        const kind = kindSelect.value;
+        const filtered = entities.filter((item) => {
+          const haystack = `${item.id} ${item.name} ${item.file} ${item.kind}`.toLowerCase();
+          return (!term || haystack.includes(term)) && (!kind || item.kind === kind);
+        });
+        byId("knowledge-count").textContent =
+          `${filtered.length} / ${entities.length} entities · ${relations.length} relations`;
+        byId("knowledge-rows").innerHTML = filtered.slice(0, 300).map((item) =>
+          `<tr>
+             <td class="code">${item.id}</td>
+             <td>${item.kind}</td>
+             <td>${item.name}</td>
+             <td class="code">${item.file || ""}${item.line ? `:${item.line}` : ""}</td>
+             <td class="code">${JSON.stringify(item.properties || {}).slice(0, 220)}</td>
+           </tr>`
+        ).join("");
+        byId("knowledge-relation-rows").innerHTML = relations.slice(0, 300).map((item) => {
+          const source = entityById[item.source];
+          const target = entityById[item.target];
+          return `<tr>
+            <td>${item.type}</td>
+            <td>${source?.name || item.source}</td>
+            <td>${target?.name || item.target}</td>
+          </tr>`;
+        }).join("");
+      }
+
       byId("call-filter").addEventListener("input", (event) => renderCalls(event.target.value));
+      byId("knowledge-filter").addEventListener("input", () => renderKnowledge());
+      byId("knowledge-kind").addEventListener("change", () => renderKnowledge());
       renderFullGraph();
       renderModules();
       renderModuleGraph();
       renderCalls();
       renderFindings();
+      renderKnowledge();
     })();
   </script>
 </body>

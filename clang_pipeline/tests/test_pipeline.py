@@ -289,6 +289,32 @@ class ClangPipelineTests(unittest.TestCase):
                 for item in transfers
             ))
 
+    def test_pipeline_logs_flow_into_knowledge_graph(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            workspace = root / "workspace"
+            log = root / "runtime.log"
+            log.write_text(
+                "function=app_main event=startup\n",
+                encoding="utf-8",
+            )
+            run_pipeline(
+                source_root=SAMPLE,
+                workspace=workspace,
+                run_id="run_test_pipeline_log",
+                build_profile="demo-poll",
+                publish_dir=None,
+                log_paths=[log],
+            )
+            facts = json.loads(
+                (workspace / "10-knowledge" / "log-facts.json").read_text()
+            )
+            knowledge = json.loads(
+                (workspace / "10-knowledge" / "knowledge-graph.json").read_text()
+            )
+            self.assertEqual(1, len(facts["events"]))
+            self.assertGreater(knowledge["summary"]["log_events"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

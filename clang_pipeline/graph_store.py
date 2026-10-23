@@ -252,6 +252,101 @@ class Neo4jGraphStore:
         }
         return result
 
+    def store_knowledge_graph(self, graph: dict[str, Any], run_id: str) -> dict[str, int]:
+        statements: list[tuple[str, dict[str, Any]]] = []
+        entities = graph.get("entities", [])
+        relations = graph.get("relations", [])
+        for entity in entities:
+            statements.append(
+                (
+                    "MERGE (e:KnowledgeEntity {run_id:$run_id, id:$id}) "
+                    "SET e.kind=$kind, e.name=$name, e.file=$file, e.line=$line, "
+                    "e.properties_json=$properties_json",
+                    {
+                        "run_id": run_id,
+                        "id": entity.get("id", ""),
+                        "kind": entity.get("kind", ""),
+                        "name": entity.get("name", ""),
+                        "file": entity.get("file", ""),
+                        "line": int(entity.get("line") or 0),
+                        "properties_json": json.dumps(
+                            entity.get("properties", {}),
+                            ensure_ascii=False,
+                            sort_keys=True,
+                        ),
+                    },
+                )
+            )
+        for relation in relations:
+            statements.append(
+                (
+                    "MATCH (a:KnowledgeEntity {run_id:$run_id, id:$source}) "
+                    "MATCH (b:KnowledgeEntity {run_id:$run_id, id:$target}) "
+                    "MERGE (a)-[r:RELATED {run_id:$run_id, id:$id}]->(b) "
+                    "SET r.type=$type, r.properties_json=$properties_json",
+                    {
+                        "run_id": run_id,
+                        "id": relation.get("id", ""),
+                        "source": relation.get("source", ""),
+                        "target": relation.get("target", ""),
+                        "type": relation.get("type", ""),
+                        "properties_json": json.dumps(
+                            relation.get("properties", {}),
+                            ensure_ascii=False,
+                            sort_keys=True,
+                        ),
+                    },
+                )
+            )
+        for index in range(0, len(statements), 200):
+            self._run(statements[index : index + 200])
+        return {
+            "entities": len(entities),
+            "relations": len(relations),
+        }
+
+    def verify_knowledge_graph(
+        self,
+        graph: dict[str, Any],
+        run_id: str,
+    ) -> dict[str, Any]:
+        expected = {
+            "entities": len(graph.get("entities", [])),
+            "relations": len(graph.get("relations", [])),
+        }
+        rows = self.query(
+            "MATCH (e:KnowledgeEntity {run_id:$run_id}) RETURN count(e) AS count",
+            {"run_id": run_id},
+        )
+        entity_count = int(rows[0].get("count", 0)) if rows else 0
+        rows = self.query(
+            "MATCH (:KnowledgeEntity {run_id:$run_id})-[r:RELATED {run_id:$run_id}]->"
+            "(:KnowledgeEntity {run_id:$run_id}) RETURN count(r) AS count",
+            {"run_id": run_id},
+        )
+        relation_count = int(rows[0].get("count", 0)) if rows else 0
+        checks = [
+            {
+                "name": "entities",
+                "expected": expected["entities"],
+                "actual": entity_count,
+                "passed": entity_count == expected["entities"],
+            },
+            {
+                "name": "relations",
+                "expected": expected["relations"],
+                "actual": relation_count,
+                "passed": relation_count == expected["relations"],
+            },
+        ]
+        return {
+            "status": "verified" if all(item["passed"] for item in checks) else "failed",
+            "run_id": run_id,
+            "expected": expected,
+            "actual": {"entities": entity_count, "relations": relation_count},
+            "checks": checks,
+        }
+
 
 def store_graph_json(
     graph: dict[str, Any],
@@ -275,3 +370,27 @@ def verify_graph_json(
 ) -> dict[str, Any]:
     store = Neo4jGraphStore(uri=uri, user=user, password=password)
     return store.verify_graph(graph, run_id)
+
+
+def store_knowledge_graph_json(
+    graph: dict[str, Any],
+    run_id: str,
+    *,
+    uri: str | None = None,
+    user: str | None = None,
+    password: str | None = None,
+) -> dict[str, int]:
+    store = Neo4jGraphStore(uri=uri, user=user, password=password)
+    return store.store_knowledge_graph(graph, run_id)
+
+
+def verify_knowledge_graph_json(
+    graph: dict[str, Any],
+    run_id: str,
+    *,
+    uri: str | None = None,
+    user: str | None = None,
+    password: str | None = None,
+) -> dict[str, Any]:
+    store = Neo4jGraphStore(uri=uri, user=user, password=password)
+    return store.verify_knowledge_graph(graph, run_id)

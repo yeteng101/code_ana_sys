@@ -6,12 +6,17 @@ from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
-from .agent import AGENT_TOOLS, AgentContext
+from .agent import AGENT_TOOLS, AgentContext, AgentToolError
 from .agent_context import write_agent_context
 from .agent_runner import ask_question
 from .agent_server import AgentHandler
 from .clang_ast import read_json
-from .graph_store import store_graph_json, verify_graph_json
+from .graph_store import (
+    store_graph_json,
+    store_knowledge_graph_json,
+    verify_graph_json,
+    verify_knowledge_graph_json,
+)
 from .native_export import run_native_export
 from .nl_repo import prepare_question_context
 from .pipeline import DEFAULT_SOURCE, DEFAULT_WORKSPACE, run_pipeline
@@ -37,6 +42,8 @@ def command_analyze(args: argparse.Namespace) -> None:
         repository=args.repository,
         commit=args.commit,
         entry_symbols=args.entry or None,
+        optimized_ir=args.optimized_ir,
+        log_paths=args.log,
     )
     print(json.dumps(outcome, ensure_ascii=False, indent=2))
 
@@ -128,6 +135,20 @@ def command_graphdb(args: argparse.Namespace) -> None:
         password=args.password or None,
     )
     result: dict[str, Any] = {"status": "succeeded", "run_id": args.run_id, **counts}
+    knowledge_counts = None
+    try:
+        knowledge = ctx.load_knowledge_graph()
+    except AgentToolError:
+        knowledge = None
+    if knowledge is not None:
+        knowledge_counts = store_knowledge_graph_json(
+            knowledge,
+            args.run_id,
+            uri=args.uri or None,
+            user=args.user or None,
+            password=args.password or None,
+        )
+        result["knowledge"] = knowledge_counts
     if args.verify:
         verification = verify_graph_json(
             graph,
@@ -139,6 +160,17 @@ def command_graphdb(args: argparse.Namespace) -> None:
         result["verification"] = verification
         if verification.get("status") != "verified":
             result["status"] = "failed"
+        if knowledge_counts is not None:
+            knowledge_verification = verify_knowledge_graph_json(
+                knowledge,
+                args.run_id,
+                uri=args.uri or None,
+                user=args.user or None,
+                password=args.password or None,
+            )
+            result["knowledge_verification"] = knowledge_verification
+            if knowledge_verification.get("status") != "verified":
+                result["status"] = "failed"
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if result["status"] != "succeeded":
         raise SystemExit(1)
@@ -154,6 +186,8 @@ def command_repo(args: argparse.Namespace) -> None:
         entry_symbols=args.entry or None,
         build_profile=args.profile,
         archive=not args.no_archive,
+        log_paths=getattr(args, "log", []),
+        optimized_ir=getattr(args, "optimized_ir", False),
     )
     if args.validation_project:
         scaffold = scaffold_project(
@@ -195,6 +229,8 @@ def main() -> None:
     analyze.add_argument("--repository", default="local-cpp-demo")
     analyze.add_argument("--commit", default="local")
     analyze.add_argument("--entry", action="append", default=[])
+    analyze.add_argument("--optimized-ir", action="store_true")
+    analyze.add_argument("--log", action="append", default=[])
     analyze.set_defaults(func=command_analyze)
 
     ask = subparsers.add_parser("ask", help="自然语言提问并输出 JSON")
@@ -269,6 +305,17 @@ def main() -> None:
     repo.add_argument("--work-root", default="")
     repo.add_argument("--profile", default="")
     repo.add_argument("--entry", action="append", default=[])
+    repo.add_argument(
+        "--log",
+        action="append",
+        default=[],
+        help="可选构建/运行日志文件，可重复传入",
+    )
+    repo.add_argument(
+        "--optimized-ir",
+        action="store_true",
+        help="生成优化后 LLVM IR 调用事实并写入知识图谱",
+    )
     repo.add_argument(
         "--validation-project",
         default="",

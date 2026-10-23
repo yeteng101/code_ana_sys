@@ -83,10 +83,16 @@ class RepoAgentTests(unittest.TestCase):
     def test_file_url_produces_complete_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp) / "bundle"
+            log_file = Path(tmp) / "runtime.log"
+            log_file.write_text(
+                "function=open_and_close event=started\n",
+                encoding="utf-8",
+            )
             result = run_repo_analysis(
                 FIXTURE.resolve().as_uri(),
                 output_dir=output,
                 archive=True,
+                log_paths=[log_file],
             )
 
             self.assertEqual("succeeded", result["status"])
@@ -98,6 +104,7 @@ class RepoAgentTests(unittest.TestCase):
             self.assertIn("external/call-chains.json", manifest["outputs"].values())
             self.assertIn("external/resource-flow.json", manifest["outputs"].values())
             self.assertIn("external/sync-relations.json", manifest["outputs"].values())
+            self.assertIn("external/knowledge-graph.json", manifest["outputs"].values())
 
             for path in (
                 "visualization.html",
@@ -106,6 +113,10 @@ class RepoAgentTests(unittest.TestCase):
                 "external/call-chains.json",
                 "external/resource-flow.json",
                 "external/sync-relations.json",
+                "external/knowledge-graph.json",
+                "knowledge/build-profile.json",
+                "knowledge/log-facts.json",
+                "knowledge/knowledge-graph.json",
             ):
                 self.assertTrue((output / path).exists(), path)
             self.assertTrue(Path(result["archive"]).exists())
@@ -117,9 +128,13 @@ class RepoAgentTests(unittest.TestCase):
             sync = json.loads(
                 (output / "external/sync-relations.json").read_text()
             )
+            knowledge = json.loads(
+                (output / "external/knowledge-graph.json").read_text()
+            )
             self.assertTrue(calls["items"])
             self.assertTrue(resources["items"])
             self.assertTrue(sync["items"])
+            self.assertGreater(knowledge["summary"]["log_events"], 0)
             for document in (calls, resources, sync):
                 self.assertNotIn(
                     result["source_dir"],

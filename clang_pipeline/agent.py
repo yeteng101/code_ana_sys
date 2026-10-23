@@ -56,6 +56,13 @@ class AgentContext:
     def load_architecture(self) -> dict[str, Any]:
         return self.load_json("07-report/architecture.json", "architecture.json")
 
+    def load_knowledge_graph(self) -> dict[str, Any]:
+        return self.load_json(
+            "external/knowledge-graph.json",
+            "knowledge-graph.json",
+            "10-knowledge/knowledge-graph.json",
+        )
+
     def visualization_path(self) -> Path | None:
         return self._find_artifact(
             "07-report/visualization.html",
@@ -112,6 +119,16 @@ AGENT_TOOLS: list[dict[str, Any]] = [
                         "description": "可选，compile_commands.json 路径",
                     },
                     "build_profile": {"type": "string", "default": "default"},
+                    "logs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "可选构建或运行日志文件",
+                    },
+                    "optimized_ir": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "是否分析优化后的 LLVM IR",
+                    },
                 },
                 "required": ["repository_url", "output_dir"],
             },
@@ -193,6 +210,14 @@ AGENT_TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "get_knowledge_graph",
+            "description": "获取函数、资源、同步关系、构建配置和日志事实组成的知识图谱。",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_visualization",
             "description": "获取当前分析结果的可视化 HTML 文件路径。",
             "parameters": {"type": "object", "properties": {}},
@@ -235,6 +260,15 @@ def _tool_get_key_chains(ctx: AgentContext, args: dict[str, Any]) -> Any:
 
 def _tool_get_architecture(ctx: AgentContext, args: dict[str, Any]) -> Any:
     return ctx.load_architecture()
+
+
+def _tool_get_knowledge_graph(ctx: AgentContext, args: dict[str, Any]) -> Any:
+    knowledge = ctx.load_knowledge_graph()
+    return {
+        "summary": knowledge.get("summary", {}),
+        "entities": knowledge.get("entities", [])[:500],
+        "relations": knowledge.get("relations", [])[:800],
+    }
 
 
 def _tool_get_visualization(ctx: AgentContext, args: dict[str, Any]) -> Any:
@@ -298,6 +332,8 @@ def _tool_analyze_repo(ctx: AgentContext, args: dict[str, Any]) -> Any:
             entry_symbols=args.get("entry_symbols"),
             build_profile=args.get("build_profile") or None,
             archive=True,
+            log_paths=args.get("logs") or None,
+            optimized_ir=bool(args.get("optimized_ir")),
         )
     from .nl_repo import analyze_repository
 
@@ -316,6 +352,7 @@ TOOL_IMPLEMENTATIONS: dict[str, Callable[[AgentContext, dict[str, Any]], Any]] =
     "get_call_graph": _tool_get_call_graph,
     "get_key_chains": _tool_get_key_chains,
     "get_architecture": _tool_get_architecture,
+    "get_knowledge_graph": _tool_get_knowledge_graph,
     "get_visualization": _tool_get_visualization,
     "get_evidence": _tool_get_evidence,
     "get_source_snippet": _tool_get_source_snippet,

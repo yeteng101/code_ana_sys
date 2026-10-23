@@ -21,6 +21,8 @@ def build_request(
     repository: str = "local-cpp-demo",
     commit: str = "local",
     entry_symbols: list[str] | None = None,
+    optimized_ir: bool = False,
+    log_paths: list[str | Path] | None = None,
 ) -> dict[str, Any]:
     request = {
         "schema_version": "1.0",
@@ -32,6 +34,8 @@ def build_request(
         "commit": commit,
         "build_profile": build_profile,
         "started_at": utc_now(),
+        "optimized_ir": optimized_ir,
+        "log_paths": [str(path) for path in (log_paths or [])],
     }
     if entry_symbols:
         request["entry_symbols"] = entry_symbols
@@ -169,8 +173,19 @@ def run_pipeline(
     repository: str = "local-cpp-demo",
     commit: str = "local",
     entry_symbols: list[str] | None = None,
+    optimized_ir: bool = False,
+    log_paths: list[str | Path] | None = None,
 ) -> dict[str, Any]:
     workspace.mkdir(parents=True, exist_ok=True)
+    logs_dir = workspace / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    copied_log_paths: list[str] = []
+    for index, value in enumerate(log_paths or []):
+        source = Path(value).expanduser().resolve()
+        if source.is_file():
+            destination = logs_dir / f"{index:02d}_{source.name}"
+            shutil.copyfile(source, destination)
+            copied_log_paths.append(str(destination))
     request = build_request(
         run_id,
         source_root,
@@ -178,6 +193,8 @@ def run_pipeline(
         repository=repository,
         commit=commit,
         entry_symbols=entry_symbols,
+        optimized_ir=optimized_ir,
+        log_paths=copied_log_paths,
     )
     write_json(workspace / "request.json", request)
     write_json(
@@ -251,6 +268,15 @@ def run_pipeline(
                 else:
                     destination = publish_dir / source.name
                 shutil.copyfile(source, destination)
+        for source in (workspace / "10-knowledge").glob("*.json"):
+            destination = publish_dir / "10-knowledge" / source.name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+        for source in (workspace / "logs").glob("*"):
+            if source.is_file():
+                destination = publish_dir / "logs" / source.name
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, destination)
 
     return {
         "run_id": run_id,
@@ -272,6 +298,8 @@ def main() -> None:
     parser.add_argument("--repository", default="local-cpp-demo")
     parser.add_argument("--commit", default="local")
     parser.add_argument("--entry", action="append", default=[])
+    parser.add_argument("--optimized-ir", action="store_true")
+    parser.add_argument("--log", action="append", default=[])
     args = parser.parse_args()
 
     run_id = args.run_id or f"run_{__import__('datetime').datetime.now().strftime('%Y%m%d')}_clang_demo"
@@ -289,6 +317,8 @@ def main() -> None:
         repository=args.repository,
         commit=args.commit,
         entry_symbols=args.entry or None,
+        optimized_ir=args.optimized_ir,
+        log_paths=args.log,
     )
     print(json.dumps(outcome, ensure_ascii=False, indent=2))
 

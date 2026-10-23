@@ -61,6 +61,31 @@ class VisualizationTests(unittest.TestCase):
                     "status": "succeeded",
                     "items": [{"relation_type": "mutex_lock"}],
                 },
+                knowledge_graph={
+                    "summary": {"entities": 2, "relations": 1},
+                    "entities": [
+                        {
+                            "id": "code:fn:alpha",
+                            "kind": "code_symbol",
+                            "name": "alpha",
+                            "file": "project/alpha.c",
+                            "line": 1,
+                        },
+                        {
+                            "id": "resource:rf_test",
+                            "kind": "resource",
+                            "name": "buffer",
+                        },
+                    ],
+                    "relations": [
+                        {
+                            "id": "rel-test",
+                            "type": "uses_resource",
+                            "source": "code:fn:alpha",
+                            "target": "resource:rf_test",
+                        }
+                    ],
+                },
             )
             text = path.read_text(encoding="utf-8")
             self.assertIn("alpha", text)
@@ -68,6 +93,7 @@ class VisualizationTests(unittest.TestCase):
             self.assertIn("Module Graph", text)
             self.assertIn("Full Call Graph", text)
             self.assertIn("Calls", text)
+            self.assertIn("Knowledge Graph", text)
             self.assertNotIn("uv_run", text)
             payload_start = text.index('<script id="viz-data"')
             payload_end = text.index("</script>", payload_start)
@@ -79,6 +105,14 @@ class VisualizationTests(unittest.TestCase):
             self.assertEqual(payload["metrics"]["edges"], 1)
             self.assertEqual(len(payload["full_graph"]["nodes"]), 2)
             self.assertEqual(len(payload["full_graph"]["edges"]), 1)
+            self.assertEqual(payload["metrics"]["knowledge_entities"], 2)
+            self.assertEqual(payload["metrics"]["knowledge_relations"], 1)
+            self.assertTrue(
+                any(
+                    item["type"] == "uses_resource"
+                    for item in payload["knowledge"]["relations"]
+                )
+            )
 
 
 if __name__ == "__main__":

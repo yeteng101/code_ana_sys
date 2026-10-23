@@ -69,6 +69,7 @@ analyze_repo
 get_call_graph
 get_key_chains
 get_architecture
+get_knowledge_graph
 get_evidence
 get_source_snippet
 get_macro_analysis

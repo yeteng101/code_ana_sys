@@ -14,6 +14,8 @@
 >
 > 本轮分析器增强：[docs/analyzer-enhancements-2026-10-21.md](docs/analyzer-enhancements-2026-10-21.md)
 >
+> 证据知识图谱：[docs/knowledge-graph.md](docs/knowledge-graph.md)
+>
 > 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)
 >
 > 本周把代码逆向分析结果从固定示例图升级为仓库无关、自动生成、嵌入 Agent 流程的
@@ -82,8 +84,13 @@ Redis 调用链 recall 从 68.18% 提升到 93.64%。同步关系从没有真实
 ```bash
 python3 -m clang_pipeline.cli repo \
   --repo-url https://github.com/example/project.git \
-  --output artifacts/project-analysis
+  --output artifacts/project-analysis \
+  --log build.log \
+  --optimized-ir
 ```
+
+`--log` 可重复传入构建或运行日志；`--optimized-ir` 会额外比较 AST 调用和
+优化后的 LLVM IR，把内联/消除/新增调用写入知识图谱。
 
 该命令会自动完成：
 
@@ -109,10 +116,17 @@ output/
 ├── run-result.json
 ├── report.md
 ├── visualization.html
+├── knowledge/
+│   ├── build-profile.json
+│   ├── log-facts.json
+│   └── knowledge-graph.json
+├── logs/
+│   └── build.log
 └── external/
     ├── call-chains.json
     ├── resource-flow.json
-    └── sync-relations.json
+    ├── sync-relations.json
+    └── knowledge-graph.json
 ```
 
 # 周报（2026-09-11 ~ 2026-09-17）
@@ -431,6 +445,7 @@ analyze_repo
 get_call_graph
 get_key_chains
 get_architecture
+get_knowledge_graph
 get_evidence
 get_source_snippet
 get_macro_analysis
@@ -1009,6 +1024,7 @@ analyze_repo
 get_call_graph
 get_key_chains
 get_architecture
+get_knowledge_graph
 get_evidence
 get_source_snippet
 get_macro_analysis

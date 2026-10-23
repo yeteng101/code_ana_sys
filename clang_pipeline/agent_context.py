@@ -19,12 +19,17 @@ def build_agent_context(
     focus = focus or []
     key_chains: dict[str, Any] = {"paths": []}
     architecture: dict[str, Any] = {"components": []}
+    knowledge_summary: dict[str, Any] = {}
     try:
         key_chains = ctx.load_key_chains()
     except Exception:
         pass
     try:
         architecture = ctx.load_architecture()
+    except Exception:
+        pass
+    try:
+        knowledge_summary = ctx.load_knowledge_graph().get("summary", {})
     except Exception:
         pass
 
@@ -45,6 +50,7 @@ def build_agent_context(
             "nodes": len(graph.get("nodes", [])),
             "edges": len(graph.get("edges", [])),
         },
+        "knowledge_graph_summary": knowledge_summary,
         "artifact_paths": {
             "graph": _artifact_path(ctx.workspace, "07-report/graph.json", "graph.json"),
             "architecture": _artifact_path(
@@ -60,6 +66,12 @@ def build_agent_context(
                 ctx.workspace,
                 "07-report/visualization.html",
                 "visualization.html",
+            ),
+            "knowledge_graph": _artifact_path(
+                ctx.workspace,
+                "external/knowledge-graph.json",
+                "knowledge-graph.json",
+                "10-knowledge/knowledge-graph.json",
             ),
         },
     }

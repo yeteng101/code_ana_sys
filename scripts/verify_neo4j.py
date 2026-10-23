@@ -12,8 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from clang_pipeline.agent import AgentContext
-from clang_pipeline.graph_store import Neo4jGraphStore, store_graph_json
+from clang_pipeline.agent import AgentContext, AgentToolError
+from clang_pipeline.graph_store import (
+    Neo4jGraphStore,
+    store_graph_json,
+    store_knowledge_graph_json,
+)
 
 
 def wait_for_neo4j(store: Neo4jGraphStore, timeout: int = 180) -> None:
@@ -59,14 +63,39 @@ def main() -> int:
         password=args.password or None,
     )
     verification = store.verify_graph(graph, args.run_id)
+    knowledge_verification = None
+    knowledge_counts = None
+    try:
+        knowledge = ctx.load_knowledge_graph()
+    except AgentToolError:
+        knowledge = None
+    if knowledge is not None:
+        knowledge_counts = store_knowledge_graph_json(
+            knowledge,
+            args.run_id,
+            uri=args.uri or None,
+            user=args.user or None,
+            password=args.password or None,
+        )
+        knowledge_verification = store.verify_knowledge_graph(knowledge, args.run_id)
     payload = {
-        "status": verification["status"],
+        "status": (
+            "verified"
+            if verification["status"] == "verified"
+            and (
+                knowledge_verification is None
+                or knowledge_verification.get("status") in {"verified", "not_available"}
+            )
+            else "failed"
+        ),
         "run_id": args.run_id,
         "written": counts,
         "verification": verification,
+        "knowledge_written": knowledge_counts,
+        "knowledge_verification": knowledge_verification,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
-    return 0 if verification["status"] == "verified" else 1
+    return 0 if payload["status"] == "verified" else 1
 
 
 if __name__ == "__main__":

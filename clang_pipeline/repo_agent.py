@@ -168,9 +168,18 @@ def build_compile_commands(
     repo: Path,
     *,
     configure: bool = True,
+    log_path: Path | None = None,
 ) -> list[dict[str, Any]]:
+    def write_log(text: str) -> None:
+        if log_path is None:
+            return
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with log_path.open("w", encoding="utf-8", newline="\n") as stream:
+            stream.write(text.rstrip() + "\n")
+
     existing = discover_compile_commands(repo)
     if existing:
+        write_log(f"using existing compile commands: {existing}")
         return list(read_json(existing))
 
     if configure and (repo / "CMakeLists.txt").exists():
@@ -193,8 +202,17 @@ def build_compile_commands(
             check=False,
         )
         if completed.returncode == 0 and (build_dir / "compile_commands.json").exists():
+            write_log("\n".join(
+                part for part in (completed.stdout, completed.stderr) if part
+            ))
             return list(read_json(build_dir / "compile_commands.json"))
+        write_log(
+            "cmake configure failed; falling back to generic compile commands\n"
+            + completed.stdout
+            + completed.stderr
+        )
 
+    write_log("no compile_commands.json found; generated generic compile commands")
     return generic_compile_commands(repo)
 
 
@@ -225,6 +243,7 @@ def relativize_artifact_paths(output_dir: Path, source_root: Path) -> None:
         "run-result.json",
     )]
     paths.extend((output_dir / "external").glob("*.json"))
+    paths.extend((output_dir / "knowledge").glob("*.json"))
     for path in paths:
         if not path.is_file():
             continue
@@ -272,12 +291,36 @@ def bundle_artifacts(
         source = workspace / "external" / name
         if source.exists():
             shutil.copyfile(source, external_dir / name)
+    knowledge_source = workspace / "external" / "knowledge-graph.json"
+    if knowledge_source.exists():
+        shutil.copyfile(knowledge_source, external_dir / "knowledge-graph.json")
+    knowledge_dir = output_dir / "knowledge"
+    knowledge_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("build-profile.json", "log-facts.json", "knowledge-graph.json"):
+        source = workspace / "10-knowledge" / name
+        if source.exists():
+            shutil.copyfile(source, knowledge_dir / name)
+    logs_dir = output_dir / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    log_sources = (
+        sorted((workspace / "logs").glob("*"))
+        if (workspace / "logs").exists()
+        else []
+    )
+    for source in log_sources:
+        if source.is_file():
+            shutil.copyfile(source, logs_dir / source.name)
     _write_call_chains(workspace, output_dir)
 
     graph = read_json(workspace / "07-report" / "graph.json")
     resource_flow = read_json(external_dir / "resource-flow.json")
     sync_relations = read_json(external_dir / "sync-relations.json")
     call_chains = read_json(external_dir / "call-chains.json")
+    knowledge_graph = (
+        read_json(external_dir / "knowledge-graph.json")
+        if (external_dir / "knowledge-graph.json").exists()
+        else {}
+    )
     manifest = {
         "schema_version": "1.0",
         "run_id": run_id,
@@ -294,12 +337,16 @@ def bundle_artifacts(
             "resource_items": len(resource_flow.get("items", [])),
             "sync_items": len(sync_relations.get("items", [])),
             "call_items": len(call_chains.get("items", [])),
+            "knowledge_entities": len(knowledge_graph.get("entities", [])),
+            "knowledge_relations": len(knowledge_graph.get("relations", [])),
         },
         "outputs": {
             "visualization": "visualization.html",
             "call_chains": "external/call-chains.json",
             "resource_flow": "external/resource-flow.json",
             "sync_relations": "external/sync-relations.json",
+            "knowledge_graph": "external/knowledge-graph.json",
+            "logs": "logs",
             "graph": "graph.json",
             "report": "report.md",
         },
@@ -318,6 +365,8 @@ def run_repo_analysis(
     entry_symbols: list[str] | None = None,
     build_profile: str | None = None,
     archive: bool = True,
+    log_paths: list[str | Path] | None = None,
+    optimized_ir: bool = False,
 ) -> dict[str, Any]:
     repo, resolved_commit, label = checkout_repository(
         repository_url,
@@ -327,10 +376,19 @@ def run_repo_analysis(
     )
     run_id = f"run_{label}_{int(time.time())}"
     repository = repository_identity(repository_url)
-    compile_units = build_compile_commands(repo)
     target_output = Path(output_dir).expanduser().resolve()
     target_workspace = target_output / "workspace"
     profile = build_profile or "repository-auto"
+    logs_dir = target_workspace / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    for index, value in enumerate(log_paths or []):
+        path = Path(value).expanduser().resolve()
+        if path.is_file():
+            shutil.copyfile(path, logs_dir / f"{index:02d}_{path.name}")
+    compile_units = build_compile_commands(
+        repo,
+        log_path=logs_dir / "build.log",
+    )
 
     outcome = run_pipeline(
         source_root=repo,
@@ -342,6 +400,7 @@ def run_repo_analysis(
         commit=resolved_commit,
         entry_symbols=entry_symbols,
         repository=repository,
+        optimized_ir=optimized_ir,
     )
     bundle = bundle_artifacts(
         target_workspace,

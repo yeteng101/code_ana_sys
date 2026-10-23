@@ -67,6 +67,7 @@ class AgentToolTests(unittest.TestCase):
         tools = _mcp_tools()
         self.assertIn("get_call_graph", [item["name"] for item in tools])
         self.assertIn("get_visualization", [item["name"] for item in tools])
+        self.assertIn("get_knowledge_graph", [item["name"] for item in tools])
         listed = _respond({"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         self.assertEqual(1, listed["id"])
         called = _respond(

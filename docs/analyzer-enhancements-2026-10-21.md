@@ -74,3 +74,19 @@ gate.json
 
 Threshold failures return a non-zero exit code. Add `--strict-review` for the
 final post-human-review gate.
+
+## 6. Evidence Knowledge Graph
+
+URL analysis now emits:
+
+```text
+knowledge/build-profile.json
+knowledge/log-facts.json
+knowledge/knowledge-graph.json
+external/knowledge-graph.json
+```
+
+The graph links functions, compile units, optimization facts, resources,
+synchronization relations, compiler diagnostics and runtime log events.
+`--optimized-ir` adds LLVM IR comparison facts; `--log` ingests build/runtime
+logs. Neo4j stores the new graph as `KnowledgeEntity` and `RELATED`.
