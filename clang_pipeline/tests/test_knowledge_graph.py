@@ -11,10 +11,26 @@ from clang_pipeline.compiler_facts import (
     optimized_ir_facts,
 )
 from clang_pipeline.knowledge_graph import build_knowledge_graph
-from clang_pipeline.log_facts import collect_log_facts
+from clang_pipeline.log_facts import RealtimeLogExtractor, collect_log_facts
 
 
 class KnowledgeGraphTests(unittest.TestCase):
+    def test_realtime_log_extractor_reads_only_appended_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            log = root / "runtime.log"
+            log.write_text("function=main event=startup\n", encoding="utf-8")
+            extractor = RealtimeLogExtractor([log], source_root=root)
+            first = extractor.poll()
+            self.assertEqual(1, len(first))
+            self.assertEqual("startup", first[0]["event"])
+            with log.open("a", encoding="utf-8") as stream:
+                stream.write("src/main.c:1:1: warning: late warning\n")
+            second = extractor.poll()
+            self.assertEqual(1, len(second))
+            self.assertEqual("compiler_diagnostic", second[0]["kind"])
+            self.assertEqual([], extractor.poll())
+
     @unittest.skipUnless(shutil.which("clang"), "clang is required")
     def test_optimized_ir_calls_are_extracted(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

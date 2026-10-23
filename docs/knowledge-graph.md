@@ -101,6 +101,29 @@ python3 -m clang_pipeline.cli repo \
 
 日志事件只作为观测事实，不会直接改动 Gold 或自动证明源码缺陷。
 
+### 实时日志提取
+
+分析完成后可以持续 tail 新日志：
+
+```bash
+python3 scripts/watch_log_facts.py \
+  --workspace artifacts/project/workspace \
+  --log /var/log/project/runtime.log \
+  --interval 1
+```
+
+首次启动会读取现有内容，之后只处理追加行。新事件会写入：
+
+```text
+10-knowledge/log-facts.json
+10-knowledge/log-events.jsonl
+10-knowledge/knowledge-graph.json
+external/knowledge-graph.json
+```
+
+并刷新 Knowledge 可视化。使用 `--once` 可以只执行一次增量提取，适合测试或
+被其他调度器调用；使用 `--no-refresh` 只提取日志、不重构图。
+
 ## Neo4j
 
 已有的 `graphdb` 命令会同时尝试写入知识图谱实体：

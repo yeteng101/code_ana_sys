@@ -16,6 +16,8 @@
 >
 > 证据知识图谱：[docs/knowledge-graph.md](docs/knowledge-graph.md)
 >
+> 知识图谱与事实提取报告：[docs/knowledge-graph-facts-report-2026-10-23.md](docs/knowledge-graph-facts-report-2026-10-23.md)
+>
 > 汇报与答辩：[docs/reporting-guide-2026-10-16.md](docs/reporting-guide-2026-10-16.md)
 >
 > 本周把代码逆向分析结果从固定示例图升级为仓库无关、自动生成、嵌入 Agent 流程的
@@ -91,6 +93,7 @@ python3 -m clang_pipeline.cli repo \
 
 `--log` 可重复传入构建或运行日志；`--optimized-ir` 会额外比较 AST 调用和
 优化后的 LLVM IR，把内联/消除/新增调用写入知识图谱。
+分析完成后可用 `scripts/watch_log_facts.py` 持续 tail 新日志，并增量刷新知识图谱。
 
 该命令会自动完成：
 

@@ -31,6 +31,94 @@ def _relative_file(value: str, source_root: Path) -> str:
     return path.as_posix()
 
 
+def parse_log_line(
+    raw: str,
+    *,
+    log_path: str | Path,
+    line_number: int,
+    source_root: str | Path,
+    origin: str = "log",
+) -> dict[str, Any] | None:
+    path = Path(log_path).resolve()
+    root = Path(source_root).resolve()
+    line = raw.strip()
+    if not line:
+        return None
+    if line.startswith("{"):
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            item = None
+        if isinstance(item, dict):
+            file = str(item.get("file") or "")
+            return {
+                "id": "log_" + stable_digest([path.as_posix(), line_number, item])[:12],
+                "kind": "structured_log_event",
+                "origin": origin,
+                "log_file": path.name,
+                "log_line": line_number,
+                "timestamp": str(item.get("timestamp") or ""),
+                "severity": str(item.get("severity") or item.get("level") or "info"),
+                "message": str(item.get("message") or line),
+                "function": str(item.get("function") or ""),
+                "event": str(item.get("event") or ""),
+                "file": _relative_file(file, root) if file else "",
+                "line": int(item.get("line") or 0),
+                "raw": raw,
+            }
+    diagnostic = DIAGNOSTIC_PATTERN.match(line)
+    if diagnostic:
+        return {
+            "id": "diag_" + stable_digest([path.as_posix(), line_number])[:12],
+            "kind": "compiler_diagnostic",
+            "origin": origin,
+            "log_file": path.name,
+            "log_line": line_number,
+            "severity": diagnostic.group("severity"),
+            "message": diagnostic.group("message"),
+            "function": "",
+            "event": "diagnostic",
+            "file": _relative_file(diagnostic.group("file"), root),
+            "line": int(diagnostic.group("line")),
+            "column": int(diagnostic.group("column") or 0),
+            "raw": raw,
+        }
+    stack = STACK_PATTERN.search(line)
+    if stack:
+        return {
+            "id": "stack_" + stable_digest([path.as_posix(), line_number])[:12],
+            "kind": "stack_frame",
+            "origin": origin,
+            "log_file": path.name,
+            "log_line": line_number,
+            "severity": "error",
+            "message": line,
+            "function": stack.group("function") or "",
+            "event": "stack_frame",
+            "file": _relative_file(stack.group("file"), root),
+            "line": int(stack.group("line")),
+            "raw": raw,
+        }
+    function = FUNCTION_FIELD_PATTERN.search(line)
+    event_name = EVENT_FIELD_PATTERN.search(line)
+    if function or event_name:
+        return {
+            "id": "log_" + stable_digest([path.as_posix(), line_number])[:12],
+            "kind": "log_event",
+            "origin": origin,
+            "log_file": path.name,
+            "log_line": line_number,
+            "severity": "info",
+            "message": line,
+            "function": function.group(1) if function else "",
+            "event": event_name.group(1) if event_name else "",
+            "file": "",
+            "line": 0,
+            "raw": raw,
+        }
+    return None
+
+
 def parse_log_file(
     path: str | Path,
     *,
@@ -44,91 +132,15 @@ def parse_log_file(
         log_path.read_text(encoding="utf-8", errors="replace").splitlines(),
         start=1,
     ):
-        line = raw.strip()
-        if not line:
-            continue
-        if line.startswith("{"):
-            try:
-                item = json.loads(line)
-            except json.JSONDecodeError:
-                item = None
-            if isinstance(item, dict):
-                file = str(item.get("file") or "")
-                event = {
-                    "id": "log_" + stable_digest([log_path.as_posix(), line_number, item])[:12],
-                    "kind": "structured_log_event",
-                    "origin": origin,
-                    "log_file": log_path.name,
-                    "log_line": line_number,
-                    "timestamp": str(item.get("timestamp") or ""),
-                    "severity": str(item.get("severity") or item.get("level") or "info"),
-                    "message": str(item.get("message") or line),
-                    "function": str(item.get("function") or ""),
-                    "event": str(item.get("event") or ""),
-                    "file": _relative_file(file, root) if file else "",
-                    "line": int(item.get("line") or 0),
-                    "raw": raw,
-                }
-                events.append(event)
-                continue
-        diagnostic = DIAGNOSTIC_PATTERN.match(line)
-        if diagnostic:
-            events.append(
-                {
-                    "id": "diag_" + stable_digest([log_path.as_posix(), line_number])[:12],
-                    "kind": "compiler_diagnostic",
-                    "origin": origin,
-                    "log_file": log_path.name,
-                    "log_line": line_number,
-                    "severity": diagnostic.group("severity"),
-                    "message": diagnostic.group("message"),
-                    "function": "",
-                    "event": "diagnostic",
-                    "file": _relative_file(diagnostic.group("file"), root),
-                    "line": int(diagnostic.group("line")),
-                    "column": int(diagnostic.group("column") or 0),
-                    "raw": raw,
-                }
-            )
-            continue
-        stack = STACK_PATTERN.search(line)
-        if stack:
-            events.append(
-                {
-                    "id": "stack_" + stable_digest([log_path.as_posix(), line_number])[:12],
-                    "kind": "stack_frame",
-                    "origin": origin,
-                    "log_file": log_path.name,
-                    "log_line": line_number,
-                    "severity": "error",
-                    "message": line,
-                    "function": stack.group("function") or "",
-                    "event": "stack_frame",
-                    "file": _relative_file(stack.group("file"), root),
-                    "line": int(stack.group("line")),
-                    "raw": raw,
-                }
-            )
-            continue
-        function = FUNCTION_FIELD_PATTERN.search(line)
-        event_name = EVENT_FIELD_PATTERN.search(line)
-        if function or event_name:
-            events.append(
-                {
-                    "id": "log_" + stable_digest([log_path.as_posix(), line_number])[:12],
-                    "kind": "log_event",
-                    "origin": origin,
-                    "log_file": log_path.name,
-                    "log_line": line_number,
-                    "severity": "info",
-                    "message": line,
-                    "function": function.group(1) if function else "",
-                    "event": event_name.group(1) if event_name else "",
-                    "file": "",
-                    "line": 0,
-                    "raw": raw,
-                }
-            )
+        event = parse_log_line(
+            raw,
+            log_path=log_path,
+            line_number=line_number,
+            source_root=root,
+            origin=origin,
+        )
+        if event:
+            events.append(event)
     return events
 
 
@@ -155,3 +167,52 @@ def collect_log_facts(
         "files": files,
         "events": events,
     }
+
+
+class RealtimeLogExtractor:
+    """Incrementally read appended log lines without re-reading old content."""
+
+    def __init__(
+        self,
+        paths: list[str | Path],
+        *,
+        source_root: str | Path,
+    ) -> None:
+        self.source_root = Path(source_root).resolve()
+        self.paths = [Path(value).expanduser().resolve() for value in paths]
+        self.offsets = {path: 0 for path in self.paths}
+        self.partial = {path: "" for path in self.paths}
+        self.line_numbers = {path: 0 for path in self.paths}
+
+    def poll(self) -> list[dict[str, Any]]:
+        events: list[dict[str, Any]] = []
+        for path in self.paths:
+            if not path.is_file():
+                continue
+            with path.open("rb") as stream:
+                stream.seek(self.offsets[path])
+                chunk = stream.read()
+                end = stream.tell()
+            if not chunk:
+                continue
+            text = chunk.decode("utf-8", errors="replace")
+            text = self.partial[path] + text
+            complete = text.splitlines(keepends=True)
+            if complete and not complete[-1].endswith(("\n", "\r")):
+                self.partial[path] = complete.pop()
+                end -= len(self.partial[path].encode("utf-8"))
+            else:
+                self.partial[path] = ""
+            for raw in complete:
+                self.line_numbers[path] += 1
+                event = parse_log_line(
+                    raw.rstrip("\r\n"),
+                    log_path=path,
+                    line_number=self.line_numbers[path],
+                    source_root=self.source_root,
+                    origin="realtime_log",
+                )
+                if event:
+                    events.append(event)
+            self.offsets[path] = end
+        return events
